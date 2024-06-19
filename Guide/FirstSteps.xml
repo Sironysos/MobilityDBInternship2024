@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="FirstSteps">
+    <title>FirstSteps</title>
+    <subtitle>How to install MobilityDB and use it for some basic querries</subtitle>
+    
+    <para>
+        This document is a guide on how you can install MobilityDB and use it in order to analyse data.
+    </para>
+
+    <section>
+        <title>Part 1: Starting a database with MobilityDB </title>
+
+        <section>
+            <title>Installing MobilityDB</title>
+
+            <para>
+                For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
+                <!--TODO : guide for if not on Jammy (at least the link to the packages)-->
+    
+                If you run Ubuntu 22.04 (Jammy Jellyfish), you can simply execute the following in a terminal:
+                <programlisting language="bash" xml:space="preserve">
+sudo apt update
+# We will need the foloowing packages:
+sudo apt install curl ca-certificates gnupg
+
+# Install the public key for the repository (if not done previously):
+curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg &gt;/dev/null
+
+# Create the repository configuration file:
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" &gt;&gt; /etc/apt/sources.list.d/postgresql.list'
+sudo apt update
+sudo apt upgrade
+
+# Install the mobilitydb package with apt. It will automatically install the dependancies needed, PosgreSQL and PostGIS in particular.
+sudo apt install postgresql-16-mobilitydb</programlisting>
+            </para>
+        </section>
+
+        <section>
+            <title>PgAdmin4: a PostgreSQL Editor</title>
+
+            <para>
+                We are going to execute SQL commands. To do so, you can do it in a terminal or use any IDE you like. If you do not have one, here is the link to install PgAdmin4, 
+                you just need to choose your distribution and follow the instructions: <ulink url="https://www.pgadmin.org/download/">https://www.pgadmin.org/download/</ulink>.
+            </para>
+            <para>
+                You could also try <ulink url=" https://www.jetbrains.com/datagrip/">DataGrip</ulink> from Jetbrains. We didn't use it in this workshop, but we're sure it's a good tool.
+            </para>
+        </section>
+
+
+        <section>
+            <title>Starting the database</title>
+            <para>
+                In order to start the PostgreSQL database, you need to do as following, replacing username by your
+                own username. Note that in this case "workshop" is the name of the database we are creating, but you can choose your own name if you take care to change it every time it is needed later. 
+                Additionnaly, &lt;username&gt; should correspond to your OS user name.
+                <programlisting language="bash" xml:space="preserve">
+sudo -u postgres createuser -s -i -d -r -l -w &lt;username&gt;
+sudo -u postgres createdb workshop
+sudo service postgresql start
+psql -U &lt;username&gt; -d workshop</programlisting>
+            </para>
+
+            <para>
+                You can now connect to the database in pgAdmin. Here are the steps to do so:
+                <itemizedlist>
+                    <listitem>
+                        <para>On the dahboard click 'Add New Server'</para>
+                    </listitem>
+                    <listitem>
+                        <para>Fill out a name of your choosing for the server</para>
+                    </listitem>
+                    <listitem>
+                        <para>Fill out the host name, which is 'localhost' if you are hosting the database on your machine</para>
+                    </listitem>
+                    <listitem>
+                        <para>Fill out the port, which is '5432' if you are hosting the database on your machine</para>
+                    </listitem>
+                    <listitem>
+                        <para>Fill out the username and password you used to create the database</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+            <para>
+                You can now find your database in the browser on the left of the screen.
+                If you're having troule finding it, here is the explicit path in the Objext Explorer on the left:
+                Servers → Server_name → Databases → workshop                
+                You can now right click on 'workshop' to open the Querry Tool. This is where we will write and execute our querries.
+            </para>
+
+        </section>
+    
+    </section>
+    <section>
+        <title>Part 2: Playing with the data types</title>
+
+        <section>
+        <title>PostgreSQL</title>
+
+        <para>
+            In this chapter, we are going to see how we can represent points or a trajectory in mobilityDB. 
+            Before that, we'll see how to do it without MobilityDB so that you can see the difference.
+        </para>
+        <para>
+            First, in PostgreSQL without any extension, we can represent a point with it's coordinates. Here is a small SQL code you can copy and paste into your editor and run it:
+            <programlisting language="sql" xml:space="preserve">
+CREATE TABLE postgrePoints(
+    time int,
+    longitude float,
+    latitude float
+);
+
+INSERT INTO postgrePoints VALUES
+(0, 0, 0),
+(2, 1, 1),
+(3, 0.5, 2),
+(4, 0, 1),
+(6, 1, 1),
+(7, 1, 0);
+
+SELECT * FROM postgrePoints;</programlisting>
+        </para>
+        <para>
+            As you can see, we have a table with 3 columns: the time, the longitude and the latitude of each point. 
+            We can then manually compute the distance between each point, or visualize the trajectory, but it is not very convenient.
+        </para>
+
+        
+        </section>
+        <section>
+        <title>PostGIS</title>
+        
+        <para>
+            With PostGIS, we can represent a point with a type geometry. Here is a small SQL code you can copy and paste into your editor and run it:
+            <programlisting language="sql" xml:space="preserve">
+-- First, we need to create the extension
+CREATE EXTENSION PostGIS;
+
+DROP TABLE IF EXISTS postgispoints;
+CREATE TABLE postgisPoints(
+    time int,
+    point geometry(point)
+);
+
+INSERT INTO postgispoints ("time", point)
+SELECT time, ST_MakePoint(longitude, latitude)
+FROM postgrePoints;
+
+SELECT * FROM postgispoints;</programlisting>
+        </para>
+
+        <para>
+            As you can see, we have a table with 2 columns: the time and the point. The point is a geometry of type point, which is a PostGIS type. 
+            We can then use PostGIS functions to compute the distance between each point, or visualize the trajectory, which is more convenient.
+            For example, we can create a line from the points and visualize it on a map:
+            <programlisting language="sql" xml:space="preserve">
+CREATE TABLE postgisLine(
+    line geometry
+);
+
+INSERT INTO postgisLine (line)
+SELECT ST_MakeLine(ARRAY(SELECT point FROM postgisPoints ORDER BY time));
+
+SELECT * FROM postgisLine;</programlisting>
+        </para>
+        </section>
+
+        <section>
+            <title>MobilityDB</title>
+            
+        <para>
+            With MobilityDB, we can represent a trajectory with a tgeompoint. 
+            It's pretty much the same as a PostGIS line, except that each point has a time associated with it.
+            Here is how you can make it:
+            <programlisting language="sql" xml:space="preserve">
+DROP EXTENSION IF EXISTS mobilityDB CASCADE;
+CREATE EXTENSION mobilityDB CASCADE;
+
+DROP TABLE IF EXISTS mdbTraj CASCADE;
+CREATE TABLE mdbTraj(
+    traj tgeogpoint
+);
+
+INSERT INTO mdbtraj(traj)
+SELECT tgeogpointSeq(array_agg(tgeogpoint(point, time) ORDER BY time))
+FROM postgisPoints;</programlisting>
+        </para>
+        </section>
+
+    </section>
+</chapter>

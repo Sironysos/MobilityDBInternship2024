@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="GTFS">
+    <title>GTFS data</title>
+    <section>
+        <title>Introduction</title>
+        <para>
+            In this chapter, we are going to use GTFS data. GTFS (General Transit Feed Specification) is a standard format for public transportation schedules and associated geographic information. 
+            It is used by many public transportation companies to share their data.
+        </para>
+        <para>
+            We are going to use the GTFS data from STAR, the public transportation company of Rennes. You can find the data <ulink url="https://transport.data.gouv.fr/datasets/versions-des-horaires-theoriques-des-lignes-de-bus-et-de-metro-du-reseau-star-au-format-gtfs#dataset-resources">here</ulink>, in the static data part, but it will give you the updated data. The exact data we are using in this workshop can be found in the repo, in the GTFS folder.
+        </para>
+        <para>
+            The GTFS data is composed of several files, such as:
+            <itemizedlist>
+                <listitem>
+                    agency.txt: the agency that operates the transportation service;
+                </listitem>
+                <listitem>
+                    calendar_dates.txt: exceptions for the service;
+                </listitem>
+                <listitem>
+                    calendar.txt: the dates for the service;
+                </listitem>
+                <listitem>
+                    fare_attributes.txt: the fare information;
+                </listitem>
+                <listitem>
+                    feed_info.txt: the feed information;
+                </listitem>
+                <listitem>
+                    routes.txt: the routes of the transportation service;
+                </listitem>
+                <listitem>
+                    shapes.txt: the shapes of the routes;
+                </listitem>
+                <listitem>
+                    stop_times.txt: the times of the stops;
+                </listitem>
+                <listitem>
+                    stops.txt: the stops of the transportation service;
+                </listitem>
+                <listitem>
+                    trips.txt: the trips of the transportation service.
+                </listitem>
+            </itemizedlist>
+            You can find more information about the GTFS data <ulink url="https://gtfs.org/schedule/reference">here</ulink>.
+        </para>
+        <para>
+            We are not going to use the fare_attributes.txt and feed_info.txt files because it is not relevant for our workshop.
+        </para>
+    </section>
+    <section>
+        <title>Importing the data</title>
+        <para>
+            First thing you need to do is create a MobilityDB extension, just like in the <phrase xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="#FirstSteps">Chapter 1</phrase>.
+            To do so, follow this command:
+            <programlisting language="sql" xml:space="preserve">
+CREATE EXTENSION mobilitydb CASCADE;</programlisting>
+        </para>
+        <para>
+            Now, we need to import the GTFS data into the database. There is a tool that can help you do that, called gtfs-to-sql. Please install it by following these instructions:
+            <programlisting language="bash" xml:space="preserve">
+sudo apt install npm
+sudo apt install moreutils
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] &amp;&amp; \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] &amp;&amp; \. "$NVM_DIR/bash_completion"
+nvm install 16
+nvm use 16
+node -v
+npm install gtfs-via-postgres</programlisting>
+            Note that you need to have nvm installed on your computer to use this tool, and a recent enough version.
+            gtfs-to-sql will create the tables for you, and fill them with the data from the GTFS files. Here is how to use it:
+            <programlisting language="bash" xml:space="preserve">
+npm exec -- gtfs-to-sql --require-dependencies -- GTFS/*.txt | sponge | psql -d &lt;databasename&gt; -b</programlisting>
+            You need to replace &lt;databasename&gt; by the name of your database. You also need to replace GTFS/*.txt by the path to the GTFS files on your computer.
+            You should now have the tables in your database. 
+        </para>
+        <para>
+            Before moving on to the next part, we still have some changes to make.<sbr/>
+            We need to add some columns to the stops table, fill them with the right SRID, and create a table to store the shape geometries. We also added an index to the shape_geoms table, to make the queries faster.<sbr/>
+            SRID stands for Spatial Reference System Identifier. It is a unique value that identifies the projection of the data. 4326 is the most common SRID, it is the WGS 84 projection.<sbr/>
+            We set the SRID to 2154 because it is the projection reference we are using in Rennes, where the data comes from.
+            <programlisting language="sql" xml:space="preserve">
+ALTER TABLE stops ADD COLUMN stop_geom geometry('POINT', 2154);
+
+UPDATE stops
+SET stop_geom = ST_SetSRID(stop_loc::geometry,2154);
+
+CREATE TABLE shape_geoms (
+  shape_id text NOT NULL,
+  shape_geom geometry('LINESTRING', 2154),
+  CONSTRAINT shape_geom_pkey PRIMARY KEY (shape_id)
+);
+
+CREATE INDEX shape_geoms_key ON shapes (shape_id);</programlisting>
+        </para>
+            
+    </section>
+    <section>
+        <title>Creating PostGIS geometries</title>
+        <para>
+            In this part, we are going to create the PostGIS geometries for the stops, the routes and the shapes of the routes. 
+            To do so, we are going to use the stops, routes and shapes tables we created earlier.
+        </para>
+        <section>
+            <subtitle>
+                Creating the shapes of the routes
+            </subtitle>
+            <para>
+            In this part, we are going to make the shapes of the routes. 
+            To do so, we are going to use the shape_geoms table we created earlier. This table is used to store the shape geometries of the routes. We are going to use the shapes.txt file to create the shapes of the routes.
+            </para>
+            <programlisting language="sql" xml:space="preserve">
+INSERT INTO shape_geoms
+SELECT 
+<phrase role="custom-color-red">    shape_id,</phrase>
+<phrase role="custom-color-green">    ST_MakeLine(array_agg(</phrase>
+<phrase role="custom-color-blue">        ST_SetSRID(</phrase>
+<phrase role="custom-color-brown">            ST_MakePoint(shape_pt_lon, shape_pt_lat),</phrase>
+<phrase role="custom-color-blue">        2154) </phrase>
+<phrase role="custom-color-green">    ORDER BY shape_pt_sequence))</phrase>
+FROM shapes
+GROUP BY shape_id;</programlisting>
+            <para>
+                We are filling the shape_geoms table with two attributes.
+                The first one is <phrase role="custom-color-red">shape_id</phrase>: the identifier of the shape, which is taken from the shapes table.
+                The second one is the geometry of the shape, which is created in three steps:
+                <itemizedlist>
+                    <listitem>
+                        <phrase role="custom-color-brown">We create a point for each shape_pt_lon and shape_pt_lat in the shapes table, using the <ulink url="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.3.5">ST_MakePoint</ulink> function.</phrase> This is a PostGIS function. 
+                    </listitem>
+                    <listitem>
+                        <phrase role="custom-color-blue">We set the SRID of the point to 2154 because it is the norm we are using (see more </phrase><ulink url="https://en.wikipedia.org/wiki/Spatial_reference_system">here</ulink><phrase role="custom-color-blue">). We use the <ulink url="https://postgis.net/stuff/postgis-3.4.pdf#subsection.10.7.5">ST_SetSRID</ulink> function to do it. </phrase>This is a PostGIS function.
+                    </listitem>
+                    <listitem>
+                        <phrase role="custom-color-green">We use the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A2100%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C127.25%2C532.882%2Cnull%5D">array_agg</ulink> function to aggregate all the points in an array. </phrase>This is a PostgreSQL function. <phrase role="custom-color-green">We create a line with all the points we created, using the <ulink url="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.3.4">ST_MakeLine</ulink> function. </phrase>This is a PostGIS function.
+                    </listitem>
+                </itemizedlist>
+                We also ordered the points by shape_pt_sequence to make sure the line is in the right order. 
+                Finally, we group the lines by shape_id to make sure we have only one line per shape.
+            </para>
+            <para>
+                Now that we have the shapes of the routes, we can move on to the next part.
+            </para>
+        </section>
+        <section>
+            <subtitle>
+                Generating Service Dates
+            </subtitle>
+            <para>
+                In this part, we are going to generate the service dates. 
+                To do so, we are going to use the calendar and calendar_dates tables we created earlier.<sbr />
+                To put it in a nutshell, we compute the information about the service dates from the calendar and calendar_dates tables, so that we have the actual service offered, taking into account exceptions from the calendar_ates table.
+                <programlisting language="sql" xml:space="preserve">
+CREATE TABLE service_dates AS (
+    SELECT service_id, date_trunc('day', d)::date AS date
+    FROM calendar c, generate_series(start_date, end_date, '1 day'::interval) AS d
+    WHERE (
+        (monday = 'available' AND extract(isodow FROM d) = 1) OR
+        (tuesday = 'available' AND extract(isodow FROM d) = 2) OR
+        (wednesday = 'available' AND extract(isodow FROM d) = 3) OR
+        (thursday = 'available' AND extract(isodow FROM d) = 4) OR
+        (friday = 'available' AND extract(isodow FROM d) = 5) OR
+        (saturday = 'available' AND extract(isodow FROM d) = 6) OR
+        (sunday = 'available' AND extract(isodow FROM d) = 7)
+    )
+    EXCEPT
+        SELECT service_id, date
+        FROM calendar_dates WHERE exception_type = 'removed'
+        UNION
+        SELECT c.service_id, date
+        FROM calendar c JOIN calendar_dates d ON c.service_id = d.service_id
+        WHERE exception_type = 'added' AND start_date &lt;= date AND date &lt;= end_date
+);</programlisting>
+                You can notice that we are using the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A4392%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C757.889%2Cnull%5D">date_trunc</ulink> function. This function truncates the date to the specified precision. In this case, we are truncating the date to the day. This is a PostgreSQL function.<sbr />
+                We also use the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A1582%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C402.077%2Cnull%5D">extract</ulink> function. This function extracts a field from a date or time value. In this case, we are extracting the day of the week. This is a PostgreSQL function. We write "extract(isodow FROM d)" to get the day of the week of the date d. "isodow" stands for ISO day of the week (here is the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#page=321">postgreSQL documentation about isodow</ulink>)<sbr />
+                We also use the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A22539%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C410.478%2Cnull%5D">generate_series</ulink> function. This function generates a series of values, in this case, dates. We are using it to generate all the dates between the start_date and the end_date of the service. This is a PostgreSQL function. 
+            </para>
+        </section>
+    </section>
+    <section>
+        <title>Creating trips</title>
+        <para>
+            Now that we are fully prepared, we can create the trips. 
+            To do so, we are going to create two tables: trip_stops and trip_segs. Let's start with the first one.
+        </para>
+            <section>
+                <subtitle>Creating trip_stops</subtitle>
+                <para>
+                    In this part, we are going to create the trip_stops table. 
+                    <programlisting language="sql" xml:space="preserve">
+CREATE TABLE trip_stops (
+    trip_id text,
+    stop_sequence integer,
+    no_stops integer,
+    route_id text,
+    service_id text,
+    shape_id text,
+    stop_id text,
+    arrival_time interval,
+    perc float
+);</programlisting>
+                    Now, let's fill this table.
+                    <programlisting language="sql" xml:space="preserve">
+INSERT INTO trip_stops (trip_id, stop_sequence, <phrase role="custom-color-red">no_stops</phrase>, route_id, service_id, shape_id, stop_id, arrival_time)
+    SELECT t.trip_id, stop_sequence, <phrase role="custom-color-red">MAX(stop_sequence) OVER (PARTITION BY t.trip_id)</phrase>, route_id, service_id, shape_id, stop_id, arrival_time
+    FROM trips t JOIN stop_times s ON t.trip_id = s.trip_id;</programlisting>
+                    Here, we are just filling the table with the data from the trips and stop_times tables. We are also adding the no_stops attribute, which is the number of stops of the trip. We are using the <phrase role="custom-color-red">MAX</phrase> function to get the maximum stop_sequence for each trip. <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#page=396">MAX</ulink> is a basic PostgreSQL function, so is <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#page=86">OVER (PARTITION BY ...)</ulink>. <sbr /><sbr />
+                    Now, let's update the table with the percentage of the trip that has been done.
+                    <programlisting language="sql" xml:space="preserve">
+UPDATE trip_stops t
+    SET perc = CASE
+        WHEN <phrase role="custom-color-red">stop_sequence =  1 then 0.0</phrase>
+        WHEN <phrase role="custom-color-green">stop_sequence =  no_stops then 1.0</phrase>
+        ELSE <phrase role="custom-color-blue">ST_LineLocatePoint(g.shape_geom, s.stop_geom)</phrase>
+    END
+    FROM shape_geoms g, stops s
+    WHERE t.shape_id = g.shape_id AND t.stop_id = s.stop_id;</programlisting>
+                    You can see that there are 3 cases:
+                    <itemizedlist>
+                        <listitem>
+                            <phrase role="custom-color-red">The first one is when the stop_sequence is 1. In this case, the percentage is 0.0 because the trip has just started (1 is the first stop).</phrase>
+                        </listitem>
+                        <listitem>
+                            <phrase role="custom-color-green">The second one is when the stop_sequence is equal to no_stops. In this case, the percentage is 1.0 because the trip is over (no_stops is the last stop).</phrase>
+                        </listitem>
+                        <listitem>
+                            <phrase role="custom-color-blue">The last one is when the stop_sequence is between 1 and no_stops. In this case, we use the <ulink url="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.19.4">ST_LineLocatePoint</ulink> function. This function returns a float between 0 and 1 representing the location of the closest point on the line to the given point. We use it to get the percentage of the trip that has been done. It is much better than just dividing the stop_sequence by no_stops because it takes into account the shape of the route.</phrase>
+                        </listitem>
+                    </itemizedlist>
+                    The perc attribute is now filled with the percentage of the trip that has been done. Let's delete NULL values, as they are not relevant.
+                    <programlisting language="sql" xml:space="preserve">
+DELETE FROM trip_stops WHERE perc IS NULL;</programlisting>
+                        The trip_stops table is now filled with the data we need. Let's move on to the next part.
+                </para>
+            </section>
+            <section>
+                <subtitle>Creating trip_segs</subtitle>
+                <para>
+                    In this part, we are going to create the trip_segs table, that will be used to store the segments of the trips. 
+                    <programlisting language="sql" xml:space="preserve">
+CREATE TABLE trip_segs (
+    trip_id text,
+    route_id text,
+    service_id text,
+    stop1_sequence integer,
+    stop2_sequence integer,
+    no_stops integer,
+    shape_id text,
+    stop1_arrival_time interval,
+    stop2_arrival_time interval,
+    perc1 float,
+    perc2 float,
+    seg_geom geometry,
+    seg_length float,
+    no_points integer,
+    PRIMARY KEY (trip_id, stop1_sequence)
+);</programlisting>
+                    Now, let's fill this table.
+                    <programlisting language="sql" xml:space="preserve">
+INSERT INTO trip_segs (trip_id, route_id, service_id, stop1_sequence, stop2_sequence, no_stops, shape_id, stop1_arrival_time, stop2_arrival_time, perc1, perc2)  
+WITH <phrase role="custom-color-brown">temp</phrase> AS <phrase role="custom-color-brown"> (</phrase>
+            SELECT trip_id, 
+                route_id, 
+                service_id, 
+                stop_sequence,
+                LEAD(stop_sequence) OVER w AS stop_sequence2,
+                no_stops,
+                shape_id, 
+                arrival_time, 
+                LEAD(arrival_time) OVER w, 
+                perc, 
+                LEAD(perc) OVER w	
+            FROM trip_stops WINDOW w AS (PARTITION BY trip_id ORDER BY stop_sequence)
+        <phrase role="custom-color-brown"> )</phrase>
+SELECT * FROM <phrase role="custom-color-brown">temp</phrase> WHERE stop_sequence2 IS NOT null;</programlisting>
+                    There is a new set of functions here. <sbr/>
+                    We are using the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A2156%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C127.25%2C573.049%2Cnull%5D">LEAD</ulink> function. This function provides access to a row at a given physical offset beyond that position. In our case, we do not specify the offset, so it is 1 (the default value). This is a PostgreSQL function. <sbr/>
+                    Another notion is the window: this clause defines a window specification that says how to partition the rows and how to order them. In our case, we partition the rows by trip_id and order them by stop_sequence, that is to say the order of the stops in the trip. This is a PostgreSQL function. <sbr />
+                    In the end, the attributes that need the LEAD function are filled with the next stop's data, so the next row. 
+                </para>
+                <para>
+                    We just need to delete the incoherent data, that is to say the data where perc1 is greater or equal than perc2. Indeed, a trip cannot go backwards.
+                    <programlisting language="sql" xml:space="preserve">
+DELETE FROM trip_segs WHERE perc1 &gt;= perc2;</programlisting>
+                </para>
+                <para>
+                    We still need to fill the seg_geom attribute with the geometry of the segment. To do so, we are going to use the shape_geoms table we created earlier.
+                    <programlisting language="sql" xml:space="preserve">
+UPDATE <phrase role="custom-color-blue">trip_segs t</phrase>
+    SET seg_geom = ST_LineSubstring(<phrase role="custom-color-brown">g</phrase>.shape_geom, perc1, perc2)
+    FROM <phrase role="custom-color-brown">shape_geoms g</phrase>
+    WHERE <phrase role="custom-color-blue">t</phrase>.shape_id = <phrase role="custom-color-brown">g</phrase>.shape_id;</programlisting>    
+                    We are using the <ulink url="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.19.5">ST_LineSubstring</ulink> function. We use it to get the segment of the line between the two points. 
+                </para>
+                <para>
+                    We also need to fill the seg_length and no_points attributes. 
+                    <programlisting language="sql" xml:space="preserve">
+UPDATE trip_segs
+    SET seg_length = ST_Length(seg_geom), 
+    no_points = ST_NumPoints(seg_geom);</programlisting>
+                    You can see that we are using the <ulink url="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.12.12">ST_Length</ulink> function to get the length of the segment and the <ulink url="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.4.33">ST_NumPoints</ulink> function to get the number of points of the segment. 
+                </para>
+                <para>
+                    The trip_segs table is now filled with the data we need. Let's move on to the next part.
+                </para>
+            </section>
+            <section>
+                <subtitle>Creating trip_points</subtitle>
+                <para>
+                    In this part, we are going to create the trips points table. 
+                    <programlisting language="sql" xml:space="preserve">
+CREATE TABLE trip_points (
+    trip_id text,
+    route_id text,
+    service_id text,
+    stop1_sequence integer,
+    point_sequence integer,
+    point_geom geometry,
+    point_arrival_time interval,
+    PRIMARY KEY (trip_id, stop1_sequence, point_sequence)
+);</programlisting>      
+                    Now, let's fill this table.
+                    <programlisting language="sql" xml:space="preserve">
+INSERT INTO trip_points (trip_id, route_id, service_id, stop1_sequence, point_sequence, point_geom, point_arrival_time)
+
+WITH 
+<phrase role="custom-color-red">temp1</phrase> AS <phrase role="custom-color-red">(</phrase>
+    SELECT 
+        trip_id, 
+        route_id, 
+        service_id, 
+        stop1_sequence, 
+        stop2_sequence, 
+        no_stops, 
+        stop1_arrival_time, 
+        stop2_arrival_time, 
+        seg_length, 
+        (dp).path[1] AS point_sequence, 
+        no_points, 
+        (dp).geom as point_geom
+    FROM trip_segs, ST_DumpPoints(seg_geom) AS dp
+<phrase role="custom-color-red">)</phrase>,
+<phrase role="custom-color-blue">temp2</phrase> AS <phrase role="custom-color-blue">(</phrase>
+    SELECT 
+        trip_id, 
+        route_id, 
+        service_id, 
+        stop1_sequence, 
+        stop1_arrival_time, 
+        stop2_arrival_time, 
+        seg_length, 
+        point_sequence, 
+        no_points, 
+        point_geom
+    FROM <phrase role="custom-color-red">temp1</phrase>
+    WHERE point_sequence &lt;&gt; no_points OR stop2_sequence = no_stops
+<phrase role="custom-color-blue">)</phrase>,
+<phrase role="custom-color-green">temp3</phrase> AS <phrase role="custom-color-green">(</phrase>
+    SELECT 
+        trip_id, 
+        route_id, 
+        service_id, 
+        stop1_sequence, 
+        stop1_arrival_time,
+        stop2_arrival_time, 
+        point_sequence, 
+        no_points, 
+        point_geom,
+        ST_Length(ST_MakeLine(array_agg(point_geom) OVER w)) / seg_length AS perc
+    FROM <phrase role="custom-color-blue">temp2</phrase> WINDOW w AS (PARTITION BY trip_id, service_id, stop1_sequence ORDER BY point_sequence)
+<phrase role="custom-color-green">)</phrase>
+
+SELECT trip_id, route_id, service_id, stop1_sequence, point_sequence, point_geom,
+CASE
+    WHEN point_sequence = 1 then stop1_arrival_time
+    WHEN point_sequence = no_points then stop2_arrival_time
+    ELSE stop1_arrival_time + ((stop2_arrival_time - stop1_arrival_time) * perc)
+END AS point_arrival_time
+
+FROM <phrase role="custom-color-green">temp3</phrase>;</programlisting>
+            </para>
+            </section>
+            <section>
+                <subtitle>Creating trip_input</subtitle>
+                <para>
+                    In this part, we are going to create the trip_input table. It will be used to store the trips with the right dates. 
+                    <programlisting language="sql" xml:space="preserve">
+CREATE TABLE trips_input (
+    trip_id text,
+    route_id text,
+    service_id text,
+    date date,
+    point_geom geometry,
+    t timestamptz
+);</programlisting>      
+                    Now, let's fill this table.
+                    <programlisting language="sql" xml:space="preserve">
+INSERT INTO trips_input
+    SELECT trip_id, route_id, t.service_id, date, point_geom, date + point_arrival_time AS t
+    FROM trip_points t JOIN
+    ( SELECT service_id, MIN(date) AS date FROM service_dates GROUP BY service_id) s
+    ON t.service_id = s.service_id
+;</programlisting>
+                    We also have to delete the data that is not relevant.
+                    <programlisting language="sql" xml:space="preserve">
+DELETE FROM trips_input
+    WHERE trip_id in (
+        SELECT distinct t1.trip_id FROM trips_input t1
+        JOIN trips_input t2 ON t2.trip_id = t1.trip_id and t2.service_id = t1.service_id and t2.route_id = t1.route_id and t2.t = t1.t and NOT ST_Equals(t2.point_geom,t1.point_geom)
+    )and t in (
+        SELECT distinct t1.t FROM trips_input t1
+        JOIN trips_input t2 ON t2.trip_id = t1.trip_id and t2.service_id = t1.service_id and t2.route_id = t1.route_id and t2.t = t1.t and NOT ST_Equals(t2.point_geom,t1.point_geom)
+);</programlisting>
+                The trips_input table is now filled with the data we need. Let's move on to the next part.
+                </para>
+            </section>
+            <section>
+                <subtitle>Creating the final trips</subtitle>
+                <para>
+                    In this part, we are going to create the trips table. It will be used to store the trips with the right dates. 
+                    <programlisting language="sql" xml:space="preserve">
+CREATE TABLE trips_mdb (
+    trip_id text NOT NULL,
+    service_id text NOT NULL,
+    route_id text NOT NULL,
+    date date NOT NULL,
+    trip tgeompoint,
+    PRIMARY KEY (trip_id, date)
+);</programlisting>      
+                    Now, let's fill this table.
+                    <programlisting language="sql" xml:space="preserve">
+INSERT INTO trips_mdb(trip_id, service_id, route_id, date, trip)
+    SELECT trip_id, service_id, route_id, date, tgeompointSeq(array_agg(tgeompoint(point_geom, t) ORDER BY T))
+    FROM trips_input
+    GROUP BY trip_id, service_id, route_id, date
+;</programlisting>
+                    We also need to insert the trips that are not in the service_dates table.
+                    <programlisting language="sql" xml:space="preserve">
+INSERT INTO trips_mdb(trip_id, service_id, route_id, date, trip)
+    SELECT trip_id, route_id, t.service_id, d.date,
+        shiftTime(trip, make_interval(days =&gt; d.date - t.date))
+    FROM trips_mdb t JOIN service_dates d ON t.service_id = d.service_id AND t.date &lt;&gt; d.date
+;</programlisting>
+                    That's it! You now have the trips table filled with the data you need.
+                </para>
+            </section>      
+    </section>
+</chapter>

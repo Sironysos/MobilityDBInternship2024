@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="GPX">
+    <title>Animating GPX data</title>
+    <subtitle>How to use MobilityDB to analyze hiking data</subtitle>
+            <para>
+                We will use data from <ulink url="https://www.openstreetmap.org/user/atchisson/traces">OpenStreetMap</ulink>. The traces we are going to use in this example are rando_morbi1.gpx and rando_morbi2.gpx.<sbr/>
+                GPX is a common file format for storing GPS data. It is used by many GPS devices and applications to store track logs and waypoints. In our case, a person did two hikes on the 26th of June 2024, in the Morbihan, and saved the data in two GPX files.<sbr/>
+                Then, this person exported the data to OpenStreetMap and we can use his trace as we want. We will use these GPX files in this workshop.<sbr/>
+                Please download the files <ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390305"> rando_morbi1.gpx</ulink> and <ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390306">rando_morbi2.gpx</ulink> from the OpenStreetMap website and put in a folder you will remember.
+            </para>       
+    <section>
+        <title>Analyzing the data</title>
+        <section>
+            <title>Loading GPX data</title>
+            <para>
+                GPX, or GPS Exchange Format, is an XML data format for GPS data.<sbr/>
+                Location data (and optionally elevation, time, and other information) is stored in tags and can be interchanged between GPS devices and software. <sbr/>
+                Conceptually, a GPX file contains tracks, which are a record of where a moving object has been, and routes, which are suggestions about where it might go in the future. Furthermore, both tracks and routes and composed by points. <sbr/>
+                The following is a truncated (for brevity) example GPX file.
+                <programlisting language = "xml">
+&lt;?xml version='1.0' encoding='UTF-8' standalone='yes' ?&gt;
+&lt;gpx version="1.1"
+xmlns="http://www.topografix.com/GPX/1/1"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/1
+http://www.topografix.com/GPX/1/1/gpx.xsd"
+creator="Example creator"&gt;
+&lt;metadata&gt;
+	&lt;name&gt;Dec 14, 2014 4:32:04 PM&lt;/name&gt;
+	&lt;author&gt;Example creator&lt;/author&gt;
+	&lt;link href="https://..." /&gt;
+	&lt;time&gt;2014-12-14T14:32:04.650Z&lt;/time&gt;
+&lt;/metadata&gt;
+&lt;trk&gt;
+	&lt;name&gt;Dec 14, 2014 4:32:04 PM&lt;/name&gt;
+	&lt;trkseg&gt;
+		&lt;trkpt lat="30.16398" lon="31.467701"&gt;
+			&lt;ele&gt;76&lt;/ele&gt;
+			&lt;time&gt;2014-12-14T14:32:10.339Z&lt;/time&gt;
+		&lt;/trkpt&gt;
+		&lt;trkpt lat="30.16394" lon="31.467333"&gt;
+			&lt;ele&gt;73&lt;/ele&gt;
+			&lt;time&gt;2014-12-14T14:32:16.00Z&lt;/time&gt;
+		&lt;/trkpt&gt;
+		&lt;trkpt lat="30.16408" lon="31.467218"&gt;
+			&lt;ele&gt;74&lt;/ele&gt;
+			&lt;time&gt;2014-12-14T14:32:19.00Z&lt;/time&gt;
+		&lt;/trkpt&gt;
+		[...]
+	&lt;/trkseg&gt;
+	&lt;trkseg&gt;
+		[...]
+	&lt;/trkseg&gt;
+	[...]
+&lt;/trk&gt;
+&lt;trk&gt;
+	[...]
+&lt;/trk&gt;
+[...]
+&lt;gpx&gt;</programlisting>
+            </para>
+
+            <para>
+                To load the GPX data into MobilityDB, we fare going to use ogr2ogr, a command line tool that converts data between different formats.<sbr/>
+                First, you need to create a database. Let's name it "hiking". Here is how you can do it:
+                <programlisting language="bash">
+sudo -u <phrase role="custom-color-red">user</phrase> psql -d postgres -c "CREATE DATABASE hiking;"</programlisting>
+            </para>
+            <para>
+                Of course you need to replace <phrase role="custom-color-red">user</phrase> by your username. <sbr/>
+                Then, you need to load the MobilityDB extension into the database. Here is how you can do it:
+                <programlisting language="SQL">
+CREATE EXTENSION mobilitydb CASCADE;</programlisting>
+                We are now ready to import the data. Go to the folder where you have put the GPX files and run the following command:
+                <programlisting language="bash">
+ogr2ogr -append -f PostgreSQL PG:dbname=hiking <phrase role="custom-color-red">11390305</phrase>.gpx</programlisting>
+                You need to replace <phrase role="custom-color-red">11390305</phrase> by the name of the file you want to import. <sbr/>
+                Please run this command with both files.<sbr/>
+                Now, you should have the data in the database. 
+            </para>
+        </section>
+        
+        <section>
+            <title>Transforming the data</title>
+                <para>
+                Let's have a look at the table "tracks" and "track_points" which were created by ogr2ogr.
+                <programlisting language="SQL">
+SELECT * FROM track_points;
+SELECT * FROM tracks;</programlisting>
+                You can see that the table "track_points" contains the points of the track, and the table "tracks" contains the entire tracks. We are going to work with the table "track_points".<sbr/>
+                First, we see that the two tracks are in the same table. We are going to put an ID for each track so that we can differentiate them. Here is how you can do it:
+                <programlisting language="SQL">
+ALTER TABLE track_points ADD COLUMN track_number int;
+
+WITH NumberedTracks AS (
+SELECT *, LAG(track_seg_point_id) OVER (ORDER BY ogc_fid) AS prev_value
+FROM track_points
+),
+TrackIdentifiers AS (
+SELECT ogc_fid, SUM(CASE WHEN track_seg_point_id &lt; prev_value THEN 1 ELSE 0 END) OVER (ORDER BY ogc_fid) + 1 AS track_id
+FROM NumberedTracks
+)
+UPDATE track_points tp
+SET track_number = ti.track_id
+FROM TrackIdentifiers ti
+WHERE tp.ogc_fid = ti.ogc_fid;</programlisting>
+            What we are doing here is that we are adding a column "track_number" to the table "track_points". Then, we are creating "NumberedTracks" which contains the previous value of the "track_seg_point_id" column.<sbr/>
+            Then, we are creating "TrackIdentifiers" which contains the track_id, depending on the previous track_seg_point_id: if it is smaller then we sum 0 but if it is higher, saying we start a new sequence in track_seq_point_id, we sum 1. <sbr/>
+            Finally, we are updating the table "track_points" with the track_id.
+            </para>
+            <para>
+                We have to transform these geopgraphic points into a MobilityDB trajectory. Here is how you can do it:
+                <programlisting language="SQL">
+DROP TABLE IF EXISTS trips_mdb;
+CREATE TABLE trips_mdb (
+id int,
+date date,
+trip tgeompoint,
+trajectory geometry,
+PRIMARY KEY (id)
+);
+
+INSERT INTO trips_mdb(id, date, trip)
+SELECT track_number, date(time), tgeompointSeq(array_agg(tgeompoint(
+wkb_geometry, time) ORDER BY time))
+FROM track_points
+GROUP BY track_number, date;
+
+UPDATE trips_mdb
+SET trajectory = trajectory(trip);</programlisting>
+                What we are doing here is that we are creating a table "trips_mdb" with an id, a date, a trip and a trajectory. The trip is a tgeompoint, which is a MobilityDB type. <sbr/>
+                We are inserting into this table the track_number, the date and the tgeompointSeq of the array of the tgeompoint. <sbr/>
+                Finally, we are updating the table with the trajectory of the trip.
+            </para>
+            <para>
+                We are done with the data loading. In conclusion, we have loaded the GPX data into MobilityDB, and we have created a table "trips_mdb" which contains the trajectories of the trips. We are now ready to visualize the data.
+            </para>
+        </section>
+
+    </section>
+    <section>
+        <title>Visualizing the data</title>
+
+        <section>
+        <title>Introduction</title>
+
+        <para>
+            Now that we have cleaned the data and made it ready to be used, we will visualize the data in order to have a better understanding of it.<sbr/>
+            To do so, we are going to use QGIS, a free and open-source geographic information system. You can download it <ulink url="https://qgis.org/en/site/forusers/download.html">here</ulink>.<sbr/>
+            If you're interested, know that we are going to follow this tutorial: <ulink url="https://www.youtube.com/watch?v=titgXKp0kms&amp;t=4940s">MobilityDB: Hands on Tutorial on Managing and Visualizing Geospatial Trajectories in SQL</ulink>.<sbr/>
+            We will use the plugin Move to visualize the data. Here is the <ulink url="https://github.com/mschoema/move/tree/master">repo</ulink> where you can find it.<sbr/>
+            Please click on the move.zip file, and download it. Take care to do it like in this following image, otherwise it could not be downloaded correctly. Also, put it in a folder you will remember.
+            <table frame='none'>
+                <title>Download the move.zip file</title>
+                <tgroup cols="2">
+                    <tbody>
+                        <row>
+                            <entry>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata fileref="./images/3/moveFolder.png"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </entry>
+                            <entry>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata fileref="./images/3/moveZip.png"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+            Now, open QGIS and click on Plugins → Manage and Install Plugins. Click on the install from zip button and select the move.zip file you just downloaded. <sbr/>
+            Then, you can use the plugin to visualize the data. A MobilityDB logo will appear on the up-left corner of the screen. 
+        </para>       
+        <para>
+        You may have an error saying:
+    <programlisting>Couldn't load plugin 'move' due to an error when calling its classFactory() method 
+    ModuleNotFoundError: No module named 'psycopg'</programlisting>
+        To fix this, you need to install the psycopg module. You can do it by running the following command in a terminal:
+    <programlisting language="bash" xml:space="preserve">pip install psycopg</programlisting>
+        If you've had to install the psycopg module, you will need to uninstall the incorrect move plugin that you just installed (Plugins → Manage and Install Plugins → Installed → Move → Uninstall Plugin) and then reinstall it. You may also need to restart QGIS to make the plugin work.
+        </para>
+        </section>
+        <section>
+        <title>Connecting to the database</title>
+        
+        <para>
+            You can now create a new blank project in QGIS.
+            Then in the browser on the left of the screen, you should find a 'PostGIS' line. Right click on it and then 'New Connection...'.
+            You will see this window:
+        </para>
+        <figure id="NewConnection" float="start">
+            <title>New PostGIS Connection</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width='30%' fileref="./images/3/PostGIS_Connection.png"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+        <para>
+            Here is what you need to fill out:
+            <itemizedlist>
+                <listitem>
+                    <para>Name: choose a name for this connection</para>                    
+                </listitem>
+                <listitem>
+                    <para>Host: if the database is hosted on your machine, then 'localhost'. If not, you should be able to fgure it out by yourself.</para>
+                </listitem>
+                <listitem>
+                    <para>Port: again, if self hosted then keep '5432', if not you should know.</para>
+                </listitem>
+                <listitem>
+                    <para>Database: here write the name of the database in which you have loaded the data. In our case, it was "hiking".</para>
+                </listitem>
+                <listitem>
+                    <para>Authentication: go to the 'Basic' tab and fill out the user name and password for the account that has access to the database. Make sure to check the 'Store' boxes next to User name and Password.</para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        
+        <para>
+            You can now click OK and find your connection, database and the trips_mdb table in the tree below the PostGIS line in the QGIS Browser.
+        </para>
+        
+        </section>
+        <section>
+            <title>Visualizing the data</title>
+            <para>
+                Now that you have connected to the database, you can visualize the data. <sbr/>
+                First, let's put a map layer. In the browser window (on the left of the screen), click on 'XYZ Tiles' and then right click on 'OpenStreetMap' and select 'Add Layer to Project'.<sbr/>
+                You will see an OpenStreetMap layer in the inferior left part of the screen.<sbr/>
+                You can zoom in the part you are studyin. In our case, we are focusing on a part of France, in Britanny, called Morbihan.
+                <figure id="OpenStreetMap" float="start">
+                    <title>OpenStreetMap layer</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata width='60%' fileref="./images/3/OpenStreetMap.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </para>
+            <para>
+                Then, let's add the data we have loaded in the database.<sbr/>
+                First, let's draw the trajectory. Click on PostGIS → connection_name → public → trips_mdb → Fields → trajectory. You will see the trajectory in the map.<sbr/>
+                Now, we want to visualize the moving point of the trip.<sbr/>
+                To do so, you need to click on the 'Move' logo on the up-left side of the screen.<sbr/>
+                Select your database and the table you want to visualize. Then, you can write a query and execute it. We are going to put in this query:
+<programlisting language="SQL" xml:space="preserve">SELECT date, trip FROM trips_mdb;</programlisting>
+                Now click on 'Execute Query'.<sbr/>
+                Let's see the trip moving while we are visualizing it. To do so, click on View → Panels → Temporal Controller. You will see a window like this: 
+                <figure id="TemporalController" float="start">
+                    <title>Full temporal visualization</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata width='60%' fileref="./images/3/Visual.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                Now this is your time to play with the data and visualize it as you want. You can put the time in the temporal controller and see the trip moving. You can also change the color of the trip, the size of the points, etc...
+            </para>
+            <figure id="Gif" float="start">
+                <title>Visualizing the trip</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width='60%' fileref="./images/3/dessin.gif"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
+
+    </section>
+</chapter>

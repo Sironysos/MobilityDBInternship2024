@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="ManagingBusTrajectories">
+    <title>Managing Bus Trajectories</title>
+    <para>    
+        We will, for our examples, use data from STAR which is the Rennes' public transport company. 
+        This data is protected by ODbL (Open Database License): Data source: STAR Data Explore/Rennes Métropole.
+    </para>
+
+    <section id="CallectingData">
+        <title>Collecting the data</title>
+        <para>
+            The data we used for this chapter can be found <ulink url="https://data.explore.star.fr/explore/dataset/tco-bus-vehicules-position-tr/information/">here</ulink>.
+            You can download the data in CSV format. However, since it is real time data, you would just get the positions of the buses at the time of the download.
+            To counter this, we will use the data we collected over the course of one week and stored in the file <ulink url="https://docs.mobilitydb.com/data/bus_data.zip">position-bus.csv</ulink>.
+            It is the raw data collected with just one simple change: we added a column with the timestamp at which the data was collected.
+        </para>
+        <para>
+            Here is the script we used to collect the data:
+            <programlisting language="python" xml:space="preserve">
+import requests
+import os
+
+def get_filepaths():
+    # Get the current working directory
+    cwd = os.path.dirname(os.path.realpath(__file__))
+
+    # Name of the file to create
+    filename = 'position-bus.csv'
+    
+    # Full paths of the file
+    filepath = os.path.join(cwd, filename)
+
+    return filepath
+
+# Use of the function above
+filepath = get_filepaths()
+
+# 7 download links
+url = 'https://data.explore.star.fr/api/explore/v2.1/catalog/datasets/tco-bus-vehicules-position-tr/exports/csv?lang=fr&amp;timezone=Europe%2FBerlin&amp;use_labels=true&amp;delimiter=%3B'
+
+# Function to download the data
+def download_data():
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Check for HTTP errors
+        # Save the data to a file
+        with open(filepath, 'ab') as file:
+            file.write(response.content)
+        print(f"Data {filepaths.index(filepath) + 1} downloaded successfully.")
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading data {filepaths.index(filepath) + 1}: {e}")
+
+if __name__ == "__main__":
+    download_data()
+            </programlisting>
+        </para>
+        <para>You can find this script named request.py in the repository, we will reuse it for GBFS data later.</para>
+        <para>Similarly, the python script add_timestamp.py is the one that adds a column with the timestamps.</para>
+    </section>
+
+    <section id="DataCleaning">
+        <title>Cleaning the data</title>
+        <para>
+            The CSV file obtained, named tposition-bus.csv, is 576 MB, and it contains more than 5.2 million rows. It's columns are listed below:
+            <table pgwide='1' width='100%' id='tabdata' frame='all'><title>Bus columns</title>
+                <tgroup cols='2' align='left' colsep='1' rowsep='1'>
+                    <colspec colwidth="1*" colname='c1'/>
+                    <colspec colwidth="3*" colname='c2'/>
+                    <tbody>
+                        <row> <entry>Timestamp</entry> <entry>Timestamp of the row, format: yyyy-mm-dd hh:mm:ss.xxxxx (the x's are tenth of thousandth of a second)</entry> </row>
+                        <row> <entry>Bus (ID)</entry> <entry>Unique ID of the bus for that row</entry> </row>
+                        <row> <entry>Bus (numéro)</entry> <entry>Another ID for the buses</entry> </row>
+                        <row> <entry>Etat</entry> <entry>State of the bus (in service, out of service, unknown, deadrunning)</entry> </row>
+                        <row> <entry>Ligne (ID)</entry> <entry>ID of the bus line</entry> </row>
+                        <row> <entry>Ligne (nom court)</entry> <entry>Short name of the bus line</entry> </row>
+                        <row> <entry>Code du sens</entry> <entry>0 or 1 depending on the direction of the bus (if in service)</entry> </row>
+                        <row> <entry>Destination</entry> <entry>Destination of the bus (if in service)</entry> </row>
+                        <row> <entry>Coordonnées</entry> <entry>Exact coordinates of the bus at that moment</entry> </row>
+                        <row> <entry>Avance / Retard</entry> <entry>Earliness / Delay</entry> </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>
+            While checking if the file was correctly downloaded and there hadn't been any error, we found some rows that were missing. Here is an exemple around row 92740:
+            <programlisting xml:space="preserve">
+2024-07-22 14:05:02.815085;--
+2024-07-22 14:05:02.815085;Streaming interrupted due to the following error: NotFoundError(404, 'search_phase_execution_exception', 'No search context found for id [219908759]')2024-07-22 14:06:02.218453
+            </programlisting>
+        </para>
+        <para>
+            To fix this, we simply used yet another python script: cleanup.py. This script will simply remove any line that does not contain data in the expected format.
+            After running the script, we finally have a CSV file that is exploitable with MobilityDB: tposition-bus-clean.csv.
+        </para>
+    </section>
+
+    <section>
+        <title>Preparing the Database</title>
+        <para>
+            Create a new database RennesBusTrajectories, then use your SQL editor to create the extension MobilityDB:
+            <programlisting language = "SQL" xml:space="preserve">
+CREATE EXTENSION MobilityDB CASCADE;
+            </programlisting>
+            The cascade command will automatically create the dependencies of MobilityDB, namely PostGIS.
+        </para>
+
+        <para>
+            Now, we can create the table that will store the bus trajectories:
+            <programlisting language = "SQL" xml:space="preserve">
+CREATE TABLE BusInput(
+    T timestamp,
+    BusID int,
+    BusNumber int,
+    State varchar(20),
+    LineID int,
+    LineName varchar(5),
+    Direction int,
+    Destination varchar(50),
+    Position varchar(30),
+    lat float,
+    lon float,
+    Points GEOMETRY(Point, 4326),
+    Delay int
+);
+            </programlisting>
+        </para>
+    </section>
+    <section>
+        <title>Loading the data</title>
+        <para>
+            Now we want to import CSV data into a PostrgreSQL table. We will use the COPY command as follows:
+            <programlisting language = "SQL" xml:space="preserve">
+COPY BusInput (T, BusID, BusNumber, State, LineID, LineName,Direction, Destination, Position, Delay)
+FROM 'path/to/tposition-bus-clean.csv' DELIMITER ';' CSV HEADER;
+            </programlisting>
+        </para>
+        <para>
+            It is possible that the above command fails with a permission error. 
+            The reason for this is that COPY is a server capability, while the CSV file is on the client side. 
+            To overcome this issue, one can use the \copy command of psql as follows:
+            <programlisting language = "bash" xml:space="preserve">
+psql -d RennesBusTrajectories -c "\copy BusInput (T, BusID, BusNumber, State, LineID, LineName,Direction, Destination, Position, Delay) FROM 'path/to/tposition-bus-clean.csv' DELIMITER ';' CSV HEADER;"
+            </programlisting>
+        </para>
+        <para>You can find a bash script in the repository to do that, it is named copyBus.sh.</para>
+        <para>Whatever method you're using, don't forget to change the path to the CSV file on your computer.</para>
+
+        <para>
+            We then create the geometry column Points from the Position column:
+            <programlisting language = "SQL" xml:space="preserve">
+UPDATE BusInput 
+SET Points = ST_SetSRID(ST_MakePoint(SPLIT_PART(Position, ',', 2)::FLOAT, SPLIT_PART(Position, ',', 1)::FLOAT), 4326);
+            </programlisting>
+        </para>
+        <para>
+            Here, we use the function SPLIT_PART to separate the latitude and longitude from the Position column based on the comma.
+        </para>
+
+        <para>
+            While testing, we found some issues with some rows being duplicated, or others having the same timestamp but different positions.
+            Once again, we decided to remove these rows. Here is how to do that:
+            <programlisting language = "SQL" xml:space="preserve">
+DELETE FROM BusInput WHERE T IN (
+	SELECT DISTINCT b1.T FROM BusInput b1 JOIN BusInput b2
+	ON b2.BusID = b1.BusID AND b2.T = b1.T AND NOT ST_Equals(b1.Points, b2.Points)
+) OR (BusID, Points, T) IN (
+	SELECT BusID, Points, T
+    FROM BusInput
+    GROUP BY BusID, Points, T
+    HAVING COUNT(*) > 1
+);
+            </programlisting>
+        </para>
+        <para>This effectively deletes any row that falls into one of the two aforementioned categories.</para>
+    </section>
+
+    <section>
+        <title>Constructing the trajectories</title>
+        <para>
+            Now that our data is clean, we can start constructing the trajectories. They will be created in another table: Busses. Here is the SQL command to create the table:
+            <programlisting language = "SQL" xml:space="preserve">
+CREATE TABLE Busses(ID, Trip) AS
+SELECT BusID, tgeompointSeq(array_agg(tgeompoint(ST_Transform(Points, 4326), T) ORDER BY T))
+FROM (
+    SELECT BusID, Points, T
+    FROM BusInput
+    ORDER BY BusID, T) AS SortedBusInput
+GROUP BY BusID;
+            </programlisting>
+        </para>
+        <para>
+            This query constructs, per bus, its spatiotemporal trajectory Trip, which is a temporal geometry point.
+        </para>
+        <programlisting language = "SQL" xml:space="preserve">
+ALTER TABLE Busses ADD COLUMN Traj geometry;
+UPDATE Busses SET Traj = trajectory(Trip);
+        </programlisting>
+
+        <para>
+            We can visualize this data on QGIS. As you can see on the image below, the data is a bit messy and it is hard to really see the paths taken by the busses.
+            This is probably due to the fact that the positions are updated only once a minute, which is to broad if we want to see the precise turns taken by the buses.
+            <figure id="BusTrajs" float="start">
+                <title>Visualisation of the trajectories</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width='60%' fileref="./images/2/BusTrajQGIS.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>
+
+    </section>
+</chapter>

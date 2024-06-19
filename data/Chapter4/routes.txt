@@ -1,0 +1,159 @@
+route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color,route_sort_order
+4-1001,1,a,Rennes (J.F. Kennedy) <> Rennes (La Poterie),Métro,1,,EE1D23,FFFFFF,1
+4-1002,1,b,Cesson-Sévigné (Cesson - Viasilva) <> Rennes <> Saint-Jacques-de-la-Lande (Saint-Jacques - Gaîté),Métro,1,,00893E,FFFFFF,2
+4-0001,1,C1,Cesson-Sévigné (Cesson - Viasilva) <> Rennes  <> Chantepie (Rosa Parks),CHRONOSTAR,3,,95C11E,1A171B,1001
+4-0002,1,C2,Saint-Grégoire (Champ Daguet) <> Rennes (Haut Sancé),CHRONOSTAR,3,,008BD2,FFFFFF,1002
+4-0003,1,C3,Rennes (Patton) <> Rennes (Henri Fréville),CHRONOSTAR,3,,FFCC00,1A171B,1003
+4-0004,1,C4,Rennes (ZA Saint-Sulpice) <> Saint-Grégoire (Grand Quartier),CHRONOSTAR,3,,6F2282,FFFFFF,1004
+4-0005,1,C5,Rennes (Saint-Laurent) <> Rennes (Lycée Bréquigny),CHRONOSTAR,3,,F39200,1A171B,1005
+4-0006,1,C6,Cesson-Sévigné (Rigourdière) <> Saint-Jacques-de-la-Lande (Aéroport),CHRONOSTAR,3,,61C3D9,1A171B,1006
+4-0007,1,C7,Saint-Jacques-de-la-Lande (Saint-Jacques - Gaîté) <> Bruz (Bruz Centre),CHRONOSTAR,3,,D39D2F,1A171B,1007
+4-0011,1,11,Rennes (La Poterie) <> Vezin-le-Coquet (ZI Ouest),Urbaine,3,,004F9E,FFFFFF,1011
+4-0012,1,12,Rennes (Villejean-Université) <> Saint-Grégoire <> Rennes (La Poterie),Urbaine,3,,BA65A5,FFFFFF,1012
+4-0013,1,13,Chantepie (Cucé) <> Rennes <> Saint-Jacques-de-la-Lande <> Bruz (Porte de Ker-Lann),Urbaine,3,,6F2282,FFFFFF,1013
+4-0014,1,14,Cesson-Sévigné (Monniais) <> Rennes (Roazhon Park),Urbaine,3,,A96F23,FFFFFF,1014
+4-0032,1,32,Saint-Grégoire (Edonia) <> Rennes (Alma Sud),Inter-quartiers,3,,61C3D9,1A171B,1032
+4-0034,1,34,Rennes (ZA Saint-Sulpice) <> Cesson-Sévigné <> Chantepie (Rosa Parks),Inter-quartiers,3,,F39200,1A171B,1034
+4-0037,1,37,Rennes (Henri Fréville) <> Saint-Jacques-de-la-Lande (Morinais),Inter-quartiers,3,,E4003A,FFFFFF,1037
+4-0038,1,38,Cesson-Sévigné (Monniais) <> Cesson-Sévigné (Ménouriais),Inter-quartiers,3,,008BD2,FFFFFF,1038
+4-0039,1,39,Saint-Grégoire (Maison Blanche) <> Saint-Grégoire (Paul-Emile Victor),Inter-quartiers,3,,BA65A5,FFFFFF,1039
+4-0047,1,C7ex,Saint-Jacques-de-la-Lande (Saint-Jacques - Gaîté) <> Bruz (Ker Lann / Bruz Centre),CHRONOSTAR,3,,FFDD00,3D3C3F,1047
+4-0050,1,50,Thorigné-Fouillard (Landelles) <> Cesson-Sévigné (Cesson - Viasilva),Métropolitaine,3,,FFCC00,1A171B,1050
+4-0051,1,51,Betton (Champ Devant) <> Rennes (Les Gayeulles),Métropolitaine,3,,6F2282,FFFFFF,1051
+4-0052,1,52,La Chapelle-des-Fougeretz (Besneraie) <> Montgermont <> Rennes <> Pacé <> Saint-Gilles (Ile des Bois),Métropolitaine,3,,00893E,FFFFFF,1052
+4-0053,1,53,Rennes (République) <> Vezin-le-Coquet <> L'Hermitage <> La Chapelle-Thouarault (Ville aux Archers),Métropolitaine,3,,E4003A,FFFFFF,1053
+4-0054,1,54,Rennes (Charles de Gaulle) <> Le Rheu <> Cintré (Clos de la Vallée),Métropolitaine,3,,BA65A5,FFFFFF,1054
+4-0055,1,55,Rennes (Charles de Gaulle) <> Mordelles <> Le Verger (Le Verger Eglise),Métropolitaine,3,,F39200,1A171B,1055
+4-0056,1,56,Rennes (Charles de Gaulle) <> Chavagne (Croix Blanche),Métropolitaine,3,,00893E,FFFFFF,1056
+4-0059,1,59,Rennes (Henri Fréville) <> Bruz (Bruz Gare),Métropolitaine,3,,EF859D,1A171B,1059
+4-0061,1,61,Rennes (Henri Fréville) <> Noyal-Châtillon-sur-Seiche <> Saint-Erblon (Parc d'Activités),Métropolitaine,3,,E4003A,FFFFFF,1061
+4-0062,1,62,Rennes (La Poterie) <> Vern-sur-Seiche (Croix Malinge),Métropolitaine,3,,004F9E,FFFFFF,1062
+4-0063,1,63,Saint-Jacques-de-la-Lande (Saint-Jacques - Gaîté) -> Bruz (Pont-Réan),Métropolitaine,3,,8CA5D6,1A171B,1063
+4-0064,1,64,Acigné (Timonière) <> Cesson-Sévigné (Cesson - Viasilva),Métropolitaine,3,,008BD2,FFFFFF,1064
+4-0065,1,65,Rennes (Villejean-Université) <> Pacé <> Parthenay-de-Bretagne (Parthenay Fontaine),Métropolitaine,3,,BA65A5,FFFFFF,1065
+4-0067,1,67,Brécé (Anjou) <> Cesson-Sévigné <> Rennes (République),Métropolitaine,3,,E4003A,FFFFFF,1067
+4-0068,1,68,Gévezé (Cheval Blanc) <> Rennes (Villejean-Université),Métropolitaine,3,,004F9E,FFFFFF,1068
+4-0070,1,70,Saint-Sulpice-la-Forêt (Cropy) <> Cesson-Sévigné (Cesson - Viasilva),Métropolitaine,3,,EF859D,1A171B,1070
+4-0071,1,71,Saint-Sulpice-la-Forêt (Cropy) <> Rennes (Les Gayeulles),Métropolitaine,3,,A96F23,FFFFFF,1071
+4-0072,1,72,Rennes (Henri Fréville) -> Chartres-de-Bretagne -> Pont-Péan (Bois Esnault),Métropolitaine,3,,004F9E,FFFFFF,1072
+4-0073,1,73,Rennes (La Poterie) <> Vern-sur-Seiche <> Saint-Armel <> Corps-Nuds (Corps-Nuds Gare),Métropolitaine,3,,00893E,FFFFFF,1073
+4-0074,1,74,Rennes (Henri Fréville) <> Orgères <> Bourgbarré (Centre de Loisirs),Métropolitaine,3,,F39200,1A171B,1074
+4-0075,1,75,Nouvoitou (Parc des Sports) <> Vern-sur-Seiche <> Rennes (La Poterie),Métropolitaine,3,,F39200,201D21,1075
+4-0076,1,76,Rennes (Lycée Basch) <> Vezin-le-Coquet <> Le Rheu <> Mordelles (Mordelles Pâtis),Métropolitaine,3,,61C3D9,1A171B,1076
+4-0077,1,77,Rennes (Villejean-Université) <> Pacé (Pâtis Roussel),Métropolitaine,3,,F39200,1A171B,1077
+4-0078,1,78,Betton (La Haute Plesse) <> Rennes (Villejean-Université),Métropolitaine,3,,E4003A,FFFFFF,1078
+4-0079,1,79,Rennes (Henri Fréville) <> Pont-Péan <> Laillé (Gingouillère),Métropolitaine,3,,61C3D9,26171B,1079
+4-0080,1,80,Rennes (Henri Fréville) <> Laillé (Gingouillère),Métropolitaine,3,,BA65A5,FFFFFF,1080
+4-0081,1,81,Rennes (Villejean-Université) <> Clayes <> Romillé (Romillé Collège),Métropolitaine,3,,008BD2,FFFFFF,1081
+4-0082,1,82,Rennes (Villejean-Université) <> Romillé <> Langan <> La Chapelle-Chaussée <> Bécherel <> Miniac-sous-Bécherel (Miniac Eglise),Métropolitaine,3,,E4003A,FFFFFF,1082
+4-0083,1,83,Thorigné-Fouillard (ZA Bellevue) <> Betton (Champ Devant),Métropolitaine,3,,004F9E,FFFFFF,1083
+4-0090,1,90,Bruz (Lavoisier) <> Bruz (DGA-MI),Intercommunale,3,,008BD2,FFFFFF,1090
+4-0091,1,91,Noyal-Châtillon-sur-Seiche (Petite Saudrais) <> Chartres-de-Bretagne <> Bruz (Cicé Blossac/Pont-Réan),Intercommunale,3,,AECC52,1A171B,1091
+4-0152,1,152ex,Rennes (Villejean-Université) <> Saint-Gilles (Ile des Bois),Express,3,,FFDD00,3D3C3F,1152
+4-0153,1,153ex,Rennes (République) <> Vezin-le-Coquet <> L'Hermitage <> La Chapelle-Thouarault (Ville aux Archers),Express,3,,FFDD00,3D3C3F,1153
+4-0154,1,154ex,Rennes (République) <> Le Rheu <> Cintré (Clos de la Vallée),Express,3,,FFDD00,3D3C3F,1154
+4-0155,1,155ex,Rennes (République) <> Mordelles <> Le Verger (Le Verger Eglise),Express,3,,FFDD00,3D3C3F,1155
+4-0156,1,156ex,Rennes (République) <> Chavagne (Croix Blanche),Express,3,,FFDD00,3D3C3F,1156
+4-0159,1,159ex,Bruz (Bruz Gare) <> Rennes (Henri Fréville),Express,3,,FFDD00,3D3C3F,1159
+4-0161,1,161ex,Rennes (Henri Fréville) <> Noyal-Châtillon-sur-Seiche <> Saint-Erblon <> Bourgbarré (Centre de Loisirs),Express,3,,FFDD00,3D3C3F,1161
+4-0164,1,164ex,Acigné (Timonière) <> Cesson-Sévigné (Cesson - Viasilva),Express,3,,FFDD00,3D3C3F,1164
+4-0165,1,165ex,Rennes (Villejean-Université) <> Parthenay-de-Bretagne (Parthenay Fontaine),Express,3,,FFDD00,3D3C3F,1165
+4-0167,1,167ex,Brécé (Anjou) <> Cesson-Sévigné <> Rennes (République),Express,3,,FFDD00,3D3C3F,1167
+4-0168,1,168ex,Gévezé (Cheval Blanc) <> Rennes (Villejean-Université),Express,3,,FFDD00,3D3C3F,1168
+4-0172,1,172ex,Rennes (Henri Fréville) <> Chartres-de-Bretagne (Ferme des Peupliers),Express,3,,FFDD00,3D3C3F,1172
+4-0173,1,173ex,Rennes (La Poterie) <> Saint-armel <> Corps-Nuds (Corps-Nuds Gare),Express,3,,FFDD00,3D3C3F,1173
+4-0175,1,175ex,Rennes (La Poterie) <> Nouvoitou (Parc des Sports),Express,3,,FFDD00,3D3C3F,1175
+4-0178,1,178ex,Betton (La Haute Plesse) <> Rennes (Villejean-Université),Express,3,,FFDD00,3D3C3F,1178
+4-0308,1,C8,Rennes (Les Gayeulles) <> Rennes (Porte de Cleunay),CHRONOSTAR,3,,00893E,FFFFFF,1308
+4-0707,1,Bzh7,Bécherel (Bécherel Centre) <> Rennes (Gares),BreizhGo,3,,,,1707
+4-0121,1,N1,Rennes (République) <> Rennes (Kennedy Guyenne),STAR de Nuit,3,,004F9E,FFFFFF,2121
+4-0122,1,N2,Rennes (République) <> Rennes (La Poterie),STAR de Nuit,3,,F39200,1A171B,2122
+4-0123,1,N3,Rennes (République) <> Bruz (Schuman),STAR de Nuit,3,,D39D2F,1A171B,2123
+4-0124,1,N4,Cesson-Sévigné (Atalante) <> Rennes (République),STAR de Nuit,3,,6F2282,FFFFFF,2124
+4-0125,1,N5,Rennes (Parc Gayeulles) <> Rennes (République),STAR de Nuit,3,,FFCC00,1A171B,2125
+4-0801,1,a relais,Rennes (J.F. Kennedy) <> Rennes (La Poterie),Spéciale,3,,FFFF00,1A171B,3801
+4-0802,1,b relais,Cesson-Sévigné (Cesson - Viasilva) <> Saint-Jacques-de-la-Lande (Saint-Jacques - Gaîté),Spéciale,3,,FFFF00,1A171B,3802
+4-0803,1,API,Api'Bus : Rennes (République) <> Rennes (Etangs d'Apigné),Spéciale,3,,009C99,FFFFFF,3803
+4-0804,1,TTZ,Rennes <> Noyal-Châtillon-sur-Seiche (Touche Tizon),Spéciale,3,,009C99,FFFFFF,3804
+4-0200,1,200,Acigné (Timonière) <> Rennes (Assomption),Complémentaire,3,,BA67A6,FFFFFF,4200
+4-0201,1,201,Thorigné-Fouillard (Landelles) <> Rennes (Assomption),Complémentaire,3,,E30613,FFFFFF,4201
+4-0202,1,202,Chevaigné (Pommiers) <> Betton <>  Saint-Grégoire <> Rennes (Assomption),Complémentaire,3,,009FE3,FFFFFF,4202
+4-0204,1,204,Saint-Grégoire (Champ Daguet) <> Rennes (Assomption),Complémentaire,3,,94C11F,FFFFFF,4204
+4-0205,1,205,Rennes (The Land) <> Rennes (Villejean-Université),Complémentaire,3,,C0087F,FFFFFF,4205
+4-0206,1,206,Cesson-Sévigné (Métairies Chalotais) <> Rennes (Assomption),Complémentaire,3,,FECC00,1A171B,4206
+4-0208,1,208,Saint-Grégoire (MFR Rabinardières) <> Rennes (Gares),Complémentaire,3,,F39200,FFFFFF,4208
+4-0209,1,209,Saint-Jacques-de-la-Lande (Croix Verte) <> Saint-Jacques-de-la-Lande (Collège Jean Moulin),Complémentaire,3,,FFCC00,1A171B,4209
+4-0212,1,212,Rennes (Coubertin) <> Noyal-Châtillon-sur-Seiche <> Saint-Erblon (Champ Mulon),Complémentaire,3,,BA67A6,FFFFFF,4212
+4-0213,1,213,Rennes (Coubertin) <> Orgères <> Bourgbarré (Sept Fours),Complémentaire,3,,94C11F,FFFFFF,4213
+4-0214,1,214,Cesson-Sévigné (Lycée Ozanam) <> Rennes (La Poterie),Complémentaire,3,,94C11F,FFFFFF,4214
+4-0216,1,216,Cesson-Sévigné (Dézerseul) <> Rennes (Assomption),Complémentaire,3,,F29FC5,1A171B,4216
+4-0218,1,218,Pacé (Centre scolaire Pacé) <> Saint-Gilles (Ile des Bois),Complémentaire,3,,BA67A6,FFFFFF,4218
+4-0219,1,219,Saint-Jacques-de-la-Lande (Jean Jaurès) <> Bruz (Aire du 8 Mai),Complémentaire,3,,EF859D,1A171B,4219
+4-0220,1,220,Acigné (Timonière) <> Cesson-Sévigné (Lycée Sévigné),Complémentaire,3,,009FE3,FFFFFF,4220
+4-0221,1,221,Cesson-Sévigné (Château de Vaux) <> Thorigné-Fouillard <> Cesson-Sévigné (Lycée Sévigné),Complémentaire,3,,F39200,FFFFFF,4221
+4-0222,1,222,Chevaigné (Pommiers) <> Betton (Champ Devant),Complémentaire,3,,FECC00,1A171B,4222
+4-0223,1,223,Chevaigné (Pommiers) <> Betton <> Saint Grégoire (Jean-Paul II),Complémentaire,3,,94C11F,FFFFFF,4223
+4-0224,1,224,Saint-Grégoire (Jean-Paul II) <> Montgermont <> La Chapelle-des-Fougeretz <> Gévezé (Cheval Blanc),Complémentaire,3,,009FE3,FFFFFF,4224
+4-0225,1,225,Saint-Grégoire (Jean-Paul II) <> Pacé (Pâtis Roussel),Complémentaire,3,,E30613,FFFFFF,4225
+4-0226,1,226,Gévezé (Cheval Blanc) <> La Chapelle-des-Fougeretz <> Montgermont <> Pacé (Centre scolaire Pacé),Complémentaire,3,,4465AD,FFFFFF,4226
+4-0227,1,227,Saint-Gilles (Ile des Bois) <> Vezin-le-Coquet <> Pacé (Centre scolaire Pacé),Complémentaire,3,,BCA3CE,FFFFFF,4227
+4-0228,1,228,La Chapelle-des-Fougeretz (Besneraie) <> Montgermont <> Rennes (Lycée Mendès France),Complémentaire,3,,71BF44,1A171B,4228
+4-0229,1,229,Bruz (Brossolette) <> Chavagne <> Mordelles (Mordelles Pâtis),Complémentaire,3,,FECC00,1A171B,4229
+4-0230,1,230,Bruz (Aire du 8 Mai) <> Orgères <> Bourgbarré (Centre de Loisirs),Complémentaire,3,,009881,FFFFFF,4230
+4-0231,1,231,Bruz (Brossolette) <> Pont-Péan <> Laillé (Gingouillère),Complémentaire,3,,E5006D,FFFFFF,4231
+4-0232,1,232,Vern-sur-Seiche (Hauts de Gaudon) <> Vern-sur-Seiche (La Poste),Complémentaire,3,,009FE3,FFFFFF,4232
+4-0233,1,233,Bourgbarré (Centre de Loisirs) <> Orgères <> Saint-Erblon (Collège Saint-Paul),Complémentaire,3,,4465AD,FFFFFF,4233
+4-0234,1,234,Saint-Grégoire (Jean-Paul II) <> Pacé (Pont Amelin),Complémentaire,3,,FECC00,1A171B,4234
+4-0235,1,235,Pont-Péan (Mouton Blanc) <> Laillé <> Orgères (L'Hermitière Village),Complémentaire,3,,FECC00,1A171B,4235
+4-0236,1,236,Pacé (Centre scolaire Pacé) <> Parthenay-de-Bretagne <> Clayes (Clayes Centre),Complémentaire,3,,F29FC5,1A171B,4236
+4-0237,1,237,Le Rheu (Collège Brassens) <> Chavagne (Croix Blanche),Complémentaire,3,,E30613,FFFFFF,4237
+4-0238,1,238,Le Rheu (Collège Brassens) <> L'Hermitage <> La Chapelle-Thouarault (Ville aux Archers),Complémentaire,3,,BA67A6,FFFFFF,4238
+4-0239,1,239,Le Rheu (Lycée Monod) <> Mordelles (Mordelles Pâtis),Complémentaire,3,,F39200,FFFFFF,4239
+4-0240,1,240,Saint-Gilles (Ile des Bois) <> L'Hermitage <> Le Rheu (Lycée Monod),Complémentaire,3,,005BAB,FFFFFF,4240
+4-0241,1,241,Mordelles (Collège St-Yves) <> Chavagne (Croix Blanche),Complémentaire,3,,71BF44,1A171B,4241
+4-0242,1,242,Miniac-sous-Bécherel (Miniac Eglise) <> Bécherel <> La Chapelle-Chaussée <> Romillé (Romillé Collège),Complémentaire,3,,F7941D,1A171B,4242
+4-0243,1,243,Saint-Grégoire (Jean-Paul II) <> Montgermont <> Pacé (Pie Neuve),Complémentaire,3,,F7941D,1A171B,4243
+4-0245,1,245,Rennes (Foyer Rennais) <> Bruz (Bruz Centre),Complémentaire,3,,005BAB,FFFFFF,4245
+4-0320,1,20B,Cesson-Sévigné (Cesson - Viasilva) <> Cesson-Sévigné (Chalotais),Complémentaire,3,,FFCC00,1A171B,4320
+4-0321,1,21B,Cesson-Sévigné (Cesson Collège) <> Chantepie (Chantepie Eglise),Complémentaire,3,,BA65A5,FFFFFF,4321
+4-0322,1,22B,Rennes (Durafour Leclerc) <> Rennes (Villebois-Mareuil),Complémentaire,3,,61C3D9,1A171B,4322
+4-0401,1,Ts1,Noyal-Châtillon-sur-Seiche (Launay Hyon) <> Bruz (Aire du 8 Mai),Transport scolaire,3,,702283,FFFFFF,4401
+4-0403,1,Ts3,Saint-Erblon (Douazel) <> Noyal-Châtillon-sur-Seiche <> Bruz (Aire du 8 Mai),Transport scolaire,3,,5DC4E1,FFFFFF,4403
+4-0404,1,Ts4,Bourgbarré (La Fretais) <> Orgères <> Bruz (Anita Conti),Transport scolaire,3,,76B729,FFFFFF,4404
+4-0405,1,Ts5,Bruz (Aire du 8 Mai) <> Saint-Erblon <> Orgères <> Bourgbarré (Houssais),Transport scolaire,3,,BA67A6,FFFFFF,4405
+4-0406,1,Ts6,Bruz (Aire du 8 Mai) <> Saint-Erblon <> Orgères <> Laillé (Bossardière),Transport scolaire,3,,F39200,FFFFFF,4406
+4-0407,1,Ts7,Bourgbarré (Jardin du Soleil) <> Bruz (Anita Conti),Transport scolaire,3,,4465AD,FFFFFF,4407
+4-0408,1,Ts8,Bruz (Brossolette) <> Mordelles (Mordelles Pâtis),Transport scolaire,3,,E30613,FFFFFF,4408
+4-0409,1,Ts9,Bruz (Aire du 8 Mai) <> Laillé (Couais),Transport scolaire,3,,13A0DB,FFFFFF,4409
+4-0410,1,Ts10,Bruz (Anita Conti) <> Laillé (Châtaigneraie),Transport scolaire,3,,E99D3A,1A171B,4410
+4-0411,1,Ts11,Bruz (Aire du 8 Mai) <> Laillé (Château d'Eau),Transport scolaire,3,,E30613,FFFFFF,4411
+4-0412,1,Ts12,Bruz (Aire du 8 Mai) <> Laillé (Laillé Eglise),Transport scolaire,3,,336699,FFFFFF,4412
+4-0413,1,Ts13,Chartres-de-Bretagne (Vieux Bourg) <> Bruz (Aire du 8 Mai),Transport scolaire,3,,009881,FFFFFF,4413
+4-0420,1,Ts20,Nouvoitou (Le Gobigné) <> Vern-sur-Seiche (La Poste),Transport scolaire,3,,E30613,FFFFFF,4420
+4-0422,1,Ts22,Chantepie (La Planche) <> Rennes (Galicie),Transport scolaire,3,,FECC00,1A171B,4422
+4-0432,1,Ts32,La Chapelle-Thouarault (Cherterie) <> L'Hermitage <> Mordelles (Collège St-Yves),Transport scolaire,3,,E30613,FFFFFF,4432
+4-0433,1,Ts33,Le Rheu (Moigné) <> Mordelles (Collège St-Yves),Transport scolaire,3,,BA67A6,FFFFFF,4433
+4-0434,1,Ts34,L'Hermitage (Rue de Montfort) <> Mordelles (Collège St-Yves),Transport scolaire,3,,FECC00,1A171B,4434
+4-0435,1,Ts35,Mordelles (Morvan Lebesque) <> Le Verger (Breil),Transport scolaire,3,,009FE3,FFFFFF,4435
+4-0436,1,Ts36,Cintré (Chêne Lierru) <> Mordelles (Morvan Lebesque),Transport scolaire,3,,F39200,FFFFFF,4436
+4-0437,1,Ts37,La Chapelle-Thouarault (Ville aux Archers) <> Mordelles (Collège St-Yves),Transport scolaire,3,,4465AD,FFFFFF,4437
+4-0438,1,Ts38,Cintré (Belle Arrivée) <> Mordelles (Morvan Lebesque),Transport scolaire,3,,702283,FFFFFF,4438
+4-0441,1,Ts41,La Chapelle-des-Fougeretz (Bersandières) <> Montgermont <> Pacé (Centre scolaire Pacé),Transport scolaire,3,,F39200,FFFFFF,4441
+4-0443,1,Ts43,Pacé (Centre scolaire Pacé) <> Saint-Gilles (Etang de la Motte),Transport scolaire,3,,FECC00,1A171B,4443
+4-0444,1,Ts44,Gévezé (Cheval Blanc) <> Pacé (Centre scolaire Pacé),Transport scolaire,3,,96C11F,FFFFFF,4444
+4-0445,1,Ts45,Gévezé (Huchetais) <> Pacé (Centre scolaire Pacé),Transport scolaire,3,,E30613,FFFFFF,4445
+4-0446,1,Ts46,Pacé (Bas Sommier) <> Vezin-le-Coquet <> Pacé (Centre scolaire Pacé),Transport scolaire,3,,009FE3,FFFFFF,4446
+4-0451,1,Ts51,Bourgbarré (Les Cruaux) <> Saint-Erblon <> Orgères (Collège Récipon),Transport scolaire,3,,009FE3,FFFFFF,4451
+4-0452,1,Ts52,Noyal-Châtillon-sur-Seiche (Abords Launay) <> Saint-Erblon (Collège Saint-Paul),Transport scolaire,3,,FECC00,1A171B,4452
+4-0453,1,Ts53,Saint-Erblon (Collège Saint-Paul) <> Orgères <> Bourgbarré <> Laillé (Bossardière),Transport scolaire,3,,E30613,FFFFFF,4453
+4-0454,1,Ts54,Saint-Erblon (Souillard) <> Orgères (Collège Récipon),Transport scolaire,3,,F39200,FFFFFF,4454
+4-0455,1,Ts55,Laillé (Laillé Collège) <> Laillé (Boulais Pochetière),Transport scolaire,3,,36742F,FFFFFF,4455
+4-0457,1,Ts57,Laillé (Laillé Collège) <> Laillé (Gripay),Transport scolaire,3,,009FE3,FFFFFF,4457
+4-0461,1,Ts61,Cesson-Sévigné (Lycée Ozanam) <> Cesson-Sévigné (Prieuré Forge),Transport scolaire,3,,E30613,FFFFFF,4461
+4-0466,1,Ts66,Saint-Gilles (Pierre Blanche) <>La Chapelle-Thouarault <> L'Hermitage <> Le Rheu (Collège Brassens),Transport scolaire,3,,009FE3,FFFFFF,4466
+4-0467,1,Ts67,Saint-Gilles (Haute Fresnais) <> L'Hermitage <> Le Rheu (Collège Brassens),Transport scolaire,3,,71BF44,1A171B,4467
+4-0470,1,RPI-1,La Chapelle-Chaussée (Chapelle-Chaussée) <> Bécherel <> La Chapelle-Chaussée (Chapelle-Chaussée),Transport scolaire,3,,6F2B91,FFFFFF,4470
+4-0471,1,Ts71,Langan (Rouaudière) <> Romillé (Romillé Collège),Transport scolaire,3,,E30613,FFFFFF,4471
+4-0475,1,Ts75,La Chapelle-Chaussée (Chapelle-Chaussée) <> Gevezé <> Saint-Grégoire (Jean-Paul II),Transport scolaire,3,,BA67A6,FFFFFF,4475
+4-0482,1,Ts82,Noyal-Châtillon-sur-Seiche (Ise) <> Chartres-de-Bretagne (Collège Pôle Sud),Transport scolaire,3,,96BF0D,FFFFFF,4482
+4-0491,1,Ts91,Rennes (Collège Rosa-Parks) <> Vezin-le-Coquet (Vallée),Transport scolaire,3,,B269AB,FFFFFF,4491

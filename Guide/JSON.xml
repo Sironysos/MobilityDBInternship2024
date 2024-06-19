@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="JSON">
+    <title>GBFS data (applicable for every JSON data)</title>
+    <para>    
+        We will, for our examples, use data from STAR which is the Rennes' public transport company (<ulink url="https://data.rennesmetropole.fr/explore/dataset/vls-gbfs-tr/table/?dataChart=eyJxdWVyaWVzIjpbeyJjb25maWciOnsiZGF0YXNldCI6InZscy1nYmZzLXRyIiwib3B0aW9ucyI6e319LCJjaGFydHMiOlt7ImFsaWduTW9udGgiOnRydWUsInR5cGUiOiJjb2x1bW4iLCJmdW5jIjoiQ09VTlQiLCJzY2llbnRpZmljRGlzcGxheSI6dHJ1ZSwiY29sb3IiOiIjNjZjMmE1In1dLCJ4QXhpcyI6ImlkZmlsZWdiZnMiLCJtYXhwb2ludHMiOjUwLCJzb3J0IjoiIn1dLCJ0aW1lc2NhbGUiOiIiLCJkaXNwbGF5TGVnZW5kIjp0cnVlLCJhbGlnbk1vbnRoIjp0cnVlfQ%3D%3D">link</ulink>). 
+        This data is protected by ODbL (Open Database License): Data source: STAR Data Explore/Rennes Métropole. <ulink url="https://docs.mobilitydb.com/data/gbfs_data.zip">Here</ulink> is the link to download some of the large data. The other files are in the repository.
+    </para>
+    <section>
+        <title>Presentation</title>
+        <para>
+            The General Bikeshare Feed Specification (GBFS) is a data format that is used to provide real-time information about the status of a bike-sharing system. 
+            It is various JSON files that contain information about the stations, the bikes, the status of the stations, the status of the bikes, etc...
+            <sbr/>Among them, we can find the following files:
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        gbfs.json: Root file describing all the files used in the STAR bike share system's use of the GBFS standard. We didn't collect data for 1 week, because data doesn't significally change.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        station_information.json: List of stations in STAR's bike sharing network, their capacities, locations and geolocations.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_regions.json: STAR bike share application region.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_alerts.json: Alerts and unavailabilities for stations in the STAR bike share network.
+                        It is updated every minute. We collected data for 1 week, using a script in the repository.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_information.json: General information about STAR bike share (organization, contact, e-mail, website).
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_hours.json: STAR bike share opening hours.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_calendar.json: STAR bike share opening days.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        station_status.json: Information on available services, bike availability and locations for each station in the STAR bike share network.
+                        We collected data for 1 week.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        free_bike_status.json: List of bikes available for hire throughout the STAR bike sharing network.
+                        We collected data for 1 week.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_pricing_plans.json: STAR bike sharing tariffs and subscriptions (Summary version).
+                    </para>
+                </listitem>
+            </itemizedlist>
+            We are going to use the station_information.json, station_status.json and free_bike_status.json files in order to illustrate the use of MobilityDB with JSON data.
+        </para>
+        <para>
+            In order to easily understand what we are going to do in this workshop, here are some schemas. <sbr/>
+            You can see that we have 3 JSON files: station_information.json, station_status.json and free_bike_status.json. You can also understand their structure.<sbr/>
+            We are going to put them into 3 separate tables in order to be able to use them with MobilityDB.         
+            <figure id="schemaJSON" float="start">
+                <title>Schema for JSON Data</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="./images/5/prestation.png" width="500"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>   
+            <figure>
+                <title>Schema of tables</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="./images/5/prestation(1).png" width="500"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>
+    </section>
+    <section>
+        <title>Bikes table</title>
+        <para>
+            In this part, we are focusing on the free_bike_status.json file. This file contains information about the bikes available for hire throughout the STAR bike sharing network.<sbr/>
+            Do not forget to use the MobilityDB extension in PostgreSQL. You can do it with the following command:
+            <programlisting language="sql" xml:space="preserve">
+CREATE EXTENSION IF NOT EXISTS mobilityDB CASCADE;</programlisting>
+            First, we need to import the data into a table. We are going to use this script in order to create the table and import the data:
+            <programlisting language="bash" xml:space="preserve">
+<phrase role="custom-color-green">#!/bin/bash</phrase>
+
+input_file="../../data/free_bike.json"
+temp_file="/tmp/processed_data.sql"
+
+<phrase role="custom-color-green"># Drop the raw_json_data table if it exists</phrase>
+psql -d bikes -c "DROP TABLE IF EXISTS raw_json_bike;"
+
+<phrase role="custom-color-green"># Create raw_json_data table if it doesn't exist</phrase>
+psql -d bikes -c "CREATE TABLE raw_json_bike (timestamp TIMESTAMP, json_data JSON);"
+
+<phrase role="custom-color-green"># Initialize the temporary file</phrase>
+&gt; $temp_file
+
+<phrase role="custom-color-green"># Read the input file line by line</phrase>
+while IFS= read -r line
+do
+    <phrase role="custom-color-green"># Check if the line is a timestamp</phrase>
+    if [[ "$line" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2} ]]
+    then
+        timestamp="$line"
+    else
+        <phrase role="custom-color-green"># Write an INSERT statement to the temporary file</phrase>
+        echo "INSERT INTO raw_json_bike (timestamp, json_data) VALUES ('$timestamp', '$line');" &gt;&gt; $temp_file
+    fi
+done &lt; $input_file
+
+<phrase role="custom-color-green"># Execute the SQL commands to insert data</phrase>
+psql -d bikes -f $temp_file
+
+<phrase role="custom-color-green"># Clean up</phrase>
+rm $temp_file</programlisting>    
+            This script is going to create a table called raw_json_bike and import the data from the free_bike_status.json file.
+            We also have to manage the timestamp in the JSON file, that's why we do the for loop in the script.            
+        </para>
+        <para>
+            Now that we have the data in the table (you can check it with a SELECT * FROM raw_json_bike;), we can create a table that will contain the data we are interested in. 
+            We are going to create a table called bikes with the following script:
+            <programlisting language="sql" xml:space="preserve">
+DROP TABLE IF EXISTS bikes CASCADE;
+CREATE TABLE IF NOT EXISTS bikes (
+	time timestamp,
+	bike_id VARCHAR(100),
+	lat float,
+	lon float,
+	is_reserved int,
+	is_disabled int,
+	PRIMARY key(bike_id, time)
+);</programlisting>
+            We are going to insert the data from the raw_json_bike table into the bikes table with the following script:
+            <programlisting language="sql" xml:space="preserve">
+INSERT INTO bikes (time, bike_id, lat, lon, is_reserved, is_disabled)
+SELECT 
+    timestamp,
+    bike-&gt;&gt;'bike_id' AS bike_id,
+    (bike-&gt;&gt;'lat')::float AS lat,
+    (bike-&gt;&gt;'lon')::float AS lon,
+    (bike-&gt;&gt;'is_reserved')::int AS is_reserved,
+    (bike-&gt;&gt;'is_disabled')::int AS is_disabled
+FROM 
+    raw_json_bike,
+    json_array_elements(json_data-&gt;'data'-&gt;'bikes') AS bike;</programlisting>
+            Now we have the data in the bikes table. We can check it with a SELECT * FROM bikes;.<sbr/>
+            We can also create a table that will count the number of bikes, the number of disabled bikes and the number of reserved bikes for each timestamp, latitude and longitude.
+            We are going to create a table called bike2 with the following script:
+            <programlisting language="sql" xml:space="preserve">       
+DROP TABLE IF EXISTS bike2;
+CREATE TABLE IF NOT EXISTS bike2 (
+    time timestamp,
+    lat float,
+    lon float,
+    bikes int,
+    disabled int,
+    reserved int
+);
+
+INSERT INTO bike2(time,lat,lon,bikes,disabled,reserved)
+SELECT time, lat, lon, COUNT(*) AS bikes, COUNT(*) FILTER(WHERE is_disabled=1) AS disabled, COUNT(*)FILTER(WHERE is_reserved=1) AS reserved
+FROM bikes GROUP BY time,lat,lon;
+
+SELECT * FROM bike2 order BY time, lat, lon;</programlisting>
+                It should look like this:
+                <figure id="bikesTable" float="start">
+                    <title>Table bikes2</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="./images/5/bikes2.png" width="500"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                Now, the final step is to create a table that will contain the data we are interested in: the number of bikes, the number of disabled bikes and the number of reserved bikes for each latitude and longitude, using the temporal integer type.
+                
+            <programlisting language="sql" xml:space="preserve">
+DROP TABLE IF EXISTS temporal;
+CREATE TABLE IF NOT EXISTS temporal(
+    lat float,
+    lon float,
+    tbikes tint(SEQUENCE),
+    tdisabled tint(SEQUENCE),
+    treserved tint(SEQUENCE)
+);
+
+
+WITH bbike AS (
+    SELECT lat, lon,
+        tintSeq(array_agg(tint(bikes, time) ORDER BY time)) AS sorted_tbikes,
+        tintSeq(array_agg(tint(disabled, time) ORDER BY time)) AS sorted_tdisabled,
+        tintSeq(array_agg(tint(reserved, time) ORDER BY time)) AS sorted_treserved
+    FROM bike2
+    GROUP BY lat, lon
+)
+INSERT INTO temporal(lat, lon, tbikes, tdisabled, treserved)
+SELECT lat, lon,
+        sorted_tbikes AS tbikes,
+        sorted_tdisabled AS tdisabled,
+        sorted_treserved AS treserved
+FROM bbike;
+
+SELECT * FROM temporal order BY lat, lon;</programlisting>
+            It should look like the bikes table in the following figure:
+            <figure id="bikesTable2" float="start">
+                <title>Table temporal (bikes in the picture)</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="./images/5/prestation(1).png" width="500"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>
+    </section>
+    <section>
+        <title>Stations table</title>
+        <para>
+            In this part, we are focusing on the station_status.json file. This file contains information on available services such as bike availability for each station in the STAR bike share network.<sbr/>
+            We are going to use the same process as for the bikes table. We are going to create a table called raw_json_status and import the data from the station_status.json file.
+            We are going to use the following script:
+            <programlisting language="bash" xml:space="preserve">
+<phrase role="custom-color-green">#!/bin/bash</phrase>
+
+input_file="../../data/station.json"
+temp_file="/tmp/processed_data.sql"
+
+<phrase role="custom-color-green"># Drop the raw_json_data table if it exists</phrase>
+psql -d bikes -c "DROP TABLE IF EXISTS raw_json_status;"
+
+<phrase role="custom-color-green"># Create the raw_json_data table</phrase>
+psql -d bikes -c "CREATE TABLE IF NOT EXISTS raw_json_status (timestamp TIMESTAMP, json_data JSON);"
+
+<phrase role="custom-color-green"># Initialize the temporary file</phrase>
+&gt; $temp_file
+
+<phrase role="custom-color-green"># Read the input file line by line</phrase>
+while IFS= read -r line
+do
+    <phrase role="custom-color-green"># Check if the line is a timestamp</phrase>
+    if [[ "$line" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2} ]]
+    then
+        timestamp="$line"
+    else
+        <phrase role="custom-color-green"># Write an INSERT statement to the temporary file</phrase>
+        echo "INSERT INTO raw_json_status (timestamp, json_data) VALUES ('$timestamp', '$line');" &gt;&gt; $temp_file
+    fi
+done &lt; $input_file
+
+<phrase role="custom-color-green"># Execute the SQL commands to insert data</phrase>
+psql -d bikes -f $temp_file
+
+<phrase role="custom-color-green"># Clean up</phrase>
+rm $temp_file</programlisting>
+            Now that we have the data in the table (you can check it with a SELECT * FROM raw_json_status;), we can create a table that will contain the data we are interested in. 
+            We are going to create a table called docks with the following script:
+            <programlisting language="sql" xml:space="preserve">
+drop table if exists docks;
+CREATE table docks(
+	id int,
+	time timestamp,
+	docks int
+);
+
+
+INSERT INTO docks (id, time, docks)
+SELECT 
+    (dock-&gt;&gt;'station_id')::int,
+    timestamp,
+    (dock-&gt;&gt;'num_docks_available')::int
+FROM 
+    raw_json_status,
+    json_array_elements(json_data-&gt;'data'-&gt;'stations') AS dock;
+
+select * from docks;</programlisting>
+            We can also create a table that will count the number of docks for each station for each timestamp.
+            We are going to create a table called tempdocks with the following script:
+            <programlisting language="sql" xml:space="preserve">
+DROP TABLE IF EXISTS tempdocks;
+CREATE TABLE IF NOT EXISTS tempdocks(
+	id int,
+	tdocks tint(SEQUENCE)
+);
+
+
+WITH ddocks AS (
+    SELECT 
+		id,
+        tintSeq(array_agg(tint(docks, time) ORDER BY time)) AS sorted_tdocks
+    FROM docks
+    GROUP BY id
+)
+INSERT INTO tempdocks(id, tdocks)
+SELECT id,
+       sorted_tdocks AS tdocks
+FROM ddocks;
+
+SELECT * FROM tempdocks order BY id;</programlisting>
+            It should look like this:
+            <figure id="docksTable" float="start">
+                <title>Table tempdocks (docks in the picture)</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="./images/5/prestation(1).png" width="500"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+</para>
+</section>
+<section>
+    <title>Stations table</title>
+    <para>
+        In this part, we are focusing on the station_information.json file. This file contains information about the stations in the STAR bike sharing network, their capacities, locations and geolocations.<sbr/>
+        This part should be easier than the bikes and docks tables because the information doesn't change along the week. We are going to create a table called raw_json_station and import the data from the station_information.json file.
+        We are going to use the following script:
+        <programlisting language="bash" xml:space="preserve">
+<phrase role="custom-color-green">#!/bin/bash</phrase>
+
+input_file="../station_information.json"
+
+<phrase role="custom-color-green"># Drop the raw_json_data table if it exists</phrase>
+psql -d bikes -c "DROP TABLE IF EXISTS raw_json_station;"
+
+<phrase role="custom-color-green"># Create the raw_json_data table</phrase>
+psql -d bikes -c "CREATE TABLE IF NOT EXISTS raw_json_station (json_data JSON);"
+
+<phrase role="custom-color-green"># Read the JSON data and escape single quotes</phrase>
+json_data=$(cat "$input_file" | sed "s/'/''/g")
+
+<phrase role="custom-color-green"># Insert the JSON data into the table</phrase>
+psql -d bikes -c "INSERT INTO raw_json_station (json_data) VALUES ('$json_data');"</programlisting>
+        Now that we have the data in the table (you can check it with a SELECT * FROM raw_json_station;), we can create a table that will contain the data we are interested in. 
+        We are going to create a table called stations with the following script:
+        <programlisting language="sql" xml:space="preserve">
+drop table if exists prestation;
+CREATE table prestation(
+	id int primary key,
+	name varchar(100),
+	position geometry(point),
+	capacity int
+);
+
+insert into prestation(id, name, position, capacity)
+select
+	(stations-&gt;&gt;'station_id')::int,
+    stations-&gt;&gt;'name',
+	ST_SetSRID(ST_MakePoint((stations-&gt;&gt;'lon')::float,(stations-&gt;&gt;'lat')::float),2154),
+	(stations-&gt;&gt;'capacity')::int
+FROM 
+    raw_json_station,
+    json_array_elements(json_data-&gt;'data'-&gt;'stations') AS stations;
+
+select * from prestation;</programlisting>
+        It should look like this:
+        <figure id="stationsTable" float="start">
+            <title>Table prestation (station_informations in the picture)</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="./images/5/prestation(1).png" width="500"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+</para>
+</section>
+<section>
+    <title>Final view</title>
+    <para>
+        Now that we have the bikes, docks and stations tables, we can create a view that will contain all the information we are interested in. 
+        We are going to create a view called final_view with the following script:
+        <programlisting language="sql" xml:space="preserve">
+CREATE OR REPLACE VIEW station_view AS
+SELECT 
+    prestation.id,
+    prestation.name,
+    prestation.position,
+    prestation.capacity,
+    tbikes,
+    tdisabled,
+    treserved,
+    tdocks
+FROM
+    prestation
+	JOIN temporal ON ST_SetSRID(ST_MakePoint(temporal.lon,temporal.lat),2154)=prestation.position
+	JOIN tempdocks ON tempdocks.id=prestation.id;
+
+SELECT * FROM station_view ORDER BY id;</programlisting>
+        It should look like this:
+        <figure id="finalView" float="start">
+            <title>Table station_view (final view in the picture)</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="./images/5/prestation(2).png" width="500"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+    </para>
+</section>
+<section>
+    <title>Conclusion</title>
+    <para>
+        We have seen how to import JSON data into tables and how to use MobilityDB with JSON data. We have created 3 tables: bikes, docks and stations. We have also created a view that contains all the information we are interested in. 
+        We have used the temporal integer type in order to store the data in the tables. We have also used the MobilityDB extension in PostgreSQL in order to be able to use the temporal integer type.
+
+        <sbr/>We could analyze the data in order to see the evolution of the number of bikes, the number of disabled bikes, the number of reserved bikes and the number of docks for each station. We could also analyze the data in order to see the evolution of the number of bikes, the number of disabled bikes, the number of reserved bikes and the number of docks for each latitude and longitude.
+    </para>
+</section>
+</chapter>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="guide.css"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!ENTITY FIRST_STEPS SYSTEM "FirstSteps.xml">
+<!ENTITY MANAGING_BUS_TRAJECTORIES SYSTEM "ManagingBusTrajectories.xml">
+<!ENTITY GRAFANA SYSTEM "Grafana.xml">
+<!ENTITY GPX SYSTEM "GPX.xml">
+<!ENTITY GTFS SYSTEM "GTFS.xml">
+<!ENTITY GTFS_RT SYSTEM "GTFS-RT.xml">
+<!ENTITY JSON SYSTEM "JSON.xml">
+]>
+<book lang="en">
+    <title>MobilityDB Workshop</title>
+    <bookinfo>
+
+        <!-- Authors -->
+        <author>
+            <firstname>Alice</firstname>
+            <surname>Lombard</surname>
+            <affiliation>
+                <orgname>INSA Rennes, France</orgname>
+            </affiliation>
+        </author>
+        <author>
+            <firstname>Raphaël</firstname>
+            <surname>Dubuget</surname>
+            <affiliation>
+                <orgname>INSA Rennes, France</orgname>
+            </affiliation>
+        </author>
+        <abstract>
+            <para>
+                This document is an example of how you can use MobilityDB in order to analyse and visualize data. It is directly inspired by 
+                the <ulink url="https://mobilitydb.github.io/MobilityDB-workshop/develop/html/index.html">MobilityDB Workshop</ulink> already existing. 
+                We will throughout this document present different use cases of MobilityDB, which is an extension on <ulink url="https://postgis.net/">PostGIS</ulink> and <ulink url="https://www.postgresql.org/">PostgreSQL</ulink>. 
+            </para>       
+            <para>
+                This workshop was made by two students from <ulink url="https://www.insa-rennes.fr/index.html">INSA Rennes</ulink> during an internship in June, July and August 2024. 
+            </para>    
+            <para>
+                Now, we are ready to start the workshop.
+                While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
+                If you need help concerning the functions of MobilityDB, please 
+                refer to the <ulink url="https://mobilitydb.com/documentation.html">documentation</ulink>. 
+            </para>
+        </abstract>
+    </bookinfo>
+
+    <!-- Chapter 1 -->
+        <!-- OK -->
+    &FIRST_STEPS;
+
+    <!-- Chapter 2 -->
+        <!-- OK -->
+    &MANAGING_BUS_TRAJECTORIES;
+
+    <!-- Chapter 3 --> 
+        <!-- OK -->
+    &GPX;
+
+    <!-- Chapter 4 -->
+        <!-- OK -->
+    &GTFS;
+
+    <!-- Chapter 5 -->
+        <!-- OK -->
+    &JSON;
+
+</book>
