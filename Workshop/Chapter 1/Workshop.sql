@@ -29,7 +29,7 @@ CREATE TABLE AISInput(
   SizeD float,
   Geom geometry(Point, 4326)
 );
-
+  
 DROP TABLE AISInput CASCADE;
 
 COPY AISInput(T, TypeOfMobile, MMSI, Latitude, Longitude, NavigationalStatus,
