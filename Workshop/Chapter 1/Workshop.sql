@@ -29,8 +29,7 @@ CREATE TABLE AISInput(
   SizeD float,
   Geom geometry(Point, 4326)
 );
-  
-DROP TABLE AISInput CASCADE;
+DROP TABLE AISInput;
 
 COPY AISInput(T, TypeOfMobile, MMSI, Latitude, Longitude, NavigationalStatus,
   ROT, SOG, COG, Heading, IMO, CallSign, Name, ShipType, CargoType, Width, Length,
@@ -44,9 +43,9 @@ UPDATE AISInput SET
   ShipType = CASE ShipType WHEN 'Undefined' THEN NULL END,
   TypeOfPositionFixingDevice = CASE TypeOfPositionFixingDevice
   WHEN 'Undefined' THEN NULL END,
-  Geom = ST_SetSRID( ST_MakePoint( Longitude, Latitude ), 4326);
+  Geom = ST_SetSRID( ST_MakePoint( Longitude, Latitude ), 432
 
-DROP TABLE AISInputFiltered CASCADE;
+DROP TABLE AISInputFiltered;
 
 CREATE TABLE AISInputFiltered AS
 SELECT DISTINCT ON(MMSI,T) *
@@ -55,7 +54,7 @@ WHERE Longitude BETWEEN -16.1 and 32.88 AND Latitude BETWEEN 40.18 AND 84.17;
 
 SELECT count(*) FROM AISInputFiltered;
 
-DROP TABLE Ships CASCADE;
+DROP TABLE Ships;
 
 CREATE TABLE Ships(MMSI, Trip, SOG, COG) AS
 SELECT MMSI,
