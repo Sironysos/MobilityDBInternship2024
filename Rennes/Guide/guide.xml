@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<book xml:id="guide" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="fr">
+<book xml:id="guide" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="en">
     <title>MobilityDB Rennes Workshop</title>
     <info>
         <author>
@@ -15,15 +15,170 @@
             </personname>
         </author>
         <pubdate>June 2024</pubdate>
-    </info> 
-    <chapter xml:id="ch0">
-        <title>Chapter 0: Preparations</title>
+    </info>
+
+    <section xml:id="intro">
+        <para>
+            This document is an example of how you can use MobilityDB in order to analyse data. It is directly inspired by 
+            the <ulink url="https://mobilitydb.github.io/MobilityDB-workshop/develop/html/index.html">MobilityDB Workshop</ulink> already existing. 
+            We will throughout this document present different use cases of MobilityDB, which is an extension on PostGIS and PostgreSQL. 
+            Later on, we will also introduce new modules that will be presented in time.
+        </para>       
+        <para>
+            This workshop of sorts was made by two students from Rennes during an internship. 
+            We will, for our examples, use data from STAR which is the Rennes' public transport company. 
+            This data is protected by ODbL (Open Database License)\cite{SourceSTAR}.
+        </para>       
+        <para>
+            While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
+            If you need help concerning the functions of MobilityDB, please 
+            refer to the <ulink url="https://mobilitydb.com/documentation.html">documentation</ulink>. 
+        </para>
+    </section>
+
+
+    <section xml:id="ch0">
+        <title>Chapitre 0: Preparations</title>
         <section xml:id="ch0se1">
         <title>Installing MobilityDB</title>
         <para>
             For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
+            <!--TODO : guide for if not on Jammy (at least the link to the packages)-->
+
             If you run Ubuntu 22.04 (Jammy Jellyfish), you can simply execute the following in a terminal:
+            <programlisting>
+sudo apt update
+sudo apt
+# We will need the foloowing packages:
+sudo apt install curl ca-certificates gnupg
+
+# Install the public key for the repository (if not done previously):
+curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
+
+# Create the repository configuration file:
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" >> /etc/apt/sources.list.d/postgresql.list'
+sudo apt update
+sudo apt upgrade
+
+# Install the mobilitydb package with apt. It will automatically install the dependancies needed, PosgreSQL and PostGIS in particular.
+sudo apt install postgresql-16-mobilitydb
+            </programlisting>
         </para>
         </section>
-    </chapter>
+        <section xml:id="ch0se2">
+        <title>PgAdmin4: a PostgreSQL Editor</title>
+
+        <para>
+            We are going to execute SQL commands. To do so, you can do it in a terminal or use any editor
+            you like. If you do not have one, here is a guide to install PgAdmin4, which is the one we used: <ulink url="https://www.pgadmin.org/download/pgadmin-4-apt/">https://www.pgadmin.org/download/pgadmin-4-apt/</ulink>
+        </para>
+        <para>
+            You could also download <ulink url=" https://www.jetbrains.com/datagrip/">DataGrip</ulink> from Jetbrains. We didn’t use it in this workshop, but we’re sure it’s a good tool.
+        </para>
+        </section>
+        <section>
+        <title>Starting the database</title>
+        <para>
+            In order to start the PostgreSQL database, you need to do as following, replacing username by your
+            own username.
+            <programlisting>
+sudo -u postgres createuser -s -i -d -r -l -w &lt;username&gt;
+sudo -u postgres createdb workshop
+sudo service postgresql start
+psql -U &lt;username&gt; -d workshop
+            </programlisting>
+        </para>
+        </section>
+    </section>
+    <section xml:id="ch1">
+        <title>Chapitre 1: Introduction to MobilityDB</title>
+
+        <section xml:id="ch1se1">
+        <title>Importing the data</title>
+
+        <para>
+            You can find in the repository for this workshop a CSV file called Freq_Mars2024 data.csv. It looks like the Figure 1.
+        </para>       
+        <figure id="imgpoints" float="start">
+            <title>First few lines of the table</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="../images/FreqMars2024dataTable.png"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+
+        <para>
+            This is the data we will use for this workshop. If you want more recent data, you can find it 
+            <ulink url="https://data.explore.star.fr/explore/dataset/tco-billettique-frequentation-detaillee-td/table/">here</ulink> by 
+            selecting the month you want.
+        </para>
+        <para>    
+            The columns in the table are listed below, with in the first column af the table the original name (in french), in the second 
+            column the english translation and in the third column an explanation of the column:
+        </para>
+
+        <table pgwide='1' width='100%' id='tabdata' frame='all'><title>AIS columns</title>
+            <tgroup cols='3' align='left' colsep='1' rowsep='1'>
+                <colspec colwidth="1*" colname='c1'/>
+                <colspec colwidth="3*" colname='c2'/>
+                <tbody>
+                    <row> <entry>DateFreq</entry> <entry>Date</entry> <entry>Date of the entry, format: 31/12/2024</entry> </row>
+                    <row> <entry>TrancheHoraire15mn</entry> <entry>15 min time slot</entry> <entry>Beginning of the 15 minutes time slot that encompasses the time of that stop, format: 23:59:59</entry> </row>
+                    <row> <entry>Timeo</entry> <entry>Timeo</entry> <entry>id of the stop for that entry</entry> </row>
+                    <row> <entry>NomArret</entry> <entry>Stop Name</entry> <entry>Name of that stop</entry> </row>
+                    <row> <entry>NomCommune</entry> <entry>Town Name</entry> <entry>Name of the town that stop is in</entry> </row>
+                    <row> <entry>identifiantLigne</entry> <entry>Line id</entry> <entry>id of the line for that entry</entry> </row>
+                    <row> <entry>NomCourtLigne</entry> <entry>Line name</entry> <entry>Human readable name of that line</entry> </row>
+                    <row> <entry>Sens</entry> <entry>Direction</entry> <entry>Direction the bus is going in, 'indéterminé' if it’s not a bus</entry> </row>
+                    <row> <entry>Frequentation</entry> <entry>Frequentation</entry> <entry>An estimation of the real number of people that got on the bus at that stop, based on the number of recorded people and indicators like the fraud rate.</entry> </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+
+        <para>
+            First, we are going to link the MobilityDB extension to the database. To do so, you need to execute the following command in your SQL editor:
+            <programlisting>
+CREATE EXTENSION mobilitydb CASCADE;
+            </programlisting>
+            We also need to set the date style to the European style, as the data is in this format. To do so, you need to execute the following command:
+            <programlisting>
+SET datestyle TO DMY;
+            </programlisting>
+        </para>
+        <para>
+            Then, we need to create a table in the database to store this data. Here is how to create the first three columns of the table:
+            <programlisting>
+CREATE TABLE RennesInput(
+    DateFreq date,
+    TimeSlot15mn time,
+    Timeo integer,
+            </programlisting>
+            We let you create the rest of the table. See you next page to see the full table!
+            <!--TODO: add a link to the next page-->
+        </para>
+
+        <para>
+            Here is how to create the full table:
+            <programlisting>
+CREATE TABLE RennesInput(
+    DateFreq date,
+    TimeSlot15mn time,
+    Timeo integer,
+    StopName varchar(50),
+    TownName varchar(50),
+    LineID integer,
+    LineName varchar(50),
+    Direction varchar(20),
+    NbPersBoarding varchar(50)
+    );
+            </programlisting>
+            
+        </para>
+
+        </section>
+    </section>  
+    
+    
 </book>
