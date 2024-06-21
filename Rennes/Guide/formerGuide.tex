@@ -1,0 +1,107 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{listings} % Used for displaying codes
+\usepackage{hyperref}
+\usepackage{geometry}
+
+\bibliographystyle{unsrt}
+
+\lstset{
+    breaklines = true
+}
+
+
+\title{MobilityDB Rennes Workshop}
+\author{Alice Lombard\\ Raphaël Dubuget}
+\date{June 2024}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+This document is an example of how you can use MobilityDB in order to analyse data. It is directly inspired by the MobilityDB Workshop\cite{Workshop} already existing. We will throughout this document present different use cases of MobilityDB, which is an extension on PostGIS and PostgreSQL. Later on, we will also introduce new modules that will be presented in time.
+
+This workshop of sorts was made by two students from Rennes during an internship. We will, for our examples, use data from STAR which is the Rennes' public transport company. This data is protected by ODbL (Open Database License)\cite{SourceSTAR}.
+
+While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. If you need help concerning the functions of MobilityDB, please refer to the documentation\cite{docMoDB}. 
+
+\vspace{1cm}
+
+\section*{Chapter 0: Preparations}
+\addcontentsline{toc}{section}{Preparations}
+
+\subsection{Installing MobilityDB}
+
+For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
+
+If you run Ubuntu 22.04 (Jammy Jellyfish), you can simply execute the following in a terminal:
+
+\begin{lstlisting}[language = bash]
+    sudo apt update
+    sudo apt upgrade
+    # Nous aurons besoin des packages siu   vants:
+    sudo apt install curl ca-certificates gnupg
+    # Install the public key for the repository (if not done previously):
+    curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
+    # Create the repository configuration file:
+    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" >> /etc/apt/sources.list.d/postgresql.list'
+    sudo apt update
+    sudo apt upgrade
+    # Install the mobilitydb package with apt. It will automatically install the dependancies needed, PosgreSQL and PostGIS in particular.
+    sudo apt install postgresql-16-mobilitydb
+\end{lstlisting}
+
+
+
+
+
+\subsection{PgAdmin4: a PostgreSQL Editor}
+We are going to execute SQL commands. To do so, you can do it in a terminal or use any editor you like. If you do not have one, here is a guide to install PgAdmin4: \url{https://www.pgadmin.org/download/pgadmin-4-apt/}
+
+You could also download DataGrip\cite{DataGrip} from Jetbrains.
+
+\subsection{Starting database}
+In order to start the PostgreSQL database, you need to do as following, replacing username by your own username.
+\begin{lstlisting}[language = bash]
+sudo -u postgres createuser -s -i -d -r -l -w <username>
+sudo -u postgres createdb workshop
+sudo service postgresql start
+psql -U <username> -d workshop
+\end{lstlisting}
+
+\section{Chapter 1: Idea 1}
+\subsection{Importing the data}
+%describe data
+We have a CSV file called Freq\_Mars2024\_data.csv. It looks like the \hyperref[DataTable1]{Figure~\ref*{DataTable1}}.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 0.45]{img/Freq_Mars2024_dataTable.png}
+    \caption{Freq\_Mars2024\_data.csv table}
+    \label{DataTable1}
+\end{figure}
+%create table
+%import
+\subsection{Processing the data}
+%convert and clean data
+%plot a bus trajectory
+%use cumulativelength to know the total distance travelled
+\section{Chapter 2: Idea 2}
+% We could use detailed STAR data crossed with the location of each stop to check where there are the most buses/ --> heatmap
+\section{Chapter 3: Idea 3}
+% The capacity of the free use bike stations, to see the trips of the bike --> animated map
+\section{Chapter 4: Idea 4}
+\section{Chapter 5: Idea 5}
+
+\newpage
+\begin{flushleft}
+    \bibliography{BiblioEP.bib}
+    % Add References to the table of contents
+    \addcontentsline{toc}{section}{References}
+\end{flushleft}
+\end{document}
