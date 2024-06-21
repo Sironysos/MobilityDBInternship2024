@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<book xml:id="doc" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="fr">
-    <title>Utiliser DocBook pour créer un document multi-usages</title>
-    <chapter xml:id="ch1">
-        <title>Introduction</title>
-        <section xml:id="ch1se1">
-        <title>Qu'est ce que DocBook ?</title>
+<book xml:id="guide" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="fr">
+    <title>MobilityDB Rennes Workshop</title>
+    <info>
+        <author>
+            <personname>
+                <firstname>Alica</firstname>
+                <surname>Lombard</surname>
+            </personname>
+        </author>
+        <author>
+            <personname>
+                <firstname>Raphaël</firstname>
+                <surname>Dubuget</surname>
+            </personname>
+        </author>
+        <pubdate>June 2024</pubdate>
+    </info> 
+    <chapter xml:id="ch0">
+        <title>Chapter 0: Preparations</title>
+        <section xml:id="ch0se1">
+        <title>Installing MobilityDB</title>
         <para>
-            Un ensemble d'outils XML.
+            For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
+            If you run Ubuntu 22.04 (Jammy Jellyfish), you can simply execute the following in a terminal:
         </para>
         </section>
     </chapter>
