@@ -24,3 +24,14 @@ UPDATE RennesInput
 SET NbPersBoarding =  REPLACE(NbPersBoarding , ',', '.');
 UPDATE RennesInput 
 SET NbPersBoarding =  CAST(NbPersBoarding AS float);
+
+/* To test */
+ALTER TABLE RennesInput
+    ADD COLUMN NbPersBoarding_num float;
+UPDATE RennesInput
+    SET NbPersBoarding_num = CAST(NbPersBoarding AS float);
+/* or */
+UPDATE RennesInput
+    SET NbPersBoarding_num = to_float(NbPersBoarding);
+
+
