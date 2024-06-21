@@ -1,14 +1,19 @@
 #!/bin/bash
 
-# Create the new folder in the desired location
-mkdir -p /home/alice/Documents/Stage/MobilityDBInternship2024/Workshop/Chapter\ 3/stage
-
 # Unzip the files one by one
-for ((i=1; i<=24; i++))
+for ((i=0; i<=9; i++))
 do
     # Specify the path to the downloaded files
-    file="/home/alice/Downloads/file$i.zip"
+    file="/home/alice/Downloads/states_2020-06-01-0$i.csv.tar"
 
     # Unzip the file and move it to the new folder
-    unzip "$file" -d /home/alice/Documents/Stage/MobilityDBInternship2024/Workshop/Chapter\ 3/stage
+    tar -xf "$file" -C /home/alice/Documents/Stage/Opensky
+done
+for ((i=10; i<=23; i++))
+do
+    # Specify the path to the downloaded files
+    file="/home/alice/Downloads/states_2020-06-01-$i.csv.tar"
+
+    # Unzip the file and move it to the new folder
+    tar -xf "$file" -C /home/alice/Documents/Stage/Opensky
 done
