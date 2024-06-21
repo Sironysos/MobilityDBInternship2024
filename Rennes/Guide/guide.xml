@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book xml:id="doc" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="fr">
+    <title>Utiliser DocBook pour créer un document multi-usages</title>
+    <chapter xml:id="ch1">
+        <title>Introduction</title>
+        <section xml:id="ch1se1">
+        <title>Qu'est ce que DocBook ?</title>
+        <para>
+            Un ensemble d'outils XML.
+        </para>
+        </section>
+    </chapter>
+</book>
