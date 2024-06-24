@@ -19,7 +19,7 @@ CREATE TABLE RennesInput(
 COPY RennesInput(DateFreq, TimeSlot15mn, Timeo, StopName, TownName, LineID, LineName, Direction, NbPersBoarding)
 FROM '/home/alice/Documents/Stage/MobilityDBInternship2024/Rennes/data/Freq_Mars2024_data.csv' DELIMITER ';' CSV HEADER;
 
-psql -d workshop -c "\copy RennesInput(DateFreq, TimeSlot15mn, Timeo, StopName, TownName, LineID, LineName, Direction, NbPersBoarding) FROM '/home/alice/Documents/Stage/MobilityDBInternship2024/Rennes/data/Freq_Mars2024_data.csv' DELIMITER  ';' CSV HEADER;"
+--psql -d workshop -c "\copy RennesInput(DateFreq, TimeSlot15mn, Timeo, StopName, TownName, LineID, LineName, Direction, NbPersBoarding) FROM '/home/alice/Documents/Stage/MobilityDBInternship2024/Rennes/data/Freq_Mars2024_data.csv' DELIMITER  ';' CSV HEADER;"
 
 SELECT * FROM RennesInput LIMIT 30;
 
