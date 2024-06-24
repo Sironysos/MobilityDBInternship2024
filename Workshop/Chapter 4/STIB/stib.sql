@@ -1,6 +1,6 @@
 CREATE EXTENSION mobilityDB CASCADE;
 
-DROP TABLE agency CASCADE;
+DROP TABLE IF EXISTS agency CASCADE;
 CREATE TABLE agency (
   agency_id text DEFAULT '',
   agency_name text DEFAULT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE agency (
   CONSTRAINT agency_pkey PRIMARY KEY (agency_id)
 );
 
-DROP TABLE calendar CASCADE;
+DROP TABLE IF EXISTS calendar CASCADE;
 CREATE TABLE calendar (
   service_id text,
   monday int NOT NULL,
@@ -28,13 +28,13 @@ CREATE TABLE calendar (
 DROP INDEX IF EXISTS calendar_service_id;
 CREATE INDEX calendar_service_id ON calendar (service_id);
 
-DROP TABLE exception_types CASCADE;
+DROP TABLE IF EXISTS exception_types CASCADE;
 CREATE TABLE exception_types (
   exception_type int PRIMARY KEY,
   description text
 );
 
-DROP TABLE calendar_dates CASCADE;
+DROP TABLE IF EXISTS calendar_dates CASCADE;
 CREATE TABLE calendar_dates (
   service_id text,
   date date NOT NULL,
@@ -43,13 +43,13 @@ CREATE TABLE calendar_dates (
 DROP INDEX IF EXISTS calendar_dates_service_id;
 CREATE INDEX calendar_dates_dateidx ON calendar_dates (date);
 
-DROP TABLE route_types CASCADE;
+DROP TABLE IF EXISTS route_types CASCADE;
 CREATE TABLE route_types (
   route_type int PRIMARY KEY,
   description text
 );
 
-DROP TABLE routes CASCADE;
+DROP TABLE IF EXISTS routes CASCADE;
 CREATE TABLE routes (
   route_id text,
   route_short_name text DEFAULT '',
@@ -62,7 +62,7 @@ CREATE TABLE routes (
   CONSTRAINT routes_pkey PRIMARY KEY (route_id)
 );
 
-DROP TABLE shapes CASCADE;
+DROP TABLE IF EXISTS shapes CASCADE;
 CREATE TABLE shapes (
   shape_id text NOT NULL,
   shape_pt_lat double precision NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE shapes (
 DROP INDEX IF EXISTS shapes_shape_key;
 CREATE INDEX shapes_shape_key ON shapes (shape_id);
 
-DROP TABLE shape_geoms CASCADE;
+DROP TABLE IF EXISTS shape_geoms CASCADE;
 -- Create a table to store the shape geometries
 CREATE TABLE shape_geoms (
   shape_id text NOT NULL,
@@ -83,13 +83,13 @@ CREATE TABLE shape_geoms (
 DROP INDEX IF EXISTS shape_geoms_key;
 CREATE INDEX shape_geoms_key ON shapes (shape_id);
 
-DROP TABLE location_types CASCADE;
+DROP TABLE IF EXISTS location_types CASCADE;
 CREATE TABLE location_types (
   location_type int PRIMARY KEY,
   description text
 );
 
-DROP TABLE stops CASCADE;
+DROP TABLE IF EXISTS stops CASCADE;
 CREATE TABLE stops (
   stop_id text,
   stop_code text,
@@ -106,13 +106,13 @@ CREATE TABLE stops (
   CONSTRAINT stops_pkey PRIMARY KEY (stop_id)
 );
 
-DROP TABLE pickup_dropoff_types CASCADE;
+DROP TABLE IF EXISTS pickup_dropoff_types CASCADE;
 CREATE TABLE pickup_dropoff_types (
   type_id int PRIMARY KEY,
   description text
 );
 
-DROP TABLE stop_times CASCADE;
+DROP TABLE IF EXISTS stop_times CASCADE;
 CREATE TABLE stop_times (
   trip_id text NOT NULL,
   -- Check that casting to time interval works.
@@ -131,7 +131,7 @@ CREATE INDEX stop_times_key ON stop_times (trip_id, stop_id);
 CREATE INDEX arr_time_index ON stop_times (arrival_time);
 CREATE INDEX dep_time_index ON stop_times (departure_time);
 
-DROP TABLE trips CASCADE;
+DROP TABLE IF EXISTS trips CASCADE;
 CREATE TABLE trips (
   route_id text NOT NULL,
   service_id text NOT NULL,
