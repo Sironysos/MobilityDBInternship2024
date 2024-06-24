@@ -8,6 +8,8 @@ CREATE TABLE agency (
   agency_timezone text DEFAULT NULL,
   agency_lang text DEFAULT NULL,
   agency_phone text DEFAULT NULL,
+  agency_fare_url text DEFAULT NULL,
+  agency_email text DEFAULT NULL,
   CONSTRAINT agency_pkey PRIMARY KEY (agency_id)
 );
 
@@ -43,6 +45,31 @@ CREATE TABLE calendar_dates (
 DROP INDEX IF EXISTS calendar_dates_service_id;
 CREATE INDEX calendar_dates_dateidx ON calendar_dates (date);
 
+DROP TABLE IF EXISTS fare_attributes CASCADE;
+CREATE TABLE fare_attributes (
+  agency_id int,
+  fare_id int,
+  price double precision,
+  currency_type text,
+  payment_method int,
+  transfers text,
+  transfer_duration int,
+  CONSTRAINT fare_attributes_pkey PRIMARY KEY (fare_id)
+);
+
+DROP TABLE IF EXISTS feed_info CASCADE;
+CREATE TABLE feed_info (
+  feed_publisher_name text,
+  feed_publisher_url text,
+  feed_lang text,
+  feed_start_date date,
+  feed_end_date date,
+  feed_version int,
+  feed_contact_email text,
+  feed_contact_url text,
+  CONSTRAINT feed_info_pkey PRIMARY KEY (feed_publisher_name)
+);
+
 DROP TABLE IF EXISTS route_types CASCADE;
 CREATE TABLE route_types (
   route_type int PRIMARY KEY,
@@ -52,6 +79,7 @@ CREATE TABLE route_types (
 DROP TABLE IF EXISTS routes CASCADE;
 CREATE TABLE routes (
   route_id text,
+  agency_id integer,
   route_short_name text DEFAULT '',
   route_long_name text DEFAULT '',
   route_desc text DEFAULT '',
@@ -59,6 +87,7 @@ CREATE TABLE routes (
   route_url text,
   route_color text,
   route_text_color text,
+  route_sort_order integer,
   CONSTRAINT routes_pkey PRIMARY KEY (route_id)
 );
 
@@ -101,8 +130,9 @@ CREATE TABLE stops (
   stop_url text,
   location_type integer  REFERENCES location_types(location_type),
   parent_station integer,
-  stop_geom geometry('POINT', 4326),
+  wheelchair_boarding int,
   platform_code text DEFAULT NULL,
+  stop_timezone text DEFAULT NULL,
   CONSTRAINT stops_pkey PRIMARY KEY (stop_id)
 );
 
@@ -120,8 +150,11 @@ CREATE TABLE stop_times (
   departure_time interval CHECK (departure_time::interval = departure_time::interval),
   stop_id text,
   stop_sequence int NOT NULL,
+  stop_headsign text,
   pickup_type int REFERENCES pickup_dropoff_types(type_id),
   drop_off_type int REFERENCES pickup_dropoff_types(type_id),
+  shape_dist_traveled float,
+  timepoint int,
   CONSTRAINT stop_times_pkey PRIMARY KEY (trip_id, stop_sequence)
 );
 DROP INDEX IF EXISTS stop_times_key;
@@ -137,9 +170,12 @@ CREATE TABLE trips (
   service_id text NOT NULL,
   trip_id text NOT NULL,
   trip_headsign text,
+  trip_short_name text,
   direction_id int,
   block_id text,
   shape_id text,
+  wheelchair_accessible int,
+  bikes_allowed int,
   CONSTRAINT trips_pkey PRIMARY KEY (trip_id)
 );
 DROP INDEX IF EXISTS trips_trip_id;
