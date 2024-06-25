@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="guide.css"?>
 <book xml:id="guide" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="en">
     <title>MobilityDB Rennes Workshop</title>
     <info>
@@ -39,14 +40,14 @@
 
     <section xml:id="chapter0">
         <title>Chapitre 0: Preparations</title>
-        <section xml:id="part1">
+        <section xml:id="part01">
         <title>Installing MobilityDB</title>
         <para>
             For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
             <!--TODO : guide for if not on Jammy (at least the link to the packages)-->
 
             If you run Ubuntu 22.04 (Jammy Jellyfish), you can simply execute the following in a terminal:
-            <programlisting>
+            <programlisting language="bash" xml:space="preserve">
 sudo apt update
 sudo apt
 # We will need the foloowing packages:
@@ -61,11 +62,10 @@ sudo apt update
 sudo apt upgrade
 
 # Install the mobilitydb package with apt. It will automatically install the dependancies needed, PosgreSQL and PostGIS in particular.
-sudo apt install postgresql-16-mobilitydb
-            </programlisting>
+sudo apt install postgresql-16-mobilitydb</programlisting>
         </para>
         </section>
-        <section xml:id="part2">
+        <section xml:id="part02">
         <title>PgAdmin4: a PostgreSQL Editor</title>
 
         <para>
@@ -76,24 +76,23 @@ sudo apt install postgresql-16-mobilitydb
             You could also download <ulink url=" https://www.jetbrains.com/datagrip/">DataGrip</ulink> from Jetbrains. We didn’t use it in this workshop, but we’re sure it’s a good tool.
         </para>
         </section>
-        <section xml:id="part3">
+        <section xml:id="part03">
         <title>Starting the database</title>
         <para>
             In order to start the PostgreSQL database, you need to do as following, replacing username by your
             own username.
-            <programlisting>
+            <programlisting language="bash" xml:space="preserve">
 sudo -u postgres createuser -s -i -d -r -l -w &lt;username&gt;
 sudo -u postgres createdb workshop
 sudo service postgresql start
-psql -U &lt;username&gt; -d workshop
-            </programlisting>
+psql -U &lt;username&gt; -d workshop</programlisting>
         </para>
         </section>
     </section>
     <section xml:id="chapter1">
         <title>Chapitre 1: Introduction to MobilityDB</title>
 
-        <section xml:id="part1">
+        <section xml:id="part11">
         <title>Importing the data</title>
 
         <para>
@@ -139,29 +138,26 @@ psql -U &lt;username&gt; -d workshop
 
         <para>
             First, we are going to link the MobilityDB extension to the database. To do so, you need to execute the following command in your SQL editor:
-            <programlisting>
-CREATE EXTENSION mobilitydb CASCADE;
-            </programlisting>
+            <programlisting language="sql" xml:space="preserve">
+CREATE EXTENSION mobilitydb CASCADE;</programlisting>
             We also need to set the date style to the European style, as the data is in this format. To do so, you need to execute the following command:
-            <programlisting>
-SET datestyle TO DMY;
-            </programlisting>
+            <programlisting language="sql" xml:space="preserve">
+SET datestyle TO DMY;</programlisting>
         </para>
         <para>
             Then, we need to create a table in the database to store this data. Here is how to create the first three columns of the table:
-            <programlisting>
+            <programlisting language="sql" xml:space="preserve">
 CREATE TABLE RennesInput(
     DateFreq date,
     TimeSlot15mn time,
-    Timeo integer,
-            </programlisting>
+    Timeo integer,</programlisting>
             We let you create the rest of the table. See you next page to see the full table!
             <!--TODO: add a link to the next page-->
         </para>
 
         <para>
             Here is how to create the full table:
-            <programlisting>
+            <programlisting language="sql" xml:space="preserve">
 CREATE TABLE RennesInput(
     DateFreq date,
     TimeSlot15mn time,
@@ -172,8 +168,7 @@ CREATE TABLE RennesInput(
     LineName varchar(50),
     Direction varchar(20),
     NbPersBoarding varchar(50)
-    );
-            </programlisting>
+    );</programlisting>
             
         </para>
 
@@ -181,7 +176,7 @@ CREATE TABLE RennesInput(
     </section>  
     <section xml:id="chapter2">
         <title>Chapitre 2: GTFS data</title>
-        <section xml:id="part1">
+        <section xml:id="part21">
             <title>Introduction</title>
             <para>
                 In this chapter, we are going to use GTFS data. GTFS (General Transit Feed Specification) is a standard format for public transportation schedules and associated geographic information. 
@@ -230,14 +225,17 @@ CREATE TABLE RennesInput(
                 We are not going to use the <!--TODO-->xxx and <!--TODO-->xxx files because it is not relevant for our workshop.
             </para>
         </section>
-        <section xml:id="part2">
+        <section xml:id="part22">
             <title>Importing the data</title>
-            <literallayout>First thing you need to do is create a MobilityDB extension, just like in the <phrase xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="#chapter1">Chapter 1</phrase>.
-To do so, follow this command:
-<programlisting>CREATE EXTENSION mobilitydb CASCADE;</programlisting></literallayout>
+            <para>
+                First thing you need to do is create a MobilityDB extension, just like in the <phrase xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="#chapter1">Chapter 1</phrase>.<sbr/>
+                To do so, follow this command:
+                <programlisting language="sql" xml:space="preserve">
+CREATE EXTENSION mobilitydb CASCADE;</programlisting>
+            </para>
             <para>
                 Now, we need to import the GTFS data into the database, you need to create a table for each file. Here is how to create the table for the agengency.txt file:
-                <programlisting>
+                <programlisting language="sql" xml:space="preserve">
 CREATE TABLE agency (
   agency_id text DEFAULT '',
   agency_name text DEFAULT NULL,
@@ -248,11 +246,208 @@ CREATE TABLE agency (
   agency_fare_url text DEFAULT NULL,
   agency_email text DEFAULT NULL,
   CONSTRAINT agency_pkey PRIMARY KEY (agency_id)
-);
-                </programlisting>
+);</programlisting>
             </para>
             <para>
-                We let you create the rest of the tables. See you next page to see all the tables!
+                We let you create the rest of the tables. See you next page to see all the tables!<!-- TODO-->
+            </para>
+            <para>
+                Here is how to create the full tables:
+                <programlisting language="sql" xml:space="preserve">
+DROP TABLE IF EXISTS agency CASCADE;
+CREATE TABLE agency (
+    agency_id text DEFAULT '',
+    agency_name text DEFAULT NULL,
+    agency_url text DEFAULT NULL,
+    agency_timezone text DEFAULT NULL,
+    agency_lang text DEFAULT NULL,
+    agency_phone text DEFAULT NULL,
+    agency_fare_url text DEFAULT NULL,
+    agency_email text DEFAULT NULL,
+    CONSTRAINT agency_pkey PRIMARY KEY (agency_id)
+);
+
+DROP TABLE IF EXISTS calendar CASCADE;
+CREATE TABLE calendar (
+    service_id text,
+    monday int NOT NULL,
+    tuesday int NOT NULL,
+    wednesday int NOT NULL,
+    thursday int NOT NULL,
+    friday int NOT NULL,
+    saturday int NOT NULL,
+    sunday int NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    CONSTRAINT calendar_pkey PRIMARY KEY (service_id)
+);
+DROP INDEX IF EXISTS calendar_service_id;
+CREATE INDEX calendar_service_id ON calendar (service_id);
+
+DROP TABLE IF EXISTS exception_types CASCADE;
+CREATE TABLE exception_types (
+    exception_type int PRIMARY KEY,
+    description text
+);
+
+DROP TABLE IF EXISTS calendar_dates CASCADE;
+CREATE TABLE calendar_dates (
+    service_id text,
+    date date NOT NULL,
+    exception_type int REFERENCES exception_types(exception_type)
+);
+DROP INDEX IF EXISTS calendar_dates_service_id;
+CREATE INDEX calendar_dates_dateidx ON calendar_dates (date);
+
+DROP TABLE IF EXISTS fare_attributes CASCADE;
+CREATE TABLE fare_attributes (
+    agency_id int,
+    fare_id int,
+    price double precision CHECK (price >= 0),
+    currency_type text,
+    payment_method int,
+    transfers text,
+    transfer_duration int,
+    CONSTRAINT fare_attributes_pkey PRIMARY KEY (fare_id)
+);
+
+DROP TABLE IF EXISTS feed_info CASCADE;
+CREATE TABLE feed_info (
+    feed_publisher_name text,
+    feed_publisher_url text,
+    feed_lang text,
+    feed_start_date date,
+    feed_end_date date,
+    feed_version int,
+    feed_contact_email text,
+    feed_contact_url text,
+    CONSTRAINT feed_info_pkey PRIMARY KEY (feed_publisher_name)
+);
+
+DROP TABLE IF EXISTS route_types CASCADE;
+CREATE TABLE route_types (
+    route_type int PRIMARY KEY,
+    description text
+);
+
+DROP TABLE IF EXISTS routes CASCADE;
+CREATE TABLE routes (
+    route_id text,
+    agency_id integer,
+    route_short_name text DEFAULT '',
+    route_long_name text DEFAULT '',
+    route_desc text DEFAULT '',
+    route_type int REFERENCES route_types(route_type),
+    route_url text DEFAULT NULL,
+    route_color text,
+    route_text_color text,
+    route_sort_order integer,
+    CONSTRAINT routes_pkey PRIMARY KEY (route_id)
+);
+
+DROP TABLE IF EXISTS shapes CASCADE;
+CREATE TABLE shapes (
+    shape_id text NOT NULL,
+    shape_pt_lat double precision NOT NULL,
+    shape_pt_lon double precision NOT NULL,
+    shape_pt_sequence int NOT NULL,
+    shape_dist_traveled float
+);
+DROP INDEX IF EXISTS shapes_shape_key;
+CREATE INDEX shapes_shape_key ON shapes (shape_id);
+
+DROP TABLE IF EXISTS shape_geoms CASCADE;
+-- Create a table to store the shape geometries
+CREATE TABLE shape_geoms (
+    shape_id text NOT NULL,
+    shape_geom geometry('LINESTRING', 4326),
+    CONSTRAINT shape_geom_pkey PRIMARY KEY (shape_id)
+);
+DROP INDEX IF EXISTS shape_geoms_key;
+CREATE INDEX shape_geoms_key ON shapes (shape_id);
+
+DROP TABLE IF EXISTS location_types CASCADE;
+CREATE TABLE location_types (
+    location_type int PRIMARY KEY,
+    description text
+);
+
+DROP TABLE IF EXISTS stops CASCADE;
+CREATE TABLE stops (
+    stop_id text,
+    stop_code text,
+    stop_name text DEFAULT NULL,
+    stop_desc text DEFAULT NULL,
+    stop_lat double precision,
+    stop_lon double precision,
+    zone_id text,
+    stop_url text,
+    location_type integer REFERENCES location_types(location_type),
+    parent_station integer,
+    wheelchair_boarding int,
+    platform_code text DEFAULT NULL,
+    stop_timezone text DEFAULT NULL,
+    CONSTRAINT stops_pkey PRIMARY KEY (stop_id)
+);
+
+DROP TABLE IF EXISTS pickup_dropoff_types CASCADE;
+CREATE TABLE pickup_dropoff_types (
+    type_id int PRIMARY KEY,
+    description text
+);
+
+DROP TABLE IF EXISTS stop_times CASCADE;
+CREATE TABLE stop_times (
+    trip_id text NOT NULL,
+    -- Check that casting to time interval works.
+    arrival_time interval CHECK (arrival_time::interval = arrival_time::interval),
+    departure_time interval CHECK (departure_time::interval = departure_time::interval),
+    stop_id text,
+    stop_sequence int NOT NULL,
+    stop_headsign text,
+    pickup_type int REFERENCES pickup_dropoff_types(type_id),
+    drop_off_type int REFERENCES pickup_dropoff_types(type_id),
+    shape_dist_traveled float,
+    timepoint int,
+    CONSTRAINT stop_times_pkey PRIMARY KEY (trip_id, stop_sequence)
+);
+DROP INDEX IF EXISTS stop_times_key;
+DROP INDEX IF EXISTS arr_time_index;
+DROP INDEX IF EXISTS dep_time_index;
+CREATE INDEX stop_times_key ON stop_times (trip_id, stop_id);
+CREATE INDEX arr_time_index ON stop_times (arrival_time);
+CREATE INDEX dep_time_index ON stop_times (departure_time);
+
+DROP TABLE IF EXISTS trips CASCADE;
+CREATE TABLE trips (
+    route_id text NOT NULL,
+    service_id text NOT NULL,
+    trip_id text NOT NULL,
+    trip_headsign text,
+    trip_short_name text,
+    direction_id int,
+    block_id text,
+    shape_id text,
+    wheelchair_accessible int,
+    bikes_allowed int,
+    CONSTRAINT trips_pkey PRIMARY KEY (trip_id)
+);
+DROP INDEX IF EXISTS trips_trip_id;
+CREATE INDEX trips_trip_id ON trips (trip_id);</programlisting>
+            </para>
+            <para>
+                This might seem barbaric at first sight, but don't worry, we are going to explain everything.<sbr/>
+                The "DROP TABLE IF EXISTS" command is used to delete the table if it already exists. This is useful if you want to recreate the table.<sbr/>
+                For each table, we created as many columns as there are in the file. We also created a primary key for each table.<sbr/>
+                For some of them, we created an index to speed up the queries.<sbr/>
+                We also created exception_types, route_types, location_types and pickup_dropoff_types tables. These tables are used to store the description of the types used in the other tables, so taht it would be easier to understand instead of 0, 1 and 2.<sbr/>
+                
+                <!-- TODO-->
+                <!-- CREATE TABLE shape_geoms (
+                    shape_id text NOT NULL,
+                    shape_geom geometry('LINESTRING', 4326),
+                    CONSTRAINT shape_geom_pkey PRIMARY KEY (shape_id)
+                    );-->
             </para>
         </section>
     </section>
