@@ -49,7 +49,7 @@ DROP TABLE IF EXISTS fare_attributes CASCADE;
 CREATE TABLE fare_attributes (
   agency_id int,
   fare_id int,
-  price double precision,
+  price double precision CHECK (price >= 0),
   currency_type text,
   payment_method int,
   transfers text,
@@ -83,8 +83,8 @@ CREATE TABLE routes (
   route_short_name text DEFAULT '',
   route_long_name text DEFAULT '',
   route_desc text DEFAULT '',
-  route_type int,
-  route_url text,
+  route_type int REFERENCES route_types(route_type),
+  route_url text DEFAULT NULL,
   route_color text,
   route_text_color text,
   route_sort_order integer,
@@ -128,7 +128,7 @@ CREATE TABLE stops (
   stop_lon double precision,
   zone_id text,
   stop_url text,
-  location_type integer  REFERENCES location_types(location_type),
+  location_type integer REFERENCES location_types(location_type),
   parent_station integer,
   wheelchair_boarding int,
   platform_code text DEFAULT NULL,
@@ -188,13 +188,31 @@ INSERT INTO exception_types (exception_type, description) VALUES
 INSERT INTO location_types(location_type, description) VALUES
 (0,'stop'),
 (1,'station'),
-(2,'station entrance');
+(2,'station entrance'),
+(3,'generic node'),
+(4,'boarding area');
 
 INSERT INTO pickup_dropoff_types (type_id, description) VALUES
 (0,'Regularly Scheduled'),
 (1,'Not available'),
 (2,'Phone arrangement only'),
 (3,'Driver arrangement only');
+
+INSERT INTO route_types (route_type, description) VALUES
+(0,'Tram, Streetcar, Light rail'),
+(1,'Subway, Metro'),
+(2,'Rail'),
+(3,'Bus'),
+(4,'Ferry'),
+(5,'Cable tram'),
+(6,'Aerial lift, Suspended cable car'),
+(7,'Funicular'),
+(11,'Trolleybus'),
+(12,'Monorail');
+
+
+/* Here import the GTFS data by running copyRaph.sh */
+
 
 INSERT INTO shape_geoms
 SELECT shape_id, ST_MakeLine(array_agg(
