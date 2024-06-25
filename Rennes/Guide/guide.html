@@ -23,9 +23,9 @@
     </div>
 
 
-    <div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="ch0"></a>Chapitre 0: Preparations</h2></div></div></div>
+    <div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="chapter0"></a>Chapitre 0: Preparations</h2></div></div></div>
         
-        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="ch0se1"></a>Installing MobilityDB</h3></div></div></div>
+        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part1"></a>Installing MobilityDB</h3></div></div></div>
         
         <p>
             For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
@@ -51,7 +51,7 @@ sudo apt install postgresql-16-mobilitydb
             </pre><p>
         </p>
         </div>
-        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="ch0se2"></a>PgAdmin4: a PostgreSQL Editor</h3></div></div></div>
+        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part2"></a>PgAdmin4: a PostgreSQL Editor</h3></div></div></div>
         
 
         <p>
@@ -62,7 +62,7 @@ sudo apt install postgresql-16-mobilitydb
             You could also download <a class="ulink" href=" https://www.jetbrains.com/datagrip/" target="_top">DataGrip</a> from Jetbrains. We didn’t use it in this workshop, but we’re sure it’s a good tool.
         </p>
         </div>
-        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idp1"></a>Starting the database</h3></div></div></div>
+        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part3"></a>Starting the database</h3></div></div></div>
         
         <p>
             In order to start the PostgreSQL database, you need to do as following, replacing username by your
@@ -76,14 +76,14 @@ psql -U &lt;username&gt; -d workshop
         </p>
         </div>
     </div>
-    <div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="ch1"></a>Chapitre 1: Introduction to MobilityDB</h2></div></div></div>
+    <div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="chapter1"></a>Chapitre 1: Introduction to MobilityDB</h2></div></div></div>
         
 
-        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="ch1se1"></a>Importing the data</h3></div></div></div>
+        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part1"></a>Importing the data</h3></div></div></div>
         
 
         <p>
-            You can find in the repository for this workshop a CSV file called Freq_Mars2024 data.csv. It looks like the Figure 1.
+            You can find in the repository for this workshop a CSV file called Freq_Mars2024 data.csv. It should look like the Figure 1.
         </p>       
         <div class="figure-float"><div class="figure"><a id="imgpoints"></a><p class="title"><strong>Figure 1. First few lines of the table</strong></p><div class="figure-contents">
             
@@ -147,6 +147,70 @@ CREATE TABLE RennesInput(
 
         </div>
     </div>  
-    
-    
+    <div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="chapter2"></a>Chapitre 2: GTFS data</h2></div></div></div>
+        
+        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part1"></a>Introduction</h3></div></div></div>
+            
+            <p>
+                In this chapter, we are going to use GTFS data. GTFS (General Transit Feed Specification) is a standard format for public transportation schedules and associated geographic information. 
+                It is used by many public transportation companies to share their data.
+            </p>
+            <p>
+                We are going to use the GTFS data from STAR, the public transportation company of Rennes. You can find the data <a class="ulink" href="https://transport.data.gouv.fr/datasets/versions-des-horaires-theoriques-des-lignes-de-bus-et-de-metro-du-reseau-star-au-format-gtfs#dataset-resources" target="_top">here</a>, but it will give you the updated data. The exact data we are using in this workshop can be found in the repo, in the GTFS folder.
+            </p>
+            <p>
+                The GTFS data is composed of several files, such as:
+                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+                        agency.txt: the agency that operates the transportation service;
+                    </li><li class="listitem">
+                        calendar_dates.txt: exceptions for the service;
+                    </li><li class="listitem">
+                        calendar.txt: the dates for the service;
+                    </li><li class="listitem">
+                        fare_attributes.txt: the fare information;
+                    </li><li class="listitem">
+                        feed_info.txt: the feed information;
+                    </li><li class="listitem">
+                        routes.txt: the routes of the transportation service;
+                    </li><li class="listitem">
+                        shapes.txt: the shapes of the routes;
+                    </li><li class="listitem">
+                        stop_times.txt: the times of the stops;
+                    </li><li class="listitem">
+                        stops.txt: the stops of the transportation service;
+                    </li><li class="listitem">
+                        trips.txt: the trips of the transportation service.
+                    </li></ul></div><p>
+                You can find more information about the GTFS data <a class="ulink" href="https://gtfs.org/schedule/reference" target="_top">here</a>.
+            </p>
+            <p>
+                We are not going to use the xxx and xxx files because it is not relevant for our workshop.
+            </p>
+        </div>
+        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part2"></a>Importing the data</h3></div></div></div>
+            
+            <div class="literallayout"><p>First thing you need to do is create a MobilityDB extension, just like in the <span class="phrase"><a class="phrase" href="#chapter1" title="Chapitre 1: Introduction to MobilityDB">Chapter 1</a></span>.<br />
+To do so, follow this command:<br />
+<pre class="programlisting">CREATE EXTENSION mobilitydb CASCADE;</pre></p></div>
+            <p>
+                Now, we need to import the GTFS data into the database, you need to create a table for each file. Here is how to create the table for the agengency.txt file:
+                </p><pre class="programlisting">
+CREATE TABLE agency (
+  agency_id text DEFAULT '',
+  agency_name text DEFAULT NULL,
+  agency_url text DEFAULT NULL,
+  agency_timezone text DEFAULT NULL,
+  agency_lang text DEFAULT NULL,
+  agency_phone text DEFAULT NULL,
+  agency_fare_url text DEFAULT NULL,
+  agency_email text DEFAULT NULL,
+  CONSTRAINT agency_pkey PRIMARY KEY (agency_id)
+);
+                </pre><p>
+            </p>
+            <p>
+                We let you create the rest of the tables. See you next page to see all the tables!
+            </p>
+        </div>
+    </div>
 </div></body></html>
