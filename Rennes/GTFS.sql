@@ -64,7 +64,7 @@ CREATE TABLE feed_info (
   feed_lang text,
   feed_start_date date,
   feed_end_date date,
-  feed_version int,
+  feed_version bigint,
   feed_contact_email text,
   feed_contact_url text,
   CONSTRAINT feed_info_pkey PRIMARY KEY (feed_publisher_name)
@@ -129,7 +129,7 @@ CREATE TABLE stops (
   zone_id text,
   stop_url text,
   location_type integer REFERENCES location_types(location_type),
-  parent_station integer,
+  parent_station text DEFAULT NULL,
   wheelchair_boarding int,
   platform_code text DEFAULT NULL,
   stop_timezone text DEFAULT NULL,
