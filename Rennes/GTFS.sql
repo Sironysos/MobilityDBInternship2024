@@ -212,7 +212,7 @@ INSERT INTO route_types (route_type, description) VALUES
 (12,'Monorail');
 
 
-/* Here import the GTFS data by running copyRaph.sh */
+/* Here import the GTFS data by running copyRaph.sh TODO*/
 
 
 INSERT INTO shape_geoms

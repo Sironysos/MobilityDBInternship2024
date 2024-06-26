@@ -249,7 +249,8 @@ CREATE TABLE agency (
 );</programlisting>
             </para>
             <para>
-                We let you create the rest of the tables. See you next page to see all the tables!<!-- TODO-->
+                We let you create the rest of the tables. See you next page to see all the tables!
+                <!--TODO: add a link to the next page-->
             </para>
             <para>
                 Here is how to create the full tables:
@@ -440,7 +441,7 @@ CREATE INDEX trips_trip_id ON trips (trip_id);</programlisting>
                 The "DROP TABLE IF EXISTS" command is used to delete the table if it already exists. This is useful if you want to recreate the table.<sbr/>
                 For each table, we created as many columns as there are in the file. We also created a primary key for each table.<sbr/>
                 For some of them, we created an index to speed up the queries.<sbr/>
-                We also created exception_types, route_types, location_types and pickup_dropoff_types tables. These tables are used to store the description of the types used in the other tables, so taht it would be easier to understand instead of 0, 1 and 2.<sbr/>
+                We also created exception_types, route_types, location_types and pickup_dropoff_types tables. These tables are used to store the description of the types used in the other tables, so that it would be easier to understand instead of 0, 1 and 2.<sbr/>
                 
                 <!-- TODO-->
                 <!-- CREATE TABLE shape_geoms (
@@ -448,6 +449,43 @@ CREATE INDEX trips_trip_id ON trips (trip_id);</programlisting>
                     shape_geom geometry('LINESTRING', 4326),
                     CONSTRAINT shape_geom_pkey PRIMARY KEY (shape_id)
                     );-->
+            </para>
+            <para>
+                In these tables, we need to insert the description of the types. Here is how to do it for the table exception_types:
+                <programlisting language="sql" xml:space="preserve">
+INSERT INTO exception_types (exception_type, description) VALUES
+    (1, 'service has been added'),
+    (2, 'service has been removed');</programlisting>
+                We let you insert the description of the types for the other tables. Remember that you can find the description of the types in the <ulink url="https://gtfs.org/schedule/reference">GTFS reference</ulink>.
+                <!--TODO: add a link to the next page-->
+            </para>
+            <para>
+                Here is how to insert the description of the types for the other tables:
+                <programlisting language="sql" xml:space="preserve">
+INSERT INTO location_types(location_type, description) VALUES
+    (0,'stop'),
+    (1,'station'),
+    (2,'station entrance'),
+    (3,'generic node'),
+    (4,'boarding area');
+
+INSERT INTO pickup_dropoff_types (type_id, description) VALUES
+    (0,'Regularly Scheduled'),
+    (1,'Not available'),
+    (2,'Phone arrangement only'),
+    (3,'Driver arrangement only');
+
+INSERT INTO route_types (route_type, description) VALUES
+    (0,'Tram, Streetcar, Light rail'),
+    (1,'Subway, Metro'),
+    (2,'Rail'),
+    (3,'Bus'),
+    (4,'Ferry'),
+    (5,'Cable tram'),
+    (6,'Aerial lift, Suspended cable car'),
+    (7,'Funicular'),
+    (11,'Trolleybus'),
+    (12,'Monorail');</programlisting>
             </para>
         </section>
     </section>
