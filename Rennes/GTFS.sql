@@ -131,6 +131,7 @@ CREATE TABLE stops (
   location_type integer REFERENCES location_types(location_type),
   parent_station text DEFAULT NULL,
   wheelchair_boarding int,
+  stop_geom geometry('POINT', 4326),
   platform_code text DEFAULT NULL,
   stop_timezone text DEFAULT NULL,
   CONSTRAINT stops_pkey PRIMARY KEY (stop_id)
@@ -382,7 +383,7 @@ CREATE TABLE trips_mdb (
 );
 
 INSERT INTO trips_mdb(trip_id, service_id, route_id, date, trip)
-SELECT trip_id, service_id, route_id, date, tgeompoint_seq(array_agg(tgeompoint_inst(point_geom, t) ORDER BY T))
+SELECT trip_id, service_id, route_id, date, tgeompointSeq(array_agg(tgeompoint(point_geom, t) ORDER BY T))
 FROM trips_input
 GROUP BY trip_id, service_id, route_id, date;
 
