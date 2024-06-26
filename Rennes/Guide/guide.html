@@ -439,6 +439,13 @@ INSERT INTO route_types (route_type, description) VALUES
     (11,'Trolleybus'),
     (12,'Monorail');</pre><p>
             </p>
+            <p>
+                So now we have the exception_types, location_types, pickup_dropoff_types, and route_types tables filled with the description of the types. We can now insert the data from the GTFS files into the tables.<br />
+                To do so, you need to use the COPY command. Here is how to do it for the agency.txt file:
+                </p><pre class="programlisting">
+COPY agency FROM '/path/to/agency.txt' DELIMITER ',' CSV HEADER;</pre><p>
+                Of course, you need to replace '/path/to/agency.txt' by the path to the file on your computer.
+            </p>
         </div>
     </div>
 </div></body></html>
