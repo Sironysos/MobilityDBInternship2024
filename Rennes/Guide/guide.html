@@ -397,10 +397,8 @@ CREATE INDEX trips_trip_id ON trips (trip_id);</pre><p>
                 The "DROP TABLE IF EXISTS" command is used to delete the table if it already exists. This is useful if you want to recreate the table.<br />
                 For each table, we created as many columns as there are in the file. We also created a primary key for each table.<br />
                 For some of them, we created an index to speed up the queries.<br />
-                We also created exception_types, route_types, location_types and pickup_dropoff_types tables. These tables are used to store the description of the types used in the other tables, so that it would be easier to understand instead of 0, 1 and 2.<br />
-                
-                
-                
+                We also created exception_types, route_types, location_types and pickup_dropoff_types tables. These tables are used to store the description of the types used in the other tables, so that it would be easier to understand instead of 0, 1 and 2.<br /><br />
+                Please note that the shape_geoms table will be explained later.
             </p>
             <p>
                 In these tables, we need to insert the description of the types. Here is how to do it for the table exception_types:
@@ -472,7 +470,48 @@ COPY trips(route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_i
                 You can also find the copyGTFS.sh script that indicates how to copy teh data in the tables using command line in the repository.
                 If you do so, please make sure that your database is nammed "star", or modify your copy of the script.
             </p>
-
+            <p>
+                Now that we have all the tables filled with data, we can move on to the next part.
+            </p>
+        
+        </div>
+        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part23"></a>
+                Creating the shapes of the routes
+            </h3></div></div></div>
+            
+            <p>
+            In this part, we are going to make the shapes of the routes. <br />
+            To do so, we are going to use the shape_geoms table we created earlier. This table is used to store the shape geometries of the routes. We are going to use the shapes.txt file to create the shapes of the routes.
+            </p>
+            <pre class="programlisting">
+INSERT INTO shape_geoms
+SELECT 
+<p class="custom-color-1">    shape_id, </p>
+<p class="custom-color-2">    ST_MakeLine(array_agg(</p>
+<p class="custom-color-3">    ST_SetSRID(</p>        
+            ST_MakePoint(shape_pt_lon, shape_pt_lat),
+            4326) 
+        ORDER BY shape_pt_sequence)
+    )
+FROM shapes
+GROUP BY shape_id;</pre>
+            <p>
+                We are filling the shape_geoms table with two attributes.<br />
+                The first one is the identifier of the shape, which is taken from the shapes table.<br />
+                The second one is the geometry of the shape, which is created in three steps:<br />
+                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+                        We create a point for each shape_pt_lon and shape_pt_lat in the shapes table, using the ST_MakePoint function. <br /><br />
+                    </li><li class="listitem">
+                        We set the SRID of the point to 4326 because it is the standard we are using (see more <a class="ulink" href="https://en.wikipedia.org/wiki/Spatial_reference_system" target="_top">here</a>). We use the ST_Set SRID function to do it.<br /><br />
+                    </li><li class="listitem">
+                        We create a line with all the points we created, using the ST_MakeLine function. We use the array_agg function to aggregate all the points in an array.<br /><br />
+                    </li></ul></div><p>
+                We also ordered the points by shape_pt_sequence to make sure the line is in the right order. <br />
+                Finally, we group the lines by shape_id to make sure we have only one line per shape.
+            </p>
+            <p>
+                Now that we have the shapes of the routes, we can move on to the next part.
+            </p>
         </div>
     </div>
 </div></body></html>

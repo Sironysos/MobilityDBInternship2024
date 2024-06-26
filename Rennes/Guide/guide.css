@@ -427,3 +427,15 @@ code.prompt {
 tr.question td {
 	vertical-align: bottom ;
 }
+
+.custom-color-1 {
+	color: tomato;
+}
+
+.custom-color-2 {
+	color: chartreuse;
+}
+
+.custom-color-3 {
+	color: steelblue;
+}
