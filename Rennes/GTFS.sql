@@ -305,6 +305,7 @@ WITH temp AS (
 )
 SELECT * FROM temp WHERE stop_sequence2 IS NOT null;
 
+-- C’est là que ça plante
 UPDATE trip_segs t
 SET seg_geom = ST_LineSubstring(g.shape_geom, perc1, perc2)
 FROM shape_geoms g
