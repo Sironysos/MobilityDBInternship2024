@@ -10,7 +10,7 @@ fi
 # Use the first argument as the base path
 BASEPATH=$1
 
-psql -d star -c "\copy agency(agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_phone, agency_fare_url, agency_email) FROM '${BASEPATH}/agency.txt DELIMITER ',' CSV HEADER;"
+psql -d star -c "\copy agency(agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_phone, agency_fare_url, agency_email) FROM '${BASEPATH}/agency.txt' DELIMITER ',' CSV HEADER;"
 
 psql -d star -c "\copy calendar(service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday, start_date,end_date) FROM '${BASEPATH}/calendar.txt' DELIMITER ',' CSV HEADER;"
 

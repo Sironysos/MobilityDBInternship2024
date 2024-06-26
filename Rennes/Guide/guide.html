@@ -443,9 +443,36 @@ INSERT INTO route_types (route_type, description) VALUES
                 So now we have the exception_types, location_types, pickup_dropoff_types, and route_types tables filled with the description of the types. We can now insert the data from the GTFS files into the tables.<br />
                 To do so, you need to use the COPY command. Here is how to do it for the agency.txt file:
                 </p><pre class="programlisting">
-COPY agency FROM '/path/to/agency.txt' DELIMITER ',' CSV HEADER;</pre><p>
-                Of course, you need to replace '/path/to/agency.txt' by the path to the file on your computer.
+COPY agency(agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_phone, agency_fare_url, agency_email) FROM '/path/to/agency.txt' DELIMITER ',' CSV HEADER;</pre><p>
+                Of course, you need to replace '/path/to/agency.txt' by the path to the file on your computer.<br />
+                This SQL command could lead to an error like this:
+                </p><pre class="programlisting">
+ERROR:  could not open file "/path/to/states_2020-06-01-00.csv" for reading: Permission denied
+HINT:  COPY FROM instructs the PostgreSQL server process to read a file. You may want a client-side facility such as psql's \copy.</pre><p>
+                If you encounter this error, you can use the \copy command in psql. Here is how to do it:
+                </p><pre class="programlisting">
+psql -d &lt;database name&gt; -c "\copy agency(agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_phone, agency_fare_url, agency_email) FROM '/path/to/agency.txt DELIMITER ',' CSV HEADER;"</pre><p>
+                Once more, you need to replace '/path/to/agency.txt' by the path to the file on your computer, and &lt;database name&gt; by the name of your database.<br />
+
+                We let you insert the data for the other tables. See you next page to see all the tables filled with data!
+                
             </p>
+            <p>
+                Here is how to insert the data for the other tables:
+                </p><pre class="programlisting">
+COPY calendar(service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday, start_date,end_date) FROM '/path/to/calendar.txt' DELIMITER ',' CSV HEADER;
+COPY calendar_dates(service_id,date,exception_type) FROM '/path/to/calendar_dates.txt' DELIMITER ',' CSV HEADER;
+COPY fare_attributes(agency_id, fare_id, price, currency_type, payment_method, transfers, transfer_duration) FROM '/path/to/fare_attributes.txt' DELIMITER ',' CSV HEADER;
+COPY feed_info(feed_publisher_name,feed_publisher_url,feed_lang,feed_start_date,feed_end_date,feed_version, feed_contact_email, feed_contact_url) FROM '/path/to/feed_info.txt' DELIMITER ',' CSV HEADER;
+COPY routes(route_id,agency_id, route_short_name,route_long_name,route_desc,route_type,route_url, route_color,route_text_color, route_sort_order) FROM '/path/to/routes.txt' DELIMITER ',' CSV HEADER;
+COPY shapes(shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence, shape_dist_traveled) FROM '/path/to/shapes.txt' DELIMITER ',' CSV HEADER;
+COPY stops(stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,zone_id,stop_url, location_type,parent_station,wheelchair_boarding,platform_code,stop_timezone) FROM '/path/to/stops.txt' DELIMITER ',' CSV HEADER;
+COPY stop_times(trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,pickup_type,drop_off_type,shape_dist_traveled,timepoint) FROM '/path/to/stop_times.txt' DELIMITER ',' CSV HEADER;
+COPY trips(route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,block_id,shape_id,wheelchair_accessible,bikes_allowed) FROM '/path/to/trips.txt' DELIMITER ',' CSV HEADER;</pre><p>
+                You can also find the copyGTFS.sh script that indicates how to copy teh data in the tables using command line in the repository.
+                If you do so, please make sure that your database is nammed "star", or modify your copy of the script.
+            </p>
+
         </div>
     </div>
 </div></body></html>
