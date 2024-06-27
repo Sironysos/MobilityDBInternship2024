@@ -428,14 +428,18 @@ tr.question td {
 	vertical-align: bottom ;
 }
 
-.custom-color-1 {
-	color: tomato;
+.custom-color-red {
+	color: firebrick;
 }
 
-.custom-color-2 {
-	color: chartreuse;
+.custom-color-green {
+	color: forestgreen;
 }
 
-.custom-color-3 {
+.custom-color-blue {
 	color: steelblue;
+}
+
+.custom-color-brown {
+	color: chocolate;
 }
