@@ -443,3 +443,9 @@ tr.question td {
 .custom-color-brown {
 	color: chocolate;
 }
+
+.subtitle {
+	font-size: 1em;
+	font-weight: bold;
+	color: darkblue;
+}
