@@ -1,3 +1,4 @@
+DROP EXTENSION IF EXISTS mobilitydb CASCADE;
 CREATE EXTENSION mobilityDB CASCADE;
 
 DROP TABLE IF EXISTS agency CASCADE;
@@ -274,6 +275,8 @@ END
 FROM shape_geoms g, stops s
 WHERE t.shape_id = g.shape_id AND t.stop_id = s.stop_id;
 
+DELETE FROM trip_stops
+	WHERE perc IS NULL;
 
 DROP TABLE IF EXISTS trip_segs;
 CREATE TABLE trip_segs (
@@ -299,13 +302,16 @@ INSERT INTO trip_segs (trip_id, route_id, service_id, stop1_sequence, stop2_sequ
 WITH temp AS (
   SELECT trip_id, route_id, service_id, stop_sequence,
     LEAD(stop_sequence) OVER w AS stop_sequence2,
-  MAX(stop_sequence) OVER (PARTITION BY trip_id),
-  shape_id, arrival_time, LEAD(arrival_time) OVER w, perc, LEAD(perc) OVER w
+ 	MAX(stop_sequence) OVER (PARTITION BY trip_id),
+	shape_id, arrival_time, LEAD(arrival_time) OVER w, perc, LEAD(perc) OVER w	
   FROM trip_stops WINDOW w AS (PARTITION BY trip_id ORDER BY stop_sequence)
 )
 SELECT * FROM temp WHERE stop_sequence2 IS NOT null;
 
--- C’est là que ça plante
+-- Ici on delete ce qui ne va pas, à expliquer…
+DELETE FROM trip_segs
+	where perc1 >= perc2;
+
 UPDATE trip_segs t
 SET seg_geom = ST_LineSubstring(g.shape_geom, perc1, perc2)
 FROM shape_geoms g
@@ -355,7 +361,6 @@ ELSE stop1_arrival_time + ((stop2_arrival_time - stop1_arrival_time) * perc)
 END AS point_arrival_time
 FROM temp3;
 
-
 DROP TABLE IF EXISTS trips_input;
 CREATE TABLE trips_input (
   trip_id text,
@@ -373,6 +378,15 @@ FROM trip_points t JOIN
 ON t.service_id = s.service_id;
 
 
+SELECT count(*) FROM trips_input;
+
+SELECT count(*) FROM trips_input AS t1, trips_input AS t2
+	WHERE t1.trip_id = t2.trip_id and t1.t = t2.t and not ST_Equals(t1.point_geom, t2.point_geom);
+
+SELECT * from trips_input
+	WHERE t = '2024-06-20 05:28:00+02';
+
+	
 DROP TABLE IF EXISTS trips_mdb;
 CREATE TABLE trips_mdb (
 	trip_id text NOT NULL,
