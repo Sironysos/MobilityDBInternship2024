@@ -65,7 +65,7 @@ sudo apt install postgresql-16-mobilitydb</pre><p>
         
         <p>
             In order to start the PostgreSQL database, you need to do as following, replacing username by your
-            own username.
+            own username. Note that in this case, "workshop" is the name of the database we are creating.
             </p><pre class="programlisting">
 sudo -u postgres createuser -s -i -d -r -l -w &lt;username&gt;
 sudo -u postgres createdb workshop
@@ -505,11 +505,11 @@ GROUP BY shape_id;</pre>
                     The first one is <span class="custom-color-red">shape_id</span>: the identifier of the shape, which is taken from the shapes table.<br />
                     The second one is the geometry of the shape, which is created in three steps:<br />
                     </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-                            <span class="custom-color-brown">We create a point for each shape_pt_lon and shape_pt_lat in the shapes table, using the ST_MakePoint function.</span> This is a PostGIS function. <br /><br />
+                            <span class="custom-color-brown">We create a point for each shape_pt_lon and shape_pt_lat in the shapes table, using the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.3.5" target="_top">ST_MakePoint</a> function.</span> This is a PostGIS function. <br /><br />
                         </li><li class="listitem">
-                            <span class="custom-color-blue">We set the SRID of the point to 4326 because it is the norm we are using (see more </span><a class="ulink" href="https://en.wikipedia.org/wiki/Spatial_reference_system" target="_top">here</a><span class="custom-color-blue">). We use the ST_Set SRID function to do it. </span>This is a PostGIS function.<br /><br />
+                            <span class="custom-color-blue">We set the SRID of the point to 4326 because it is the norm we are using (see more </span><a class="ulink" href="https://en.wikipedia.org/wiki/Spatial_reference_system" target="_top">here</a><span class="custom-color-blue">). We use the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.10.7.5" target="_top">ST_SetSRID</a> function to do it. </span>This is a PostGIS function.<br /><br />
                         </li><li class="listitem">
-                            <span class="custom-color-green">We use the array_agg function to aggregate all the points in an array. </span>This is a PostgreSQL function. <span class="custom-color-green">We create a line with all the points we created, using the ST_MakeLine function. </span>This is a PostGIS function.<br /><br />
+                            <span class="custom-color-green">We use the <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A2100%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C127.25%2C532.882%2Cnull%5D" target="_top">array_agg</a> function to aggregate all the points in an array. </span>This is a PostgreSQL function. <span class="custom-color-green">We create a line with all the points we created, using the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.3.4" target="_top">ST_MakeLine</a> function. </span>This is a PostGIS function.<br /><br />
                         </li></ul></div><p>
                     We also ordered the points by shape_pt_sequence to make sure the line is in the right order. <br />
                     Finally, we group the lines by shape_id to make sure we have only one line per shape.
@@ -572,6 +572,209 @@ WHERE exception_type = 1 AND start_date &lt;= date AND date &lt;= end_date
                     We also use the <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A22539%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C410.478%2Cnull%5D" target="_top">generate_series</a> function. This function generates a series of values, in this case, dates. We are using it to generate all the dates between the start_date and the end_date of the service. This is a PostgreSQL function. <br />
                 </p>
             </div>
+        </div>
+        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idp215"></a>Creating trips</h3></div></div></div>
+            
+            <p>
+                Now that we are fully prepared, we can create the trips. <br />
+                To do so, we are going to create two tables: trip_stops and trip_segs. Let's start with the first one.
+            </p>
+                <div class="section"><div class="titlepage"><div><div><h5 class="subtitle">Creating trip_stops</h5></div></div></div>
+                    
+                    <p>
+                        In this part, we are going to create the trip_stops table. <br />
+                        </p><pre class="programlisting">
+DROP TABLE IF EXISTS trip_stops;
+CREATE TABLE trip_stops (
+  trip_id text,
+  stop_sequence integer,
+  no_stops integer,
+  route_id text,
+  service_id text,
+  shape_id text,
+  stop_id text,
+  arrival_time interval,
+  perc float
+);</pre><p>
+                        Now, let's fill this table.
+                        </p><pre class="programlisting">
+INSERT INTO trip_stops (trip_id, stop_sequence, <span class="custom-color-red">no_stops</span>, route_id, service_id, shape_id, stop_id, arrival_time)
+SELECT t.trip_id, stop_sequence, <span class="custom-color-red">MAX(stop_sequence) OVER (PARTITION BY t.trip_id)</span>, route_id, service_id, shape_id, stop_id, arrival_time
+FROM trips t JOIN stop_times s ON t.trip_id = s.trip_id;</pre><p>
+                        Here, we are just filling the table with the data from the trips and stop_times tables. We are also adding the no_stops attribute, which is the number of stops of the trip. We are using the <span class="custom-color-red">MAX</span> function to get the maximum stop_sequence for each trip. <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#page=396" target="_top">MAX</a> is a basic PostgreSQL function, so is <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#page=86" target="_top">OVER (PARTITION BY ...)</a>. <br /><br />
+                        Now, let's update the table with the percentage of the trip that has been done.
+                        </p><pre class="programlisting">
+UPDATE trip_stops t
+SET perc = CASE
+WHEN <span class="custom-color-red">stop_sequence =  1 then 0.0</span>
+WHEN <span class="custom-color-green">stop_sequence =  no_stops then 1.0</span>
+ELSE <span class="custom-color-blue">ST_LineLocatePoint(g.shape_geom, s.stop_geom)</span>
+END
+FROM shape_geoms g, stops s
+WHERE t.shape_id = g.shape_id AND t.stop_id = s.stop_id;</pre><p>
+                        You can see that there are 3 cases:<br />
+                        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+                                <span class="custom-color-red">The first one is when the stop_sequence is 1. In this case, the percentage is 0.0 because the trip has just started (1 is the first stop).</span>
+                            </li><li class="listitem">
+                                <span class="custom-color-green">The second one is when the stop_sequence is equal to no_stops. In this case, the percentage is 1.0 because the trip is over (no_stops is the last stop).</span>
+                            </li><li class="listitem">
+                                <span class="custom-color-blue">The last one is when the stop_sequence is between 1 and no_stops. In this case, we use the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.19.4" target="_top">ST_LineLocatePoint</a> function. This function returns a float between 0 and 1 representing the location of the closest point on the line to the given point. We use it to get the percentage of the trip that has been done. It is much better than just dividing the stop_sequence by no_stops because it takes into account the shape of the route.</span>
+                            </li></ul></div><p>
+                        The perc attribute is now filled with the percentage of the trip that has been done. Let's delete NULL values, as they are not relevant.
+                        </p><pre class="programlisting">
+DELETE FROM trip_stops WHERE perc IS NULL;</pre><p>
+                            The trip_stops table is now filled with the data we need. Let's move on to the next part.
+                    </p>
+                </div>
+                <div class="section"><div class="titlepage"><div><div><h5 class="subtitle">Creating trip_segs</h5></div></div></div>
+                    
+                    <p>
+                        In this part, we are going to create the trip_segs table, that will be used to store the segments of the trips. <br />
+                        </p><pre class="programlisting">
+DROP TABLE IF EXISTS trip_segs;
+CREATE TABLE trip_segs (
+    trip_id text,
+    route_id text,
+    service_id text,
+    stop1_sequence integer,
+    stop2_sequence integer,
+    no_stops integer,
+    shape_id text,
+    stop1_arrival_time interval,
+    stop2_arrival_time interval,
+    perc1 float,
+    perc2 float,
+    seg_geom geometry,
+    seg_length float,
+    no_points integer,
+    PRIMARY KEY (trip_id, stop1_sequence)
+);</pre><p>
+                        Now, let's fill this table.
+                        </p><pre class="programlisting">
+INSERT INTO trip_segs (trip_id, route_id, service_id, stop1_sequence, stop2_sequence, no_stops, shape_id, stop1_arrival_time, stop2_arrival_time, perc1, perc2)  
+WITH <span class="custom-color-brown">temp</span> AS <span class="custom-color-brown"> (</span>
+                SELECT trip_id, 
+                    route_id, 
+                    service_id, 
+                    stop_sequence,
+                    LEAD(stop_sequence) OVER w AS stop_sequence2,
+                    no_stops,
+                    shape_id, 
+                    arrival_time, 
+                    LEAD(arrival_time) OVER w, 
+                    perc, 
+                    LEAD(perc) OVER w	
+                FROM trip_stops WINDOW w AS (PARTITION BY trip_id ORDER BY stop_sequence)
+            <span class="custom-color-brown"> )</span>
+SELECT * FROM <span class="custom-color-brown">temp</span> WHERE stop_sequence2 IS NOT null;</pre><p>
+                        There is a new set of functions here. <br />
+                        We are using the <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A2156%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C127.25%2C573.049%2Cnull%5D" target="_top">LEAD</a> function. This function provides access to a row at a given physical offset beyond that position. In our case, we do not specify the offset, so it is 1 (the default value). This is a PostgreSQL function. <br />
+                        Another notion is the window: this clause defines a window specification that says how to partition the rows and how to order them. In our case, we partition the rows by trip_id and order them by stop_sequence, that is to say the order of the stops in the trip. This is a PostgreSQL function. <br /><br />
+                        In the end, the attributes that need the LEAD function are filled with the next stop's data, so the next row. <br />
+                    </p>
+                    <p>
+                        We just need to delete the incoherent data, that is to say the data where perc1 is greater or equal than perc2. Indeed, a trip cannot go backwards.
+                        </p><pre class="programlisting">
+DELETE FROM trip_segs WHERE perc1 &gt;= perc2;</pre><p>
+                    </p>
+                    <p>
+                        We still need to fill the seg_geom attribute with the geometry of the segment. To do so, we are going to use the shape_geoms table we created earlier.
+                        </p><pre class="programlisting">
+UPDATE <span class="custom-color-blue">trip_segs t</span>
+SET seg_geom = ST_LineSubstring(<span class="custom-color-brown">g</span>.shape_geom, perc1, perc2)
+FROM <span class="custom-color-brown">shape_geoms g</span>
+WHERE <span class="custom-color-blue">t</span>.shape_id = <span class="custom-color-brown">g</span>.shape_id;</pre><p>    
+                        We are using the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.19.5" target="_top">ST_LineSubstring</a> function. We use it to get the segment of the line between the two points. <br />
+                    </p>
+                    <p>
+                        We also need to fill the seg_length and no_points attributes. 
+                        </p><pre class="programlisting">
+UPDATE trip_segs
+SET seg_length = ST_Length(seg_geom), 
+    no_points = ST_NumPoints(seg_geom);</pre><p>
+                        You can see that we are using the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.12.12" target="_top">ST_Length</a> function to get the length of the segment and the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.4.33" target="_top">ST_NumPoints</a> function to get the number of points of the segment. <br />
+                    </p>
+                    <p>
+                        The trip_segs table is now filled with the data we need. Let's move on to the next part.
+                    </p>
+                </div>
+                <div class="section"><div class="titlepage"><div><div><h5 class="subtitle">Creating trip_points</h5></div></div></div>
+                    
+                    <p>
+                        In this part, we are going to create the trips points table. <br />
+                        </p><pre class="programlisting">
+DROP TABLE IF EXISTS trip_points;
+CREATE TABLE trip_points (
+    trip_id text,
+    route_id text,
+    service_id text,
+    stop1_sequence integer,
+    point_sequence integer,
+    point_geom geometry,
+    point_arrival_time interval,
+    PRIMARY KEY (trip_id, stop1_sequence, point_sequence)
+);</pre><p>      
+                        Now, let's fill this table.
+                        </p><pre class="programlisting">
+INSERT INTO trip_points (trip_id, route_id, service_id, stop1_sequence, point_sequence, point_geom, point_arrival_time)
+
+WITH 
+    temp1 AS (
+        SELECT 
+            trip_id, 
+            route_id, 
+            service_id, 
+            stop1_sequence, 
+            stop2_sequence, 
+            no_stops, 
+            stop1_arrival_time, 
+            stop2_arrival_time, 
+            seg_length, 
+            (dp).path[1] AS point_sequence, 
+            no_points, 
+            (dp).geom as point_geom
+        FROM trip_segs, ST_DumpPoints(seg_geom) AS dp
+    ),
+    temp2 AS (
+        SELECT 
+            trip_id, 
+            route_id, 
+            service_id, 
+            stop1_sequence, 
+            stop1_arrival_time, 
+            stop2_arrival_time, 
+            seg_length, 
+            point_sequence, 
+            no_points, 
+            point_geom
+        FROM temp1
+        WHERE point_sequence &lt;&gt; no_points OR stop2_sequence = no_stops
+    ),
+    temp3 AS (
+        SELECT 
+            trip_id, 
+            route_id, 
+            service_id, 
+            stop1_sequence, 
+            stop1_arrival_time,
+            stop2_arrival_time, 
+            point_sequence, 
+            no_points, 
+            point_geom,
+            ST_Length(ST_MakeLine(array_agg(point_geom) OVER w)) / seg_length AS perc
+        FROM temp2 WINDOW w AS (PARTITION BY trip_id, service_id, stop1_sequence ORDER BY point_sequence)
+    )
+
+SELECT trip_id, route_id, service_id, stop1_sequence, point_sequence, point_geom,
+CASE
+    WHEN point_sequence = 1 then stop1_arrival_time
+    WHEN point_sequence = no_points then stop2_arrival_time
+    ELSE stop1_arrival_time + ((stop2_arrival_time - stop1_arrival_time) * perc)
+END AS point_arrival_time
+
+FROM temp3;</pre><p>
+                </p>
+                </div>      
         </div>
     </div>
 </div></body></html>
