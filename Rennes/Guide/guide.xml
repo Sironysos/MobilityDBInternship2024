@@ -614,7 +614,10 @@ SELECT c.service_id, date
 FROM calendar c JOIN calendar_dates d ON c.service_id = d.service_id
 WHERE exception_type = 1 AND start_date &lt;= date AND date &lt;= end_date
 );</programlisting>
-                    You can notice that we are using the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A4392%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C757.889%2Cnull%5D">generate_series</ulink> function. This function generates a series of values, in this case, dates. We are using it to generate all the dates between the start_date and the end_date of the service. This is a PostgreSQL function. <sbr/>
+                    You can notice that we are using the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A4392%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C757.889%2Cnull%5D">date_trunc</ulink> function. This function truncates the date to the specified precision. In this case, we are truncating the date to the day. This is a PostgreSQL function. <sbr/>
+                    We also use the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A1582%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C402.077%2Cnull%5D">extract</ulink> function. This function extracts a field from a date or time value. In this case, we are extracting the day of the week. This is a PostgreSQL function. We write "extract(isodow FROM d)" to get the day of the week of the date d. "isodow" stands for ISO day of the week (here is the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#page=321">postgreSQL documentation about isodow</ulink>)<sbr/>
+                    <sbr/>
+                    We also use the <ulink url="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A22539%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C410.478%2Cnull%5D">generate_series</ulink> function. This function generates a series of values, in this case, dates. We are using it to generate all the dates between the start_date and the end_date of the service. This is a PostgreSQL function. <sbr/>
                 </para>
             </section>
         </section>
