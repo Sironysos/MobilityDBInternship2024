@@ -213,7 +213,7 @@ INSERT INTO route_types (route_type, description) VALUES
 (12,'Monorail');
 
 
-/* Here import the GTFS data by running copyRaph.sh TODO*/
+/* Here import the GTFS data by running copyGTFS.sh */
 
 
 INSERT INTO shape_geoms
@@ -274,7 +274,7 @@ ELSE ST_LineLocatePoint(g.shape_geom, s.stop_geom)
 END
 FROM shape_geoms g, stops s
 WHERE t.shape_id = g.shape_id AND t.stop_id = s.stop_id;
-
+	
 DELETE FROM trip_stops
 	WHERE perc IS NULL;
 
@@ -302,7 +302,7 @@ INSERT INTO trip_segs (trip_id, route_id, service_id, stop1_sequence, stop2_sequ
 WITH temp AS (
   SELECT trip_id, route_id, service_id, stop_sequence,
     LEAD(stop_sequence) OVER w AS stop_sequence2,
- 	MAX(stop_sequence) OVER (PARTITION BY trip_id),
+ 	no_stops,
 	shape_id, arrival_time, LEAD(arrival_time) OVER w, perc, LEAD(perc) OVER w	
   FROM trip_stops WINDOW w AS (PARTITION BY trip_id ORDER BY stop_sequence)
 )
@@ -377,16 +377,16 @@ FROM trip_points t JOIN
 ( SELECT service_id, MIN(date) AS date FROM service_dates GROUP BY service_id) s
 ON t.service_id = s.service_id;
 
+DELETE FROM trips_input
+WHERE trip_id in (
+	SELECT distinct t1.trip_id FROM trips_input t1
+	JOIN trips_input t2 ON t2.trip_id = t1.trip_id and t2.service_id = t1.service_id and t2.route_id = t1.route_id and t2.t = t1.t and NOT ST_Equals(t2.point_geom,t1.point_geom)
+)and t in (
+	SELECT distinct t1.t FROM trips_input t1
+	JOIN trips_input t2 ON t2.trip_id = t1.trip_id and t2.service_id = t1.service_id and t2.route_id = t1.route_id and t2.t = t1.t and NOT ST_Equals(t2.point_geom,t1.point_geom)
+);
 
-SELECT count(*) FROM trips_input;
 
-SELECT count(*) FROM trips_input AS t1, trips_input AS t2
-	WHERE t1.trip_id = t2.trip_id and t1.t = t2.t and not ST_Equals(t1.point_geom, t2.point_geom);
-
-SELECT * from trips_input
-	WHERE t = '2024-06-20 05:28:00+02';
-
-	
 DROP TABLE IF EXISTS trips_mdb;
 CREATE TABLE trips_mdb (
 	trip_id text NOT NULL,
@@ -401,6 +401,8 @@ INSERT INTO trips_mdb(trip_id, service_id, route_id, date, trip)
 SELECT trip_id, service_id, route_id, date, tgeompointSeq(array_agg(tgeompoint(point_geom, t) ORDER BY T))
 FROM trips_input
 GROUP BY trip_id, service_id, route_id, date;
+
+select * from trips_mdb;
 
 INSERT INTO trips_mdb(trip_id, service_id, route_id, date, trip)
 SELECT trip_id, route_id, t.service_id, d.date,
