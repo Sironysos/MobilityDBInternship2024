@@ -386,7 +386,6 @@ WHERE trip_id in (
 	JOIN trips_input t2 ON t2.trip_id = t1.trip_id and t2.service_id = t1.service_id and t2.route_id = t1.route_id and t2.t = t1.t and NOT ST_Equals(t2.point_geom,t1.point_geom)
 );
 
-
 DROP TABLE IF EXISTS trips_mdb;
 CREATE TABLE trips_mdb (
 	trip_id text NOT NULL,
@@ -402,9 +401,7 @@ SELECT trip_id, service_id, route_id, date, tgeompointSeq(array_agg(tgeompoint(p
 FROM trips_input
 GROUP BY trip_id, service_id, route_id, date;
 
-select * from trips_mdb;
-
 INSERT INTO trips_mdb(trip_id, service_id, route_id, date, trip)
 SELECT trip_id, route_id, t.service_id, d.date,
-  shift(trip, make_interval(days => d.date - t.date))
+  shiftTime(trip, make_interval(days => d.date - t.date))
 FROM trips_mdb t JOIN service_dates d ON t.service_id = d.service_id AND t.date <> d.date;
