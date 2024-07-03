@@ -107,7 +107,7 @@ DROP TABLE IF EXISTS shape_geoms CASCADE;
 -- Create a table to store the shape geometries
 CREATE TABLE shape_geoms (
   shape_id text NOT NULL,
-  shape_geom geometry('LINESTRING', 4326),
+  shape_geom geometry('LINESTRING', 2154),
   CONSTRAINT shape_geom_pkey PRIMARY KEY (shape_id)
 );
 DROP INDEX IF EXISTS shape_geoms_key;
@@ -132,7 +132,7 @@ CREATE TABLE stops (
   location_type integer REFERENCES location_types(location_type),
   parent_station text DEFAULT NULL,
   wheelchair_boarding int,
-  stop_geom geometry('POINT', 4326),
+  stop_geom geometry('POINT', 2154),
   platform_code text DEFAULT NULL,
   stop_timezone text DEFAULT NULL,
   CONSTRAINT stops_pkey PRIMARY KEY (stop_id)
@@ -218,12 +218,12 @@ INSERT INTO route_types (route_type, description) VALUES
 
 INSERT INTO shape_geoms
 SELECT shape_id, ST_MakeLine(array_agg(
-  ST_SetSRID(ST_MakePoint(shape_pt_lon, shape_pt_lat),4326) ORDER BY shape_pt_sequence))
+  ST_Transform(ST_Point(shape_pt_lon, shape_pt_lat, 4326), 2154) ORDER BY shape_pt_sequence))
 FROM shapes
 GROUP BY shape_id;
 
 UPDATE stops
-SET stop_geom = ST_SetSRID(ST_MakePoint(stop_lon, stop_lat),4326);
+SET stop_geom = ST_Transform(ST_Point(stop_lon, stop_lat, 4326), 2154);
 
 DROP TABLE IF EXISTS service_dates;
 CREATE TABLE service_dates AS (
