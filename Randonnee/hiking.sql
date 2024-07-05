@@ -13,27 +13,32 @@ INSERT INTO trips_input VALUES
 (0,NULL,NULL,NULL);
 
 
--- COPY trips_input(lon, lat, time) FROM
--- '/home/gpx_data/example.csv' DELIMITER ',' CSV HEADER;
+-- Here you need to import each trip file separatly. 
+-- This allows you to put a different ID on each trip, because if you import al of them at the same time it becomes difficult to tell apart the trips from one another.
 
--- Do the above or run the below in a terminal
--- psql -d Randonnee -c "\copy trips_input(lon, lat, time) FROM '/home/gpx_data/exemple.csv' DELIMITER ',' CSV HEADER;"
+-- First run the following SQL command (you need to change the name of and the path to the file you want to import)
+COPY trips_input(lon, lat, time) FROM
+'/home/gpx_data/example.csv' DELIMITER ',' CSV HEADER;
 
+-- Do the above or run the command below in a terminal if you have a permission error
+-- (you need to change the name of the database, and the name and path to the file you want to import)
+-- psql -d DataBaseName -c "\copy trips_input(lon, lat, time) FROM '/home/gpx_data/exemple.csv' DELIMITER ',' CSV HEADER;"
 
+-- Then run this command to update the ID
 WITH max_id_cte AS (
     SELECT MAX(id)+1 AS max_id FROM trips_input
 ),
 rows_to_update AS (
-    SELECT
-        id,
-        (SELECT max_id FROM max_id_cte) AS new_id
+    SELECT id, (SELECT max_id FROM max_id_cte) AS new_id
     FROM trips_input
     WHERE id IS NULL
 )
-UPDATE trips_input
-SET id = rows_to_update.new_id
+UPDATE trips_input SET id = rows_to_update.new_id
 FROM rows_to_update
 WHERE trips_input.id IS NULL;
+
+-- Now you can repeat the last two steps for each trip file you want to import. Don’t forget to change the name of the file each time!
+
 
 select * from trips_input;
 
