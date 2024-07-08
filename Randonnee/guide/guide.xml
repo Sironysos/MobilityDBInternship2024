@@ -42,27 +42,315 @@
     </section>
 
     <section xml:id="chapter1">
-        <title>Chapitre 1: SQL work</title>
+        <title>Chapter 1: Treating the data</title>
 
         <section xml:id="part11">
-        <title>Importing the data</title>
+            <title>Loading GPX data</title>
 
-        <para>
-            Blabla this is Raph's work
-        </para>       
-        </section>
+                <para>
+                    GPX, or GPS Exchange Format, is an XML data format for GPS data. 
+                    Location data (and optionally elevation, time, and other information) is stored in tags and can be interchanged between GPS devices and software. 
+                    Conceptually, a GPX file contains tracks, which are a record of where a moving object has been, and routes, 
+                    which are suggestions about where it might go in the future. Furthermore, both tracks and routes and composed by points. 
+                    The following is a truncated (for brevity) example GPX file.
+                    <programlisting language = "xml">
+&lt;?xml version='1.0' encoding='UTF-8' standalone='yes' ?&gt;
+&lt;gpx version="1.1"
+xmlns="http://www.topografix.com/GPX/1/1"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/1
+http://www.topografix.com/GPX/1/1/gpx.xsd"
+creator="Example creator"&gt;
+&lt;metadata&gt;
+	&lt;name&gt;Dec 14, 2014 4:32:04 PM&lt;/name&gt;
+	&lt;author&gt;Example creator&lt;/author&gt;
+	&lt;link href="https://..." /&gt;
+	&lt;time&gt;2014-12-14T14:32:04.650Z&lt;/time&gt;
+&lt;/metadata&gt;
+&lt;trk&gt;
+	&lt;name&gt;Dec 14, 2014 4:32:04 PM&lt;/name&gt;
+	&lt;trkseg&gt;
+		&lt;trkpt lat="30.16398" lon="31.467701"&gt;
+			&lt;ele&gt;76&lt;/ele&gt;
+			&lt;time&gt;2014-12-14T14:32:10.339Z&lt;/time&gt;
+		&lt;/trkpt&gt;
+		&lt;trkpt lat="30.16394" lon="31.467333"&gt;
+			&lt;ele&gt;73&lt;/ele&gt;
+			&lt;time&gt;2014-12-14T14:32:16.00Z&lt;/time&gt;
+		&lt;/trkpt&gt;
+		&lt;trkpt lat="30.16408" lon="31.467218"&gt;
+			&lt;ele&gt;74&lt;/ele&gt;
+			&lt;time&gt;2014-12-14T14:32:19.00Z&lt;/time&gt;
+		&lt;/trkpt&gt;
+		[...]
+	&lt;/trkseg&gt;
+	&lt;trkseg&gt;
+		[...]
+	&lt;/trkseg&gt;
+	[...]
+&lt;/trk&gt;
+&lt;trk&gt;
+	[...]
+&lt;/trk&gt;
+[...]
+&lt;gpx&gt;
+                    </programlisting>
+                </para>
+
+                <para>
+                    To begin working on this file, you will need to transform the GPX data in order to use it with MobilityDB. 
+                    The Python script below (called gpw_to_csv.py in our github) creates a CSV file based on the GPX one. 
+                    It uses expat, a stream-oriented XML parser library.
+                </para>
+                <para>
+                    <programlisting language="python">
+import sys
+import xml.parsers.expat
+
+stack = []
+def start_element(name, attrs):
+stack.append(name)
+if name == 'gpx' :
+    print("lon,lat,time")
+if name == 'trkpt' :
+    print("{},{},".format(attrs['lon'], attrs['lat']), end="")
+
+def end_element(name):
+stack.pop()
+
+def char_data(data):
+if stack[-1] == "time" and stack[-2] == "trkpt" :
+    print(data)
+
+p = xml.parsers.expat.ParserCreate()
+
+p.StartElementHandler = start_element
+p.EndElementHandler = end_element
+p.CharacterDataHandler = char_data
+
+p.ParseFile(sys.stdin.buffer)
+                    </programlisting>
+                </para>
+                <para>
+                    To use it, you can copy and paste this code into a ython file and run it with the following command (make sure to indicate the paths for each file):
+                    <programlisting language = "bash">
+python3 python_file.py &lt; example.gpx > example.csv
+                    </programlisting>
+                    You can have different names for the gpx and csv files if you want, but make sure to change the names in the command.
+                </para>
+                <para>
+                    This is what the resulting CSV file will look like:
+                    <programlisting language = "csv">
+lon,lat,time
+-2.869371,47.551691,2024-06-26T14:04:15+02:00
+-2.86959,47.551946,2024-06-26T14:04:40+02:00
+-2.86982,47.55215,2024-06-26T14:05:04+02:00
+...
+                    </programlisting>
+                </para>
+
+                <para>
+                    This CSV file can then be loaded into MobilityDB as follows (be carefull to read the comments as you cannot just run everything together):
+                    <programlisting language = "SQL">
+DROP EXTENSION IF EXISTS mobilitydb CASCADE;
+CREATE EXTENSION mobilityDB CASCADE;
+
+DROP TABLE IF EXISTS trips_input;
+CREATE TABLE trips_input (
+    id int,
+    lon float,
+    lat float,
+    time timestamptz
+);
+
+INSERT INTO trips_input VALUES
+(0,NULL,NULL,NULL);
+
+
+-- Here you need to import each trip file separatly. 
+-- This allows you to put a different ID on each trip, because if you import all of them at the same time it becomes difficult to tell apart the trips from one another.
+
+-- First run the following SQL command (you need to change the name of the file you want to import and the path to it)
+COPY trips_input(lon, lat, time) FROM
+'/home/gpx_data/example.csv' DELIMITER ',' CSV HEADER;
+
+-- Do the above or run the command below in a terminal if you have a permission error
+-- (you need to change the name of the database, and the name and path to the file you want to import)
+-- psql -d DataBaseName -c "\copy trips_input(lon, lat, time) FROM '/home/gpx_data/exemple.csv' DELIMITER ',' CSV HEADER;"
+
+-- Then run this command to update the ID
+WITH max_id_cte AS (
+    SELECT MAX(id)+1 AS max_id FROM trips_input
+),
+rows_to_update AS (
+    SELECT id, (SELECT max_id FROM max_id_cte) AS new_id
+    FROM trips_input
+    WHERE id IS NULL
+)
+UPDATE trips_input SET id = rows_to_update.new_id
+FROM rows_to_update
+WHERE trips_input.id IS NULL;
+
+-- Now you can repeat the last two steps for each trip file you want to import. Don’t forget to change the name of the file each time!
+
+
+DROP TABLE IF EXISTS trips_mdb;
+CREATE TABLE trips_mdb (
+    id int,
+    date date,
+    trip tgeompoint,
+    trajectory geometry,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO trips_mdb(id, date, trip)
+SELECT id, date(time), tgeompointSeq(array_agg(tgeompoint(
+    ST_SetSRID(ST_Point(lon, lat), 4326), time) ORDER BY time))
+FROM trips_input
+WHERE id != 0
+GROUP BY id, date;
+
+UPDATE trips_mdb
+SET trajectory = trajectory(trip);
+                    </programlisting>
+                </para>
+            </section>
 
     </section>
     <section xml:id="chapter2">
-        <title>Chapitre 2: Visualizing the data</title>
+        <title>Chapter 2: Visualizing the data</title>
 
         <section xml:id="part21">
         <title>Introduction</title>
 
         <para>
             Now, we have cleaned the data and made it ready to be used. We will now visualize the data in order to have a better understanding of it.<sbr/>
-            To do so, we are going to use QGIS, a free and open-source geographic information system. You can download it TODO<ulink url="https://qgis.org/en/site/forusers/download.html">here</ulink>.<sbr/>
+            To do so, we are going to use QGIS, a free and open-source geographic information system. You can download it <ulink url="https://qgis.org/en/site/forusers/download.html">here</ulink>.<sbr/>
+            Just for you to know, we are going to follow this tutorial: <ulink url="https://www.youtube.com/watch?v=titgXKp0kms&amp;t=4940s">MobilityDB: Hands on Tutorial on Managing and Visualizing Geospatial Trajectories in SQL</ulink>.<sbr/>
+            We will use the plugin Move to visualize the data. Here is the <ulink url="https://github.com/mschoema/move/tree/master">repo</ulink> where you can find it.
+            Please click on the move.zip file, and download it. Take care to do it like in this following <phrase xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="#move.zip">image</phrase>, otherwise it could not be downloaded correctly. Also, put it in a folder you will remember.
+            <figure id="move.zip">
+                <title>How to download the plugin properly</title>
+                <table frame='none'>
+                    <title>Images</title>
+                    <tgroup cols="2">
+                        <tbody>
+                            <row>
+                                <entry>
+                                    <mediaobject>
+                                        <imageobject>
+                                            <imagedata fileref="./images/moveFolder.png"/>
+                                        </imageobject>
+                                    </mediaobject>
+                                </entry>
+                                <entry>
+                                    <mediaobject>
+                                        <imageobject>
+                                            <imagedata fileref="./images/moveZip.png"/>
+                                        </imageobject>
+                                    </mediaobject>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </figure>
+            Now, open QGIS and click on Plugins-&gt;Manage and Install Plugins. Click on the install from zip button and select the move.zip file you just downloaded. 
+            Then, you can use the plugin to visualize the data. A MobilityDB logo will appear on the up-left side of the screen.<sbr />
+            <section xml:id="moveError">
+                <title>Plugin error</title>
+                <para>
+                You may have an error saying:
+<programlisting>Couldn't load plugin 'move' due to an error when calling its classFactory() method 
+ModuleNotFoundError: No module named 'psycopg'</programlisting>
+                To fix this, you need to install the psycopg module. You can do it by running the following command in a terminal:
+<programlisting language="bash" xml:space="preserve">pip install psycopg</programlisting>
+                If you've had to install the psycopg module, you will need to uninstall the incorrect move plugin that you just installed (Plugins-&gt;Manage and Install Plugins-&gt;Installed-&gt;Move-&gt;Uninstall Plugin) and then reinstall it. You may also need to restart QGIS to make the plugin work.
+                </para>
+            </section>
         </para>       
+        </section>
+        <section xml:id="part22">
+        <title>Connecting to the database</title>
+        
+        <para>
+            You can now create a new blank project in QGIS.<sbr/>
+            Then in the browser on the left of the screen, you should find a 'PostGIS' line. Right click on it and then 'New Connection...'.
+            You will see this window:
+        </para>
+        <figure id="NewConnection" float="start">
+            <title>New PostGIS Connection</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="./images/PostGIS_Connection.png"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+        <para>
+            Here is what you need to fill out:
+            <itemizedlist>
+                <listitem>
+                    Name: choose a name for this connection                    
+                </listitem>
+                <listitem>
+                    Host: if the database is hosted on your machine, then 'localhost'. If not, you should be able to fgure it out by yourself.
+                </listitem>
+                <listitem>
+                    Port: again, if self hosted then keep '5432', if not you should know.
+                </listitem>
+                <listitem>
+                    Database: here write the name of the database in which you have loaded the data.
+                </listitem>
+                <listitem>
+                    Authentication: go to the 'Basic' tab and fill out the user name and password for the account that has access to the database. Make sure to check the 'Store' boxes next to User name and Password.
+                </listitem>
+            </itemizedlist>
+        </para>
+        
+        <para>
+            You can now click OK and find your connection, database and the trips_mdb table in the tree below the PostGIS line in the QGIS Browser.
+        </para>
+        
+        </section>
+        <section xml:id="part23">
+            <title>Visualizing the data</title>
+            <para>
+                Now that you have connected to the database, you can visualize the data. <sbr/>
+                First, let's put a map layer. In the browser window (on the left of the screen), click on 'XYZ Tiles' and then right click on 'OpenStreetMap' and select 'Add Layer to Project'.<sbr/>
+                You will see an OpenStreetMap layer in the inferior left part of the screen.<sbr/>
+                You can zoom in the part you are studyin. In our case, we are focusing on a part of France, in Britanny, called Morbihan.<sbr/>
+                <figure id="OpenStreetMap" float="start">
+                    <title>OpenStreetMap layer</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="./images/OpenStreetMap.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                Then, let's add the data we have loaded in the database.
+                First, let's draw the trajectory. Click on PostGIS-&gt;randonnee-&gt;public-&gt;trips_mdb-&gt;Fields-&gt;trajectory. You will see the trajectory in the map.<sbr/>
+                Now, we want to visualize the moving point of the trip.
+                To do so, you need to click on the 'Move' logo on the up-left side of the screen.
+                Select your database and the table you want to visualize. Then, you can write a query and execute it. We are going to put this query:
+<programlisting language="SQL" xml:space="preserve">SELECT date, trip FROM trips_mdb;</programlisting>
+                Now click on 'Execute Query'.
+                Let's see the trip moving while we are visualizing it. To do so, click on View-&gt;Panels-&gt;Temporal Controller. You will see a window like this: 
+                <figure id="TemporalController" float="start">
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="./images/Visual.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                Now this is your time to play with the data and visualize it as you want. You can put the time in the temporal controller and see the trip moving. You can also change the color of the trip, the size of the points, etc.
+            </para>
+            <figure id="Gif" float="start">
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="./images/dessin.gif"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
         </section>
 
     </section>

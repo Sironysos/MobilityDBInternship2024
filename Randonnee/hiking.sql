@@ -14,9 +14,9 @@ INSERT INTO trips_input VALUES
 
 
 -- Here you need to import each trip file separatly. 
--- This allows you to put a different ID on each trip, because if you import al of them at the same time it becomes difficult to tell apart the trips from one another.
+-- This allows you to put a different ID on each trip, because if you import all of them at the same time it becomes difficult to tell apart the trips from one another.
 
--- First run the following SQL command (you need to change the name of and the path to the file you want to import)
+-- First run the following SQL command (you need to change the name of the file you want to import and the path to it)
 COPY trips_input(lon, lat, time) FROM
 '/home/gpx_data/example.csv' DELIMITER ',' CSV HEADER;
 
@@ -40,8 +40,6 @@ WHERE trips_input.id IS NULL;
 -- Now you can repeat the last two steps for each trip file you want to import. Don’t forget to change the name of the file each time!
 
 
-select * from trips_input;
-
 DROP TABLE IF EXISTS trips_mdb;
 CREATE TABLE trips_mdb (
 	id int,
@@ -60,5 +58,3 @@ GROUP BY id, date;
 
 UPDATE trips_mdb
 SET trajectory = trajectory(trip);
-
-select * from trips_mdb;
