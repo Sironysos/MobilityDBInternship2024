@@ -25,10 +25,16 @@
             We will throughout this document present different use cases of MobilityDB, which is an extension on PostGIS and PostgreSQL. 
         </para>       
         <para>
-            This workshop was made by two students from <ulink url="https://www.insa-rennes.fr/index.html">INSA Rennes</ulink>  during an internship. 
-            We will use data from <ulink url="https://www.openstreetmap.org/user/atchisson/traces">OpenStreetMap</ulink>. The traces we are going to use in this example are rando_morbi1.gpx and rando_morbi2.gpx.
+            This workshop was made by two students from <ulink url="https://www.insa-rennes.fr/index.html">INSA Rennes</ulink> during an internship in June, July and August 2024. 
+        </para>
+        <para>
+            We will use data from <ulink url="https://www.openstreetmap.org/user/atchisson/traces">OpenStreetMap</ulink>. The traces we are going to use in this example are rando_morbi1.gpx and rando_morbi2.gpx.<sbr/>
+            GPX is a common file format for storing GPS data. It is used by many GPS devices and applications to store track logs and waypoints. In our case, a person did two hikes on the 26th of June 2024, in the Morbihan, and saved the data in two GPX files.<sbr />
+            Then, this person exported the data to OpenStreetMap and we can use his trace as we want. We will use these GPX files in this workshop.<sbr />
+            Please download the files<ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390305"> rando_morbi1.gpx</ulink> and <ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390306">rando_morbi2.gpx</ulink> from the OpenStreetMap website and put in a folder you will remember.
         </para>       
         <para>
+            Now, we are ready to start the workshop.<sbr/>
             While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
             If you need help concerning the functions of MobilityDB, please 
             refer to the <ulink url="https://mobilitydb.com/documentation.html">documentation</ulink>. 
@@ -36,22 +42,27 @@
     </section>
 
     <section xml:id="chapter1">
-        <title>Chapitre 1: Introduction to MobilityDB</title>
+        <title>Chapitre 1: SQL work</title>
 
         <section xml:id="part11">
         <title>Importing the data</title>
 
         <para>
-            You can find in the repository for this workshop a CSV file called Freq_Mars2024 data.csv. It should look like the Figure 1.
+            Blabla this is Raph's work
         </para>       
-        <figure id="imgpoints" float="start">
-            <title>First few lines of the table</title>
-            <mediaobject>
-                <imageobject>
-                    <imagedata fileref="../images/FreqMars2024dataTable.png"/>
-                </imageobject>
-            </mediaobject>
-        </figure>
+        </section>
+
+    </section>
+    <section xml:id="chapter2">
+        <title>Chapitre 2: Visualizing the data</title>
+
+        <section xml:id="part21">
+        <title>Introduction</title>
+
+        <para>
+            Now, we have cleaned the data and made it ready to be used. We will now visualize the data in order to have a better understanding of it.<sbr/>
+            To do so, we are going to use QGIS, a free and open-source geographic information system. You can download it TODO<ulink url="https://qgis.org/en/site/forusers/download.html">here</ulink>.<sbr/>
+        </para>       
         </section>
 
     </section>

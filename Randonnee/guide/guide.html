@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>MobilityDB Hiking Workshop</title><link rel="stylesheet" type="text/css" href="guide.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /></head><body><div xml:lang="en" class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a id="guide"></a>MobilityDB Hiking Workshop</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Alice</span> <span class="surname">Lombard</span></h3></div></div><div><div class="author"><h3 class="author"><span class="firstname">Raphaël</span> <span class="surname">Dubuget</span></h3></div></div><div><p class="pubdate">July 2024</p></div></div><hr /></div><div class="list-of-figures"><p><strong>List of Figures</strong></p><dl><dt>1. <a href="#imgpoints">First few lines of the table</a></dt></dl></div>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>MobilityDB Hiking Workshop</title><link rel="stylesheet" type="text/css" href="guide.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /></head><body><div xml:lang="en" class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a id="guide"></a>MobilityDB Hiking Workshop</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Alice</span> <span class="surname">Lombard</span></h3></div></div><div><div class="author"><h3 class="author"><span class="firstname">Raphaël</span> <span class="surname">Dubuget</span></h3></div></div><div><p class="pubdate">July 2024</p></div></div><hr /></div>
     
     
 
@@ -10,29 +10,44 @@
             We will throughout this document present different use cases of MobilityDB, which is an extension on PostGIS and PostgreSQL. 
         </p>       
         <p>
-            This workshop was made by two students from <a class="ulink" href="https://www.insa-rennes.fr/index.html" target="_top">INSA Rennes</a>  during an internship. 
-            We will use data from <a class="ulink" href="https://www.openstreetmap.org/user/atchisson/traces" target="_top">OpenStreetMap</a>. The traces we are going to use in this example are rando_morbi1.gpx and rando_morbi2.gpx.
+            This workshop was made by two students from <a class="ulink" href="https://www.insa-rennes.fr/index.html" target="_top">INSA Rennes</a> during an internship in June, July and August 2024. 
+        </p>
+        <p>
+            We will use data from <a class="ulink" href="https://www.openstreetmap.org/user/atchisson/traces" target="_top">OpenStreetMap</a>. The traces we are going to use in this example are rando_morbi1.gpx and rando_morbi2.gpx.<br />
+            GPX is a common file format for storing GPS data. It is used by many GPS devices and applications to store track logs and waypoints. In our case, a person did two hikes on the 26th of June 2024, in the Morbihan, and saved the data in two GPX files.<br />
+            Then, this person exported the data to OpenStreetMap and we can use his trace as we want. We will use these GPX files in this workshop.<br />
+            Please download the files<a class="ulink" href="https://www.openstreetmap.org/user/atchisson/traces/11390305" target="_top"> rando_morbi1.gpx</a> and <a class="ulink" href="https://www.openstreetmap.org/user/atchisson/traces/11390306" target="_top">rando_morbi2.gpx</a> from the OpenStreetMap website and put in a folder you will remember.
         </p>       
         <p>
+            Now, we are ready to start the workshop.<br />
             While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
             If you need help concerning the functions of MobilityDB, please 
             refer to the <a class="ulink" href="https://mobilitydb.com/documentation.html" target="_top">documentation</a>. 
         </p>
     </div>
 
-    <div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="chapter1"></a>Chapitre 1: Introduction to MobilityDB</h2></div></div></div>
+    <div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="chapter1"></a>Chapitre 1: SQL work</h2></div></div></div>
         
 
         <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part11"></a>Importing the data</h3></div></div></div>
         
 
         <p>
-            You can find in the repository for this workshop a CSV file called Freq_Mars2024 data.csv. It should look like the Figure 1.
+            Blabla this is Raph's work
         </p>       
-        <div class="figure-float"><div class="figure"><a id="imgpoints"></a><p class="title"><strong>Figure 1. First few lines of the table</strong></p><div class="figure-contents">
-            
-            <div class="mediaobject"><img src="../images/FreqMars2024dataTable.png" alt="First few lines of the table" /></div>
-        </div></div><br class="figure-break" /></div>
+        </div>
+
+    </div>
+    <div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="chapter2"></a>Chapitre 2: Visualizing the data</h2></div></div></div>
+        
+
+        <div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part21"></a>Introduction</h3></div></div></div>
+        
+
+        <p>
+            Now, we have cleaned the data and made it ready to be used. We will now visualize the data in order to have a better understanding of it.<br />
+            To do so, we are going to use QGIS, a free and open-source geographic information system. You can download it TODO<a class="ulink" href="https://qgis.org/en/site/forusers/download.html" target="_top">here</a>.<br />
+        </p>       
         </div>
 
     </div>
