@@ -25,7 +25,7 @@
             <para>
                 This document is an example of how you can use MobilityDB in order to analyse data. It is directly inspired by 
                 the <ulink url="https://mobilitydb.github.io/MobilityDB-workshop/develop/html/index.html">MobilityDB Workshop</ulink> already existing. 
-                We will throughout this document present different use cases of MobilityDB, which is an extension on PostGIS and PostgreSQL. 
+                We will throughout this document present different use cases of MobilityDB, which is an extension on <ulink url="https://postgis.net/">PostGIS</ulink> and <ulink url="https://www.postgresql.org/">PostgreSQL</ulink>. 
             </para>       
             <para>
                 This workshop was made by two students from <ulink url="https://www.insa-rennes.fr/index.html">INSA Rennes</ulink> during an internship in June, July and August 2024. 
