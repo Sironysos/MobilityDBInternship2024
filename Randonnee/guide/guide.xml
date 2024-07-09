@@ -1,50 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/css" href="guide.css"?>
-<book xml:id="guide" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="en">
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book lang="en">
     <title>MobilityDB Hiking Workshop</title>
-    <info>
+    <subtitle>How to use MobilityDB to analyze hiking data</subtitle>
+    <titleabbrev>MobilityDB Hiking Workshop</titleabbrev>
+    <bookinfo>
+
+        <!-- Authors -->
         <author>
-            <personname>
-                <firstname>Alice</firstname>
-                <surname>Lombard</surname>
-            </personname>
+            <firstname>Alice</firstname>
+            <surname>Lombard</surname>
+            <affiliation>
+                <orgname>INSA Rennes, France</orgname>
+            </affiliation>
         </author>
         <author>
-            <personname>
-                <firstname>Raphaël</firstname>
-                <surname>Dubuget</surname>
-            </personname>
+            <firstname>Raphaël</firstname>
+            <surname>Dubuget</surname>
+            <affiliation>
+                <orgname>INSA Rennes, France</orgname>
+            </affiliation>
         </author>
-        <pubdate>July 2024</pubdate>
-    </info>
+        <abstract>
+            <para>
+                This document is an example of how you can use MobilityDB in order to analyse data. It is directly inspired by 
+                the <ulink url="https://mobilitydb.github.io/MobilityDB-workshop/develop/html/index.html">MobilityDB Workshop</ulink> already existing. 
+                We will throughout this document present different use cases of MobilityDB, which is an extension on PostGIS and PostgreSQL. 
+            </para>       
+            <para>
+                This workshop was made by two students from <ulink url="https://www.insa-rennes.fr/index.html">INSA Rennes</ulink> during an internship in June, July and August 2024. 
+            </para>
+            <para>
+                We will use data from <ulink url="https://www.openstreetmap.org/user/atchisson/traces">OpenStreetMap</ulink>. The traces we are going to use in this example are rando_morbi1.gpx and rando_morbi2.gpx.
+                GPX is a common file format for storing GPS data. It is used by many GPS devices and applications to store track logs and waypoints. In our case, a person did two hikes on the 26th of June 2024, in the Morbihan, and saved the data in two GPX files.
+                Then, this person exported the data to OpenStreetMap and we can use his trace as we want. We will use these GPX files in this workshop.
+                Please download the files<ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390305"> rando_morbi1.gpx</ulink> and <ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390306">rando_morbi2.gpx</ulink> from the OpenStreetMap website and put in a folder you will remember.
+            </para>       
+            <para>
+                Now, we are ready to start the workshop.
+                While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
+                If you need help concerning the functions of MobilityDB, please 
+                refer to the <ulink url="https://mobilitydb.com/documentation.html">documentation</ulink>. 
+            </para>
+        </abstract>
+    </bookinfo>
 
-    <section xml:id="intro">
-        <para>
-            This document is an example of how you can use MobilityDB in order to analyse data. It is directly inspired by 
-            the <ulink url="https://mobilitydb.github.io/MobilityDB-workshop/develop/html/index.html">MobilityDB Workshop</ulink> already existing. 
-            We will throughout this document present different use cases of MobilityDB, which is an extension on PostGIS and PostgreSQL. 
-        </para>       
-        <para>
-            This workshop was made by two students from <ulink url="https://www.insa-rennes.fr/index.html">INSA Rennes</ulink> during an internship in June, July and August 2024. 
-        </para>
-        <para>
-            We will use data from <ulink url="https://www.openstreetmap.org/user/atchisson/traces">OpenStreetMap</ulink>. The traces we are going to use in this example are rando_morbi1.gpx and rando_morbi2.gpx.<sbr/>
-            GPX is a common file format for storing GPS data. It is used by many GPS devices and applications to store track logs and waypoints. In our case, a person did two hikes on the 26th of June 2024, in the Morbihan, and saved the data in two GPX files.<sbr />
-            Then, this person exported the data to OpenStreetMap and we can use his trace as we want. We will use these GPX files in this workshop.<sbr />
-            Please download the files<ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390305"> rando_morbi1.gpx</ulink> and <ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390306">rando_morbi2.gpx</ulink> from the OpenStreetMap website and put in a folder you will remember.
-        </para>       
-        <para>
-            Now, we are ready to start the workshop.<sbr/>
-            While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
-            If you need help concerning the functions of MobilityDB, please 
-            refer to the <ulink url="https://mobilitydb.com/documentation.html">documentation</ulink>. 
-        </para>
-    </section>
 
-    <section xml:id="chapter1">
+    <chapter id="chapter1">
         <title>Chapter 1: Treating the data</title>
 
-        <section xml:id="part11">
+        <section id="part11">
             <title>Loading GPX data</title>
 
                 <para>
@@ -140,7 +146,7 @@ python3 python_file.py &lt; example.gpx &gt; example.csv
                 </para>
                 <para>
                     This is what the resulting CSV file will look like, with one column for the longitudes, one for the latitudes and the last one for the timestamps:
-                    <programlisting language = "csv">
+                    <programlisting>
 lon,lat,time
 -2.869371,47.551691,2024-06-26T14:04:15+02:00
 -2.86959,47.551946,2024-06-26T14:04:40+02:00
@@ -216,19 +222,19 @@ SET trajectory = trajectory(trip);
                 </para>
             </section>
 
-    </section>
-    <section xml:id="chapter2">
+    </chapter>
+    <chapter id="chapter2">
         <title>Chapter 2: Visualizing the data</title>
 
-        <section xml:id="part21">
+        <section id="part21">
         <title>Introduction</title>
 
         <para>
-            Now that we have cleaned the data and made it ready to be used, we will visualize the data in order to have a better understanding of it.<sbr/>
-            To do so, we are going to use QGIS, a free and open-source geographic information system. You can download it <ulink url="https://qgis.org/en/site/forusers/download.html">here</ulink>.<sbr/>
-            If you're interested, know that we are going to follow this tutorial: <ulink url="https://www.youtube.com/watch?v=titgXKp0kms&amp;t=4940s">MobilityDB: Hands on Tutorial on Managing and Visualizing Geospatial Trajectories in SQL</ulink>.<sbr/>
+            Now that we have cleaned the data and made it ready to be used, we will visualize the data in order to have a better understanding of it.
+            To do so, we are going to use QGIS, a free and open-source geographic information system. You can download it <ulink url="https://qgis.org/en/site/forusers/download.html">here</ulink>.
+            If you're interested, know that we are going to follow this tutorial: <ulink url="https://www.youtube.com/watch?v=titgXKp0kms&amp;t=4940s">MobilityDB: Hands on Tutorial on Managing and Visualizing Geospatial Trajectories in SQL</ulink>.
             We will use the plugin Move to visualize the data. Here is the <ulink url="https://github.com/mschoema/move/tree/master">repo</ulink> where you can find it.
-            Please click on the move.zip file, and download it. Take care to do it like in this following <phrase xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="#move.zip">image</phrase>, otherwise it could not be downloaded correctly. Also, put it in a folder you will remember.
+            Please click on the move.zip file, and download it. Take care to do it like in this following image, otherwise it could not be downloaded correctly. Also, put it in a folder you will remember.
             <table frame='none'>
                 <title>Download the move.zip file</title>
                 <tgroup cols="2">
@@ -253,25 +259,22 @@ SET trajectory = trajectory(trip);
                 </tgroup>
             </table>
             Now, open QGIS and click on Plugins → Manage and Install Plugins. Click on the install from zip button and select the move.zip file you just downloaded. 
-            Then, you can use the plugin to visualize the data. A MobilityDB logo will appear on the up-left corner of the screen.<sbr />
-            <section xml:id="moveError">
-                <title>Plugin error</title>
-                <para>
-                You may have an error saying:
-<programlisting>Couldn't load plugin 'move' due to an error when calling its classFactory() method 
-ModuleNotFoundError: No module named 'psycopg'</programlisting>
-                To fix this, you need to install the psycopg module. You can do it by running the following command in a terminal:
-<programlisting language="bash" xml:space="preserve">pip install psycopg</programlisting>
-                If you've had to install the psycopg module, you will need to uninstall the incorrect move plugin that you just installed (Plugins → Manage and Install Plugins → Installed → Move → Uninstall Plugin) and then reinstall it. You may also need to restart QGIS to make the plugin work.
-                </para>
-            </section>
+            Then, you can use the plugin to visualize the data. A MobilityDB logo will appear on the up-left corner of the screen. 
         </para>       
+        <para>
+        You may have an error saying:
+    <programlisting>Couldn't load plugin 'move' due to an error when calling its classFactory() method 
+    ModuleNotFoundError: No module named 'psycopg'</programlisting>
+        To fix this, you need to install the psycopg module. You can do it by running the following command in a terminal:
+    <programlisting language="bash" xml:space="preserve">pip install psycopg</programlisting>
+        If you've had to install the psycopg module, you will need to uninstall the incorrect move plugin that you just installed (Plugins → Manage and Install Plugins → Installed → Move → Uninstall Plugin) and then reinstall it. You may also need to restart QGIS to make the plugin work.
+        </para>
         </section>
-        <section xml:id="part22">
+        <section id="part22">
         <title>Connecting to the database</title>
         
         <para>
-            You can now create a new blank project in QGIS.<sbr/>
+            You can now create a new blank project in QGIS.
             Then in the browser on the left of the screen, you should find a 'PostGIS' line. Right click on it and then 'New Connection...'.
             You will see this window:
         </para>
@@ -287,19 +290,19 @@ ModuleNotFoundError: No module named 'psycopg'</programlisting>
             Here is what you need to fill out:
             <itemizedlist>
                 <listitem>
-                    Name: choose a name for this connection                    
+                    <para>Name: choose a name for this connection</para>                    
                 </listitem>
                 <listitem>
-                    Host: if the database is hosted on your machine, then 'localhost'. If not, you should be able to fgure it out by yourself.
+                    <para>Host: if the database is hosted on your machine, then 'localhost'. If not, you should be able to fgure it out by yourself.</para>
                 </listitem>
                 <listitem>
-                    Port: again, if self hosted then keep '5432', if not you should know.
+                    <para>Port: again, if self hosted then keep '5432', if not you should know.</para>
                 </listitem>
                 <listitem>
-                    Database: here write the name of the database in which you have loaded the data.
+                    <para>Database: here write the name of the database in which you have loaded the data.</para>
                 </listitem>
                 <listitem>
-                    Authentication: go to the 'Basic' tab and fill out the user name and password for the account that has access to the database. Make sure to check the 'Store' boxes next to User name and Password.
+                    <para>Authentication: go to the 'Basic' tab and fill out the user name and password for the account that has access to the database. Make sure to check the 'Store' boxes next to User name and Password.</para>
                 </listitem>
             </itemizedlist>
         </para>
@@ -309,13 +312,13 @@ ModuleNotFoundError: No module named 'psycopg'</programlisting>
         </para>
         
         </section>
-        <section xml:id="part23">
+        <section id="part23">
             <title>Visualizing the data</title>
             <para>
-                Now that you have connected to the database, you can visualize the data. <sbr/>
-                First, let's put a map layer. In the browser window (on the left of the screen), click on 'XYZ Tiles' and then right click on 'OpenStreetMap' and select 'Add Layer to Project'.<sbr/>
-                You will see an OpenStreetMap layer in the inferior left part of the screen.<sbr/>
-                You can zoom in the part you are studyin. In our case, we are focusing on a part of France, in Britanny, called Morbihan.<sbr/>
+                Now that you have connected to the database, you can visualize the data. 
+                First, let's put a map layer. In the browser window (on the left of the screen), click on 'XYZ Tiles' and then right click on 'OpenStreetMap' and select 'Add Layer to Project'.
+                You will see an OpenStreetMap layer in the inferior left part of the screen.
+                You can zoom in the part you are studyin. In our case, we are focusing on a part of France, in Britanny, called Morbihan.
                 <figure id="OpenStreetMap" float="start">
                     <title>OpenStreetMap layer</title>
                     <mediaobject>
@@ -325,7 +328,7 @@ ModuleNotFoundError: No module named 'psycopg'</programlisting>
                     </mediaobject>
                 </figure>
                 Then, let's add the data we have loaded in the database.
-                First, let's draw the trajectory. Click on PostGIS → connection_name → public → trips_mdb → Fields → trajectory. You will see the trajectory in the map.<sbr/>
+                First, let's draw the trajectory. Click on PostGIS → connection_name → public → trips_mdb → Fields → trajectory. You will see the trajectory in the map.
                 Now, we want to visualize the moving point of the trip.
                 To do so, you need to click on the 'Move' logo on the up-left side of the screen.
                 Select your database and the table you want to visualize. Then, you can write a query and execute it. We are going to put in this query:
@@ -352,5 +355,5 @@ ModuleNotFoundError: No module named 'psycopg'</programlisting>
             </figure>
         </section>
 
-    </section>
+    </chapter>
 </book>
