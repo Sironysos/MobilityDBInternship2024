@@ -99,7 +99,7 @@ creator="Example creator"&gt;
 
                 <para>
                     To begin working on this file, you will need to transform the GPX data in order to use it with MobilityDB. 
-                    The Python script below (called gpw_to_csv.py in our github) creates a CSV file based on the GPX one. 
+                    The Python script below (called gpx_to_csv.py in our github) creates a CSV file based on the GPX one. 
                     It uses expat, a stream-oriented XML parser library.
                 </para>
                 <para>
@@ -132,14 +132,14 @@ p.ParseFile(sys.stdin.buffer)
                     </programlisting>
                 </para>
                 <para>
-                    To use it, you can copy and paste this code into a ython file and run it with the following command (make sure to indicate the paths for each file):
+                    To use it, you can copy and paste this code into a Python file and run it with the following command (make sure to indicate the paths for each file):
                     <programlisting language = "bash">
-python3 python_file.py &lt; example.gpx > example.csv
+python3 python_file.py &lt; example.gpx &gt; example.csv
                     </programlisting>
                     You can have different names for the gpx and csv files if you want, but make sure to change the names in the command.
                 </para>
                 <para>
-                    This is what the resulting CSV file will look like:
+                    This is what the resulting CSV file will look like, with one column for the longitudes, one for the latitudes and the last one for the timestamps:
                     <programlisting language = "csv">
 lon,lat,time
 -2.869371,47.551691,2024-06-26T14:04:15+02:00
@@ -224,39 +224,36 @@ SET trajectory = trajectory(trip);
         <title>Introduction</title>
 
         <para>
-            Now, we have cleaned the data and made it ready to be used. We will now visualize the data in order to have a better understanding of it.<sbr/>
+            Now that we have cleaned the data and made it ready to be used, we will visualize the data in order to have a better understanding of it.<sbr/>
             To do so, we are going to use QGIS, a free and open-source geographic information system. You can download it <ulink url="https://qgis.org/en/site/forusers/download.html">here</ulink>.<sbr/>
-            Just for you to know, we are going to follow this tutorial: <ulink url="https://www.youtube.com/watch?v=titgXKp0kms&amp;t=4940s">MobilityDB: Hands on Tutorial on Managing and Visualizing Geospatial Trajectories in SQL</ulink>.<sbr/>
+            If you're interested, know that we are going to follow this tutorial: <ulink url="https://www.youtube.com/watch?v=titgXKp0kms&amp;t=4940s">MobilityDB: Hands on Tutorial on Managing and Visualizing Geospatial Trajectories in SQL</ulink>.<sbr/>
             We will use the plugin Move to visualize the data. Here is the <ulink url="https://github.com/mschoema/move/tree/master">repo</ulink> where you can find it.
             Please click on the move.zip file, and download it. Take care to do it like in this following <phrase xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="#move.zip">image</phrase>, otherwise it could not be downloaded correctly. Also, put it in a folder you will remember.
-            <figure id="move.zip">
-                <title>How to download the plugin properly</title>
-                <table frame='none'>
-                    <title>Images</title>
-                    <tgroup cols="2">
-                        <tbody>
-                            <row>
-                                <entry>
-                                    <mediaobject>
-                                        <imageobject>
-                                            <imagedata fileref="./images/moveFolder.png"/>
-                                        </imageobject>
-                                    </mediaobject>
-                                </entry>
-                                <entry>
-                                    <mediaobject>
-                                        <imageobject>
-                                            <imagedata fileref="./images/moveZip.png"/>
-                                        </imageobject>
-                                    </mediaobject>
-                                </entry>
-                            </row>
-                        </tbody>
-                    </tgroup>
-                </table>
-            </figure>
-            Now, open QGIS and click on Plugins-&gt;Manage and Install Plugins. Click on the install from zip button and select the move.zip file you just downloaded. 
-            Then, you can use the plugin to visualize the data. A MobilityDB logo will appear on the up-left side of the screen.<sbr />
+            <table frame='none'>
+                <title>Download the move.zip file</title>
+                <tgroup cols="2">
+                    <tbody>
+                        <row>
+                            <entry>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata fileref="./images/moveFolder.png"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </entry>
+                            <entry>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata fileref="./images/moveZip.png"/>
+                                    </imageobject>
+                                </mediaobject>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+            Now, open QGIS and click on Plugins → Manage and Install Plugins. Click on the install from zip button and select the move.zip file you just downloaded. 
+            Then, you can use the plugin to visualize the data. A MobilityDB logo will appear on the up-left corner of the screen.<sbr />
             <section xml:id="moveError">
                 <title>Plugin error</title>
                 <para>
@@ -265,7 +262,7 @@ SET trajectory = trajectory(trip);
 ModuleNotFoundError: No module named 'psycopg'</programlisting>
                 To fix this, you need to install the psycopg module. You can do it by running the following command in a terminal:
 <programlisting language="bash" xml:space="preserve">pip install psycopg</programlisting>
-                If you've had to install the psycopg module, you will need to uninstall the incorrect move plugin that you just installed (Plugins-&gt;Manage and Install Plugins-&gt;Installed-&gt;Move-&gt;Uninstall Plugin) and then reinstall it. You may also need to restart QGIS to make the plugin work.
+                If you've had to install the psycopg module, you will need to uninstall the incorrect move plugin that you just installed (Plugins → Manage and Install Plugins → Installed → Move → Uninstall Plugin) and then reinstall it. You may also need to restart QGIS to make the plugin work.
                 </para>
             </section>
         </para>       
@@ -328,14 +325,15 @@ ModuleNotFoundError: No module named 'psycopg'</programlisting>
                     </mediaobject>
                 </figure>
                 Then, let's add the data we have loaded in the database.
-                First, let's draw the trajectory. Click on PostGIS-&gt;randonnee-&gt;public-&gt;trips_mdb-&gt;Fields-&gt;trajectory. You will see the trajectory in the map.<sbr/>
+                First, let's draw the trajectory. Click on PostGIS → connection_name → public → trips_mdb → Fields → trajectory. You will see the trajectory in the map.<sbr/>
                 Now, we want to visualize the moving point of the trip.
                 To do so, you need to click on the 'Move' logo on the up-left side of the screen.
-                Select your database and the table you want to visualize. Then, you can write a query and execute it. We are going to put this query:
+                Select your database and the table you want to visualize. Then, you can write a query and execute it. We are going to put in this query:
 <programlisting language="SQL" xml:space="preserve">SELECT date, trip FROM trips_mdb;</programlisting>
                 Now click on 'Execute Query'.
-                Let's see the trip moving while we are visualizing it. To do so, click on View-&gt;Panels-&gt;Temporal Controller. You will see a window like this: 
+                Let's see the trip moving while we are visualizing it. To do so, click on View → Panels → Temporal Controller. You will see a window like this: 
                 <figure id="TemporalController" float="start">
+                    <title>Full temporal visualization</title>
                     <mediaobject>
                         <imageobject>
                             <imagedata fileref="./images/Visual.png"/>
@@ -345,6 +343,7 @@ ModuleNotFoundError: No module named 'psycopg'</programlisting>
                 Now this is your time to play with the data and visualize it as you want. You can put the time in the temporal controller and see the trip moving. You can also change the color of the trip, the size of the points, etc.
             </para>
             <figure id="Gif" float="start">
+                <title>Visualizing the trip</title>
                 <mediaobject>
                     <imageobject>
                         <imagedata fileref="./images/dessin.gif"/>
