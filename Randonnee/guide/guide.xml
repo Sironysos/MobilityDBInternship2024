@@ -4,7 +4,6 @@
 <book lang="en">
     <title>MobilityDB Hiking Workshop</title>
     <subtitle>How to use MobilityDB to analyze hiking data</subtitle>
-    <titleabbrev>MobilityDB Hiking Workshop</titleabbrev>
     <bookinfo>
 
         <!-- Authors -->
