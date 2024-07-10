@@ -145,15 +145,7 @@ psql -U &lt;username&gt; -d workshop
         <section id="part21">
         <title>Introduction</title>
 
-              
-        <para>
-        You may have an error saying:
-    <programlisting>Couldn't load plugin 'move' due to an error when calling its classFactory() method 
-    ModuleNotFoundError: No module named 'psycopg'</programlisting>
-        To fix this, you need to install the psycopg module. You can do it by running the following command in a terminal:
-    <programlisting language="bash" xml:space="preserve">pip install psycopg</programlisting>
-        If you've had to install the psycopg module, you will need to uninstall the incorrect move plugin that you just installed (Plugins → Manage and Install Plugins → Installed → Move → Uninstall Plugin) and then reinstall it. You may also need to restart QGIS to make the plugin work.
-        </para>
+         
         </section>
         <section id="part22">
         <title>Connecting to the database</title>

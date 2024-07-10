@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>MobilityDB Beginnings Workshop</title><link rel="stylesheet" type="text/css" href="guide.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /><meta name="description" content="This document is a guide on how you can install MobilityDB and use it in order to analyse data. It is directly inspired by the MobilityDB Workshop already existing. We will throughout this document present different use cases of MobilityDB, which is an extension on PostGIS and PostgreSQL. This workshop was made by two students from INSA Rennes during an internship in June, July and August 2024.  Now, we are ready to start the workshop. While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. If you need help concerning the functions of MobilityDB, please refer to the documentation." /></head><body><div xml:lang="en" class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a id="idm1"></a>MobilityDB Beginnings Workshop</h1></div><div><h2 class="subtitle">How to install MobilityDB and use it for some basic querries</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Alice</span> <span class="surname">Lombard</span></h3><div class="affiliation"><span class="orgname">INSA Rennes, France<br /></span></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Raphaël</span> <span class="surname">Dubuget</span></h3><div class="affiliation"><span class="orgname">INSA Rennes, France<br /></span></div></div></div><div><div class="abstract"><p class="title"><strong>Abstract</strong></p><p>
+                This document is a guide on how you can install MobilityDB and use it in order to analyse data. It is directly inspired by 
+                the <a class="ulink" href="https://mobilitydb.github.io/MobilityDB-workshop/develop/html/index.html" target="_top">MobilityDB Workshop</a> already existing. 
+                We will throughout this document present different use cases of MobilityDB, which is an extension on <a class="ulink" href="https://postgis.net/" target="_top">PostGIS</a> and <a class="ulink" href="https://www.postgresql.org/" target="_top">PostgreSQL</a>. 
+            </p><p>
+                This workshop was made by two students from <a class="ulink" href="https://www.insa-rennes.fr/index.html" target="_top">INSA Rennes</a> during an internship in June, July and August 2024. 
+            </p><p>
+                
+            </p><p>
+                Now, we are ready to start the workshop.
+                While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
+                If you need help concerning the functions of MobilityDB, please 
+                refer to the <a class="ulink" href="https://mobilitydb.com/documentation.html" target="_top">documentation</a>. 
+            </p></div></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="chapter"><a href="#chapter1">1. Chapter 1: Starting a database with MobilityDB </a></span></dt><dd><dl><dt><span class="section"><a href="#part11">Installing MobilityDB</a></span></dt><dt><span class="section"><a href="#part12">PgAdmin4: a PostgreSQL Editor</a></span></dt><dt><span class="section"><a href="#part13">Starting the database</a></span></dt></dl></dd><dt><span class="chapter"><a href="#chapter2">2. Chapter 2: Visualizing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#part21">Introduction</a></span></dt><dt><span class="section"><a href="#part22">Connecting to the database</a></span></dt><dt><span class="section"><a href="#part23">Visualizing the data</a></span></dt></dl></dd></dl></div><div class="list-of-figures"><p><strong>List of Figures</strong></p><dl><dt>2.1. <a href="#NewConnection">New PostGIS Connection</a></dt><dt>2.2. <a href="#OpenStreetMap">OpenStreetMap layer</a></dt><dt>2.3. <a href="#TemporalController">Full temporal visualization</a></dt><dt>2.4. <a href="#Gif">Visualizing the trip</a></dt></dl></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="chapter1"></a>Chapter 1. Chapter 1: Starting a database with MobilityDB </h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#part11">Installing MobilityDB</a></span></dt><dt><span class="section"><a href="#part12">PgAdmin4: a PostgreSQL Editor</a></span></dt><dt><span class="section"><a href="#part13">Starting the database</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part11"></a>Installing MobilityDB</h2></div></div></div><p>
+                For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
+                
+    
+                If you run Ubuntu 22.04 (Jammy Jellyfish), you can simply execute the following in a terminal:
+                </p><pre class="programlisting">
+sudo apt update
+# We will need the foloowing packages:
+sudo apt install curl ca-certificates gnupg
+
+# Install the public key for the repository (if not done previously):
+curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg &gt;/dev/null
+
+# Create the repository configuration file:
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" &gt;&gt; /etc/apt/sources.list.d/postgresql.list'
+sudo apt update
+sudo apt upgrade
+
+# Install the mobilitydb package with apt. It will automatically install the dependancies needed, PosgreSQL and PostGIS in particular.
+sudo apt install postgresql-16-mobilitydb
+                </pre><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part12"></a>PgAdmin4: a PostgreSQL Editor</h2></div></div></div><p>
+                We are going to execute SQL commands. To do so, you can do it in a terminal or use any IDE you like. If you do not have one, here is the link to install PgAdmin4, 
+                you just need to choose your distribution and follow the instructions: <a class="ulink" href="https://www.pgadmin.org/download/" target="_top">https://www.pgadmin.org/download/</a>.
+            </p><p>
+                You could also try <a class="ulink" href=" https://www.jetbrains.com/datagrip/" target="_top">DataGrip</a> from Jetbrains. We didn't use it in this workshop, but we're sure it's a good tool.
+            </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part13"></a>Starting the database</h2></div></div></div><p>
+                In order to start the PostgreSQL database, you need to do as following, replacing username by your
+                own username. Note that in this case "workshop" is the name of the database we are creating, but you can choose your own name if you take care to change it every time it is needed later. 
+                Additionnaly, &lt;username&gt; should correspond to your OS user name.
+                </p><pre class="programlisting">
+sudo -u postgres createuser -s -i -d -r -l -w &lt;username&gt;
+sudo -u postgres createdb workshop
+sudo service postgresql start
+psql -U &lt;username&gt; -d workshop
+                </pre><p>
+            </p><p>
+                You can now connect to the database in pgAdmin. Here are the steps to do so:
+                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>On the dahboard click 'Add New Server'</p></li><li class="listitem"><p>Fill out a name of your choosing for the server</p></li><li class="listitem"><p>Fill out the host name, which is 'localhost' if you are hosting the database on your machine</p></li><li class="listitem"><p>Fill out the port, which is '5432' if you are hosting the database on your machine</p></li><li class="listitem"><p>Fill out the username and password you used to create the database</p></li></ul></div><p>
+            </p><p>
+                You can now find your database in the browser on the left of the screen.
+                If you're having troule finding it, here is the explicit path in the Objext Explorer on the left:
+                Servers → Server_name → Databases → workshop                
+                You can now right click on 'workshop' to open the Querry Tool. This is where we will write and execute our querries.
+            </p></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="chapter2"></a>Chapter 2. Chapter 2: Visualizing the data</h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#part21">Introduction</a></span></dt><dt><span class="section"><a href="#part22">Connecting to the database</a></span></dt><dt><span class="section"><a href="#part23">Visualizing the data</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part21"></a>Introduction</h2></div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part22"></a>Connecting to the database</h2></div></div></div><p>
+            You can now create a new blank project in QGIS.
+            Then in the browser on the left of the screen, you should find a 'PostGIS' line. Right click on it and then 'New Connection...'.
+            You will see this window:
+        </p><div class="figure-float"><div class="figure"><a id="NewConnection"></a><p class="title"><strong>Figure 2.1. New PostGIS Connection</strong></p><div class="figure-contents"><div class="mediaobject"><img src="./images/PostGIS_Connection.png" alt="New PostGIS Connection" /></div></div></div><br class="figure-break" /></div><p>
+            Here is what you need to fill out:
+            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Name: choose a name for this connection</p></li><li class="listitem"><p>Host: if the database is hosted on your machine, then 'localhost'. If not, you should be able to fgure it out by yourself.</p></li><li class="listitem"><p>Port: again, if self hosted then keep '5432', if not you should know.</p></li><li class="listitem"><p>Database: here write the name of the database in which you have loaded the data.</p></li><li class="listitem"><p>Authentication: go to the 'Basic' tab and fill out the user name and password for the account that has access to the database. Make sure to check the 'Store' boxes next to User name and Password.</p></li></ul></div><p>
+        </p><p>
+            You can now click OK and find your connection, database and the trips_mdb table in the tree below the PostGIS line in the QGIS Browser.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part23"></a>Visualizing the data</h2></div></div></div><p>
+                Now that you have connected to the database, you can visualize the data. 
+                First, let's put a map layer. In the browser window (on the left of the screen), click on 'XYZ Tiles' and then right click on 'OpenStreetMap' and select 'Add Layer to Project'.
+                You will see an OpenStreetMap layer in the inferior left part of the screen.
+                You can zoom in the part you are studyin. In our case, we are focusing on a part of France, in Britanny, called Morbihan.
+                </p><div class="figure-float"><div class="figure"><a id="OpenStreetMap"></a><p class="title"><strong>Figure 2.2. OpenStreetMap layer</strong></p><div class="figure-contents"><div class="mediaobject"><img src="./images/OpenStreetMap.png" alt="OpenStreetMap layer" /></div></div></div><br class="figure-break" /></div><p>
+                Then, let's add the data we have loaded in the database.
+                First, let's draw the trajectory. Click on PostGIS → connection_name → public → trips_mdb → Fields → trajectory. You will see the trajectory in the map.
+                Now, we want to visualize the moving point of the trip.
+                To do so, you need to click on the 'Move' logo on the up-left side of the screen.
+                Select your database and the table you want to visualize. Then, you can write a query and execute it. We are going to put in this query:
+</p><pre class="programlisting">SELECT date, trip FROM trips_mdb;</pre><p>
+                Now click on 'Execute Query'.
+                Let's see the trip moving while we are visualizing it. To do so, click on View → Panels → Temporal Controller. You will see a window like this: 
+                </p><div class="figure-float"><div class="figure"><a id="TemporalController"></a><p class="title"><strong>Figure 2.3. Full temporal visualization</strong></p><div class="figure-contents"><div class="mediaobject"><img src="./images/Visual.png" alt="Full temporal visualization" /></div></div></div><br class="figure-break" /></div><p>
+                Now this is your time to play with the data and visualize it as you want. You can put the time in the temporal controller and see the trip moving. You can also change the color of the trip, the size of the points, etc.
+            </p><div class="figure-float"><div class="figure"><a id="Gif"></a><p class="title"><strong>Figure 2.4. Visualizing the trip</strong></p><div class="figure-contents"><div class="mediaobject"><img src="./images/dessin.gif" alt="Visualizing the trip" /></div></div></div><br class="figure-break" /></div></div></div></div></body></html>
