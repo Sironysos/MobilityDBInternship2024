@@ -15,13 +15,13 @@
                 While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
                 If you need help concerning the functions of MobilityDB, please 
                 refer to the <a class="ulink" href="https://mobilitydb.com/documentation.html" target="_top">documentation</a>. 
-            </p></div></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="chapter"><a href="#chapter1">1. Chapter 1: Analyzing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#part11">Loading GPX data</a></span></dt></dl></dd><dt><span class="chapter"><a href="#chapter2">2. Chapter 2: Visualizing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#part21">Introduction</a></span></dt><dt><span class="section"><a href="#part22">Connecting to the database</a></span></dt><dt><span class="section"><a href="#part23">Visualizing the data</a></span></dt></dl></dd></dl></div><div class="list-of-figures"><p><strong>List of Figures</strong></p><dl><dt>2.1. <a href="#NewConnection">New PostGIS Connection</a></dt><dt>2.2. <a href="#OpenStreetMap">OpenStreetMap layer</a></dt><dt>2.3. <a href="#TemporalController">Full temporal visualization</a></dt><dt>2.4. <a href="#Gif">Visualizing the trip</a></dt></dl></div><div class="list-of-tables"><p><strong>List of Tables</strong></p><dl><dt>2.1. <a href="#idm51">Download the move.zip file</a></dt></dl></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="chapter1"></a>Chapter 1. Chapter 1: Analyzing the data</h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#part11">Loading GPX data</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part11"></a>Loading GPX data</h2></div></div></div><p>
-                    GPX, or GPS Exchange Format, is an XML data format for GPS data. 
-                    Location data (and optionally elevation, time, and other information) is stored in tags and can be interchanged between GPS devices and software. 
-                    Conceptually, a GPX file contains tracks, which are a record of where a moving object has been, and routes, 
-                    which are suggestions about where it might go in the future. Furthermore, both tracks and routes and composed by points. 
-                    The following is a truncated (for brevity) example GPX file.
-                    </p><pre class="programlisting">
+            </p></div></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="chapter"><a href="#chapter1">1. Chapter 1: Analyzing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#part11">Loading GPX data</a></span></dt><dt><span class="section"><a href="#part12">Transforming the data</a></span></dt></dl></dd><dt><span class="chapter"><a href="#chapter2">2. Chapter 2: Visualizing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#part21">Introduction</a></span></dt><dt><span class="section"><a href="#part22">Connecting to the database</a></span></dt><dt><span class="section"><a href="#part23">Visualizing the data</a></span></dt></dl></dd></dl></div><div class="list-of-figures"><p><strong>List of Figures</strong></p><dl><dt>2.1. <a href="#NewConnection">New PostGIS Connection</a></dt><dt>2.2. <a href="#OpenStreetMap">OpenStreetMap layer</a></dt><dt>2.3. <a href="#TemporalController">Full temporal visualization</a></dt><dt>2.4. <a href="#Gif">Visualizing the trip</a></dt></dl></div><div class="list-of-tables"><p><strong>List of Tables</strong></p><dl><dt>2.1. <a href="#idm59">Download the move.zip file</a></dt></dl></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="chapter1"></a>Chapter 1. Chapter 1: Analyzing the data</h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#part11">Loading GPX data</a></span></dt><dt><span class="section"><a href="#part12">Transforming the data</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part11"></a>Loading GPX data</h2></div></div></div><p>
+                GPX, or GPS Exchange Format, is an XML data format for GPS data. 
+                Location data (and optionally elevation, time, and other information) is stored in tags and can be interchanged between GPS devices and software. 
+                Conceptually, a GPX file contains tracks, which are a record of where a moving object has been, and routes, 
+                which are suggestions about where it might go in the future. Furthermore, both tracks and routes and composed by points. 
+                The following is a truncated (for brevity) example GPX file.
+                </p><pre class="programlisting">
 &lt;?xml version='1.0' encoding='UTF-8' standalone='yes' ?&gt;
 &lt;gpx version="1.1"
 xmlns="http://www.topografix.com/GPX/1/1"
@@ -61,126 +61,80 @@ creator="Example creator"&gt;
 	[...]
 &lt;/trk&gt;
 [...]
-&lt;gpx&gt;
-                    </pre><p>
-                </p><p>
-                    To begin working on this file, you will need to transform the GPX data in order to use it with MobilityDB. 
-                    The Python script below (called gpx_to_csv.py in our github) creates a CSV file based on the GPX one. 
-                    It uses expat, a stream-oriented XML parser library.
-                </p><p>
-                    </p><pre class="programlisting">
-import sys
-import xml.parsers.expat
+&lt;gpx&gt;</pre><p>
+            </p><p>
+                To load the GPX data into MobilityDB, we fare going to use ogr2ogr, a command line tool that converts data between different formats.
+                First, you need to create a database. Let's name it "hiking". Here is how you can do it:
+                </p><pre class="programlisting">
+sudo -u <span class="custom-color-red">user</span> psql -d postgres -c "CREATE DATABASE hiking;"</pre><p>
+            </p><p>
+                Of course you need to replace <span class="custom-color-red">user</span> by your username. 
+                Then, you need to load the MobilityDB extension into the database. Here is how you can do it:
+                </p><pre class="programlisting">
+CREATE EXTENSION mobilitydb CASCADE;</pre><p>
+                We are now ready to import the data. Go to the folder where you have put the GPX files and run the following command:
+                </p><pre class="programlisting">
+ogr2ogr -append -f PostgreSQL PG:dbname=hiking <span class="custom-color-red">11390305</span>.gpx</pre><p>
+                You need to replace <span class="custom-color-red">11390305</span> by the name of the file you want to import. 
+                Please run this command with both files.
+                Now, you should have the data in the database. 
+            </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part12"></a>Transforming the data</h2></div></div></div><p>
+                Let's have a look at the table "tracks" and "track_points" which were created by ogr2ogr.
+                </p><pre class="programlisting">
+SELECT * FROM track_points;
+SELECT * FROM tracks;</pre><p>
+                You can see that the table "track_points" contains the points of the track, and the table "tracks" contains the entire tracks. We are going to work with the table "track_points".
+                First, we see that the two tracks are in the same table. We are going to put an ID for each track so that we can differentiate them. Here is how you can do it:
+                </p><pre class="programlisting">
+ALTER TABLE track_points ADD COLUMN track_number int;
 
-stack = []
-def start_element(name, attrs):
-stack.append(name)
-if name == 'gpx' :
-    print("lon,lat,time")
-if name == 'trkpt' :
-    print("{},{},".format(attrs['lon'], attrs['lat']), end="")
-
-def end_element(name):
-stack.pop()
-
-def char_data(data):
-if stack[-1] == "time" and stack[-2] == "trkpt" :
-    print(data)
-
-p = xml.parsers.expat.ParserCreate()
-
-p.StartElementHandler = start_element
-p.EndElementHandler = end_element
-p.CharacterDataHandler = char_data
-
-p.ParseFile(sys.stdin.buffer)
-                    </pre><p>
-                </p><p>
-                    To use it, you can copy and paste this code into a Python file and run it with the following command (make sure to indicate the paths for each file):
-                    </p><pre class="programlisting">
-python3 python_file.py &lt; example.gpx &gt; example.csv
-                    </pre><p>
-                    You can have different names for the gpx and csv files if you want, but make sure to change the names in the command.
-                </p><p>
-                    This is what the resulting CSV file will look like, with one column for the longitudes, one for the latitudes and the last one for the timestamps:
-                    </p><pre class="programlisting">
-lon,lat,time
--2.869371,47.551691,2024-06-26T14:04:15+02:00
--2.86959,47.551946,2024-06-26T14:04:40+02:00
--2.86982,47.55215,2024-06-26T14:05:04+02:00
-...
-                    </pre><p>
-                </p><p>
-                    This CSV file can then be loaded into MobilityDB as follows (be carefull to read the comments as you cannot just run everything together):
-                    </p><pre class="programlisting">
-DROP EXTENSION IF EXISTS mobilitydb CASCADE;
-CREATE EXTENSION mobilityDB CASCADE;
-
-DROP TABLE IF EXISTS trips_input;
-CREATE TABLE trips_input (
-    id int,
-    lon float,
-    lat float,
-    time timestamptz
-);
-
-INSERT INTO trips_input VALUES
-(0,NULL,NULL,NULL);
-
-
--- Here you need to import each trip file separatly. 
--- This allows you to put a different ID on each trip, because if you import all of them at the same time it becomes difficult to tell apart the trips from one another.
-
--- First run the following SQL command (you need to change the name of the file you want to import and the path to it)
-COPY trips_input(lon, lat, time) FROM
-'/home/gpx_data/example.csv' DELIMITER ',' CSV HEADER;
-
--- Do the above or run the command below in a terminal if you have a permission error
--- (you need to change the name of the database, and the name and path to the file you want to import)
--- psql -d DataBaseName -c "\copy trips_input(lon, lat, time) FROM '/home/gpx_data/exemple.csv' DELIMITER ',' CSV HEADER;"
-
--- Then run this command to update the ID
-WITH max_id_cte AS (
-    SELECT MAX(id)+1 AS max_id FROM trips_input
+WITH NumberedTracks AS (
+SELECT *, LAG(track_seg_point_id) OVER (ORDER BY ogc_fid) AS prev_value
+FROM track_points
 ),
-rows_to_update AS (
-    SELECT id, (SELECT max_id FROM max_id_cte) AS new_id
-    FROM trips_input
-    WHERE id IS NULL
+TrackIdentifiers AS (
+SELECT ogc_fid, SUM(CASE WHEN track_seg_point_id &lt; prev_value THEN 1 ELSE 0 END) OVER (ORDER BY ogc_fid) + 1 AS track_id
+FROM NumberedTracks
 )
-UPDATE trips_input SET id = rows_to_update.new_id
-FROM rows_to_update
-WHERE trips_input.id IS NULL;
-
--- Now you can repeat the last two steps for each trip file you want to import. Don’t forget to change the name of the file each time!
-
-
+UPDATE track_points tp
+SET track_number = ti.track_id
+FROM TrackIdentifiers ti
+WHERE tp.ogc_fid = ti.ogc_fid;</pre><p>
+            What we are doing here is that we are adding a column "track_number" to the table "track_points". Then, we are creating "NumberedTracks" which contains the previous value of the "track_seg_point_id" column.
+            Then, we are creating "TrackIdentifiers" which contains the track_id, depending on the previous track_seg_point_id: if it is smaller then we sum 0 but if it is higher, saying we start a new sequence in track_seq_point_id, we sum 1. 
+            Finally, we are updating the table "track_points" with the track_id.
+            </p><p>
+                We have to transform these geopgraphic points into a MobilityDB trajectory. Here is how you can do it:
+                </p><pre class="programlisting">
 DROP TABLE IF EXISTS trips_mdb;
 CREATE TABLE trips_mdb (
-    id int,
-    date date,
-    trip tgeompoint,
-    trajectory geometry,
-    PRIMARY KEY (id)
+id int,
+date date,
+trip tgeompoint,
+trajectory geometry,
+PRIMARY KEY (id)
 );
 
 INSERT INTO trips_mdb(id, date, trip)
-SELECT id, date(time), tgeompointSeq(array_agg(tgeompoint(
-    ST_SetSRID(ST_Point(lon, lat), 4326), time) ORDER BY time))
-FROM trips_input
-WHERE id != 0
-GROUP BY id, date;
+SELECT track_number, date(time), tgeompointSeq(array_agg(tgeompoint(
+wkb_geometry, time) ORDER BY time))
+FROM track_points
+GROUP BY track_number, date;
 
 UPDATE trips_mdb
-SET trajectory = trajectory(trip);
-                    </pre><p>
-                </p></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="chapter2"></a>Chapter 2. Chapter 2: Visualizing the data</h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#part21">Introduction</a></span></dt><dt><span class="section"><a href="#part22">Connecting to the database</a></span></dt><dt><span class="section"><a href="#part23">Visualizing the data</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part21"></a>Introduction</h2></div></div></div><p>
+SET trajectory = trajectory(trip);</pre><p>
+                What we are doing here is that we are creating a table "trips_mdb" with an id, a date, a trip and a trajectory. The trip is a tgeompoint, which is a MobilityDB type. 
+                We are inserting into this table the track_number, the date and the tgeompointSeq of the array of the tgeompoint. 
+                Finally, we are updating the table with the trajectory of the trip.
+            </p><p>
+                We are done with the data loading. In conclusion, we have loaded the GPX data into MobilityDB, and we have created a table "trips_mdb" which contains the trajectories of the trips. We are now ready to visualize the data.
+            </p></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="chapter2"></a>Chapter 2. Chapter 2: Visualizing the data</h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#part21">Introduction</a></span></dt><dt><span class="section"><a href="#part22">Connecting to the database</a></span></dt><dt><span class="section"><a href="#part23">Visualizing the data</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part21"></a>Introduction</h2></div></div></div><p>
             Now that we have cleaned the data and made it ready to be used, we will visualize the data in order to have a better understanding of it.
             To do so, we are going to use QGIS, a free and open-source geographic information system. You can download it <a class="ulink" href="https://qgis.org/en/site/forusers/download.html" target="_top">here</a>.
             If you're interested, know that we are going to follow this tutorial: <a class="ulink" href="https://www.youtube.com/watch?v=titgXKp0kms&amp;t=4940s" target="_top">MobilityDB: Hands on Tutorial on Managing and Visualizing Geospatial Trajectories in SQL</a>.
             We will use the plugin Move to visualize the data. Here is the <a class="ulink" href="https://github.com/mschoema/move/tree/master" target="_top">repo</a> where you can find it.
             Please click on the move.zip file, and download it. Take care to do it like in this following image, otherwise it could not be downloaded correctly. Also, put it in a folder you will remember.
-            </p><div class="table"><a id="idm51"></a><p class="title"><strong>Table 2.1. Download the move.zip file</strong></p><div class="table-contents"><table class="table" summary="Download the move.zip file" border="0"><colgroup><col /><col /></colgroup><tbody><tr><td>
+            </p><div class="table"><a id="idm59"></a><p class="title"><strong>Table 2.1. Download the move.zip file</strong></p><div class="table-contents"><table class="table" summary="Download the move.zip file" border="0"><colgroup><col /><col /></colgroup><tbody><tr><td>
                                 <div class="mediaobject"><img src="./images/moveFolder.png" /></div>
                             </td><td>
                                 <div class="mediaobject"><img src="./images/moveZip.png" /></div>
@@ -200,7 +154,7 @@ SET trajectory = trajectory(trip);
             You will see this window:
         </p><div class="figure-float"><div class="figure"><a id="NewConnection"></a><p class="title"><strong>Figure 2.1. New PostGIS Connection</strong></p><div class="figure-contents"><div class="mediaobject"><img src="./images/PostGIS_Connection.png" alt="New PostGIS Connection" /></div></div></div><br class="figure-break" /></div><p>
             Here is what you need to fill out:
-            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Name: choose a name for this connection</p></li><li class="listitem"><p>Host: if the database is hosted on your machine, then 'localhost'. If not, you should be able to fgure it out by yourself.</p></li><li class="listitem"><p>Port: again, if self hosted then keep '5432', if not you should know.</p></li><li class="listitem"><p>Database: here write the name of the database in which you have loaded the data.</p></li><li class="listitem"><p>Authentication: go to the 'Basic' tab and fill out the user name and password for the account that has access to the database. Make sure to check the 'Store' boxes next to User name and Password.</p></li></ul></div><p>
+            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Name: choose a name for this connection</p></li><li class="listitem"><p>Host: if the database is hosted on your machine, then 'localhost'. If not, you should be able to fgure it out by yourself.</p></li><li class="listitem"><p>Port: again, if self hosted then keep '5432', if not you should know.</p></li><li class="listitem"><p>Database: here write the name of the database in which you have loaded the data. In our case, it was "hiking".</p></li><li class="listitem"><p>Authentication: go to the 'Basic' tab and fill out the user name and password for the account that has access to the database. Make sure to check the 'Store' boxes next to User name and Password.</p></li></ul></div><p>
         </p><p>
             You can now click OK and find your connection, database and the trips_mdb table in the tree below the PostGIS line in the QGIS Browser.
         </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part23"></a>Visualizing the data</h2></div></div></div><p>

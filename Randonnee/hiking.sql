@@ -2,7 +2,7 @@ DROP EXTENSION IF EXISTS mobilitydb CASCADE;
 CREATE EXTENSION mobilityDB CASCADE;
 
 --here, do "ogr2ogr -append -f PostgreSQL PG:dbname=hiking ./data/11390305.gpx"
---and "ogr2ogr -append -f PostgreSQL PG:dbname=hiking ./data/11390305.gpx"
+--and "ogr2ogr -append -f PostgreSQL PG:dbname=hiking ./data/11390306.gpx"
 
 SELECT * FROM track_points;
 SELECT * FROM tracks;

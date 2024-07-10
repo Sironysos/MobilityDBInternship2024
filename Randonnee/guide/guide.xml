@@ -48,17 +48,15 @@
 
     <chapter id="chapter1">
         <title>Chapter 1: Analyzing the data</title>
-
         <section id="part11">
             <title>Loading GPX data</title>
-
-                <para>
-                    GPX, or GPS Exchange Format, is an XML data format for GPS data. 
-                    Location data (and optionally elevation, time, and other information) is stored in tags and can be interchanged between GPS devices and software. 
-                    Conceptually, a GPX file contains tracks, which are a record of where a moving object has been, and routes, 
-                    which are suggestions about where it might go in the future. Furthermore, both tracks and routes and composed by points. 
-                    The following is a truncated (for brevity) example GPX file.
-                    <programlisting language = "xml">
+            <para>
+                GPX, or GPS Exchange Format, is an XML data format for GPS data. 
+                Location data (and optionally elevation, time, and other information) is stored in tags and can be interchanged between GPS devices and software. 
+                Conceptually, a GPX file contains tracks, which are a record of where a moving object has been, and routes, 
+                which are suggestions about where it might go in the future. Furthermore, both tracks and routes and composed by points. 
+                The following is a truncated (for brevity) example GPX file.
+                <programlisting language = "xml">
 &lt;?xml version='1.0' encoding='UTF-8' standalone='yes' ?&gt;
 &lt;gpx version="1.1"
 xmlns="http://www.topografix.com/GPX/1/1"
@@ -98,128 +96,85 @@ creator="Example creator"&gt;
 	[...]
 &lt;/trk&gt;
 [...]
-&lt;gpx&gt;
-                    </programlisting>
-                </para>
+&lt;gpx&gt;</programlisting>
+            </para>
 
+            <para>
+                To load the GPX data into MobilityDB, we fare going to use ogr2ogr, a command line tool that converts data between different formats.
+                First, you need to create a database. Let's name it "hiking". Here is how you can do it:
+                <programlisting language="bash">
+sudo -u <phrase role="custom-color-red">user</phrase> psql -d postgres -c "CREATE DATABASE hiking;"</programlisting>
+            </para>
+            <para>
+                Of course you need to replace <phrase role="custom-color-red">user</phrase> by your username. 
+                Then, you need to load the MobilityDB extension into the database. Here is how you can do it:
+                <programlisting language="SQL">
+CREATE EXTENSION mobilitydb CASCADE;</programlisting>
+                We are now ready to import the data. Go to the folder where you have put the GPX files and run the following command:
+                <programlisting language="bash">
+ogr2ogr -append -f PostgreSQL PG:dbname=hiking <phrase role="custom-color-red">11390305</phrase>.gpx</programlisting>
+                You need to replace <phrase role="custom-color-red">11390305</phrase> by the name of the file you want to import. 
+                Please run this command with both files.
+                Now, you should have the data in the database. 
+            </para>
+        </section>
+        
+        <section id="part12">
+            <title>Transforming the data</title>
                 <para>
-                    To begin working on this file, you will need to transform the GPX data in order to use it with MobilityDB. 
-                    The Python script below (called gpx_to_csv.py in our github) creates a CSV file based on the GPX one. 
-                    It uses expat, a stream-oriented XML parser library.
-                </para>
-                <para>
-                    <programlisting language="python">
-import sys
-import xml.parsers.expat
+                Let's have a look at the table "tracks" and "track_points" which were created by ogr2ogr.
+                <programlisting language="SQL">
+SELECT * FROM track_points;
+SELECT * FROM tracks;</programlisting>
+                You can see that the table "track_points" contains the points of the track, and the table "tracks" contains the entire tracks. We are going to work with the table "track_points".
+                First, we see that the two tracks are in the same table. We are going to put an ID for each track so that we can differentiate them. Here is how you can do it:
+                <programlisting language="SQL">
+ALTER TABLE track_points ADD COLUMN track_number int;
 
-stack = []
-def start_element(name, attrs):
-stack.append(name)
-if name == 'gpx' :
-    print("lon,lat,time")
-if name == 'trkpt' :
-    print("{},{},".format(attrs['lon'], attrs['lat']), end="")
-
-def end_element(name):
-stack.pop()
-
-def char_data(data):
-if stack[-1] == "time" and stack[-2] == "trkpt" :
-    print(data)
-
-p = xml.parsers.expat.ParserCreate()
-
-p.StartElementHandler = start_element
-p.EndElementHandler = end_element
-p.CharacterDataHandler = char_data
-
-p.ParseFile(sys.stdin.buffer)
-                    </programlisting>
-                </para>
-                <para>
-                    To use it, you can copy and paste this code into a Python file and run it with the following command (make sure to indicate the paths for each file):
-                    <programlisting language = "bash">
-python3 python_file.py &lt; example.gpx &gt; example.csv
-                    </programlisting>
-                    You can have different names for the gpx and csv files if you want, but make sure to change the names in the command.
-                </para>
-                <para>
-                    This is what the resulting CSV file will look like, with one column for the longitudes, one for the latitudes and the last one for the timestamps:
-                    <programlisting>
-lon,lat,time
--2.869371,47.551691,2024-06-26T14:04:15+02:00
--2.86959,47.551946,2024-06-26T14:04:40+02:00
--2.86982,47.55215,2024-06-26T14:05:04+02:00
-...
-                    </programlisting>
-                </para>
-
-                <para>
-                    This CSV file can then be loaded into MobilityDB as follows (be carefull to read the comments as you cannot just run everything together):
-                    <programlisting language = "SQL">
-DROP EXTENSION IF EXISTS mobilitydb CASCADE;
-CREATE EXTENSION mobilityDB CASCADE;
-
-DROP TABLE IF EXISTS trips_input;
-CREATE TABLE trips_input (
-    id int,
-    lon float,
-    lat float,
-    time timestamptz
-);
-
-INSERT INTO trips_input VALUES
-(0,NULL,NULL,NULL);
-
-
--- Here you need to import each trip file separatly. 
--- This allows you to put a different ID on each trip, because if you import all of them at the same time it becomes difficult to tell apart the trips from one another.
-
--- First run the following SQL command (you need to change the name of the file you want to import and the path to it)
-COPY trips_input(lon, lat, time) FROM
-'/home/gpx_data/example.csv' DELIMITER ',' CSV HEADER;
-
--- Do the above or run the command below in a terminal if you have a permission error
--- (you need to change the name of the database, and the name and path to the file you want to import)
--- psql -d DataBaseName -c "\copy trips_input(lon, lat, time) FROM '/home/gpx_data/exemple.csv' DELIMITER ',' CSV HEADER;"
-
--- Then run this command to update the ID
-WITH max_id_cte AS (
-    SELECT MAX(id)+1 AS max_id FROM trips_input
+WITH NumberedTracks AS (
+SELECT *, LAG(track_seg_point_id) OVER (ORDER BY ogc_fid) AS prev_value
+FROM track_points
 ),
-rows_to_update AS (
-    SELECT id, (SELECT max_id FROM max_id_cte) AS new_id
-    FROM trips_input
-    WHERE id IS NULL
+TrackIdentifiers AS (
+SELECT ogc_fid, SUM(CASE WHEN track_seg_point_id &lt; prev_value THEN 1 ELSE 0 END) OVER (ORDER BY ogc_fid) + 1 AS track_id
+FROM NumberedTracks
 )
-UPDATE trips_input SET id = rows_to_update.new_id
-FROM rows_to_update
-WHERE trips_input.id IS NULL;
-
--- Now you can repeat the last two steps for each trip file you want to import. Don’t forget to change the name of the file each time!
-
-
+UPDATE track_points tp
+SET track_number = ti.track_id
+FROM TrackIdentifiers ti
+WHERE tp.ogc_fid = ti.ogc_fid;</programlisting>
+            What we are doing here is that we are adding a column "track_number" to the table "track_points". Then, we are creating "NumberedTracks" which contains the previous value of the "track_seg_point_id" column.
+            Then, we are creating "TrackIdentifiers" which contains the track_id, depending on the previous track_seg_point_id: if it is smaller then we sum 0 but if it is higher, saying we start a new sequence in track_seq_point_id, we sum 1. 
+            Finally, we are updating the table "track_points" with the track_id.
+            </para>
+            <para>
+                We have to transform these geopgraphic points into a MobilityDB trajectory. Here is how you can do it:
+                <programlisting language="SQL">
 DROP TABLE IF EXISTS trips_mdb;
 CREATE TABLE trips_mdb (
-    id int,
-    date date,
-    trip tgeompoint,
-    trajectory geometry,
-    PRIMARY KEY (id)
+id int,
+date date,
+trip tgeompoint,
+trajectory geometry,
+PRIMARY KEY (id)
 );
 
 INSERT INTO trips_mdb(id, date, trip)
-SELECT id, date(time), tgeompointSeq(array_agg(tgeompoint(
-    ST_SetSRID(ST_Point(lon, lat), 4326), time) ORDER BY time))
-FROM trips_input
-WHERE id != 0
-GROUP BY id, date;
+SELECT track_number, date(time), tgeompointSeq(array_agg(tgeompoint(
+wkb_geometry, time) ORDER BY time))
+FROM track_points
+GROUP BY track_number, date;
 
 UPDATE trips_mdb
-SET trajectory = trajectory(trip);
-                    </programlisting>
-                </para>
-            </section>
+SET trajectory = trajectory(trip);</programlisting>
+                What we are doing here is that we are creating a table "trips_mdb" with an id, a date, a trip and a trajectory. The trip is a tgeompoint, which is a MobilityDB type. 
+                We are inserting into this table the track_number, the date and the tgeompointSeq of the array of the tgeompoint. 
+                Finally, we are updating the table with the trajectory of the trip.
+            </para>
+            <para>
+                We are done with the data loading. In conclusion, we have loaded the GPX data into MobilityDB, and we have created a table "trips_mdb" which contains the trajectories of the trips. We are now ready to visualize the data.
+            </para>
+        </section>
 
     </chapter>
     <chapter id="chapter2">
@@ -298,7 +253,7 @@ SET trajectory = trajectory(trip);
                     <para>Port: again, if self hosted then keep '5432', if not you should know.</para>
                 </listitem>
                 <listitem>
-                    <para>Database: here write the name of the database in which you have loaded the data.</para>
+                    <para>Database: here write the name of the database in which you have loaded the data. In our case, it was "hiking".</para>
                 </listitem>
                 <listitem>
                     <para>Authentication: go to the 'Basic' tab and fill out the user name and password for the account that has access to the database. Make sure to check the 'Store' boxes next to User name and Password.</para>
