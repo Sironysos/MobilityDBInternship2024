@@ -140,96 +140,92 @@ psql -U &lt;username&gt; -d workshop
     
         </chapter>
     <chapter id="chapter2">
-        <title>Chapter 2: Visualizing the data</title>
+        <title>Chapter 2: Playing with the data types</title>
 
         <section id="part21">
-        <title>Introduction</title>
+        <title>PostgreSQL</title>
 
-         
+        <para>
+            In this chapter, we are going to see how we can represent points or a trajectory in mobilityDB. 
+            Before that, we'll see how to do it without MobilityDB so that you can see the difference.
+        </para>
+        <para>
+            First, in PostgreSQL without any extension, we can represent a point with it's coordinates. Here is a small SQL code you can copy and paste into your editor and run it:
+            <programlisting language="sql" xml:space="preserve">
+CREATE TABLE postgrePoints(
+    time int,
+    longitude float,
+    latitude float
+);
+
+INSERT INTO postgrePoints VALUES
+(0, 0, 0),
+(2, 1, 1),
+(3, 0.5, 2),
+(4, 0, 1),
+(6, 1, 1),
+(7, 1, 0);
+
+SELECT * FROM postgrePoints;
+            </programlisting>
+        </para>
+        <para>
+            As you can see, we have a table with 3 columns: the time, the longitude and the latitude of each point. 
+            We can then manually compute the distance between each point, or visualize the trajectory, but it is not very convenient.
+        </para>
+
+        
         </section>
         <section id="part22">
-        <title>Connecting to the database</title>
+        <title>PostGIS</title>
         
         <para>
-            You can now create a new blank project in QGIS.
-            Then in the browser on the left of the screen, you should find a 'PostGIS' line. Right click on it and then 'New Connection...'.
-            You will see this window:
+            With PostGIS, we can represent a point with a type geometry. Here is a small SQL code you can copy and paste into your editor and run it:
+            <programlisting language="sql" xml:space="preserve">
+-- First, we need to create the extension
+CREATE EXTENSION PostGIS;
+
+DROP TABLE IF EXISTS postgispoints;
+CREATE TABLE postgisPoints(
+    time int,
+    point geometry(point)
+);
+
+INSERT INTO postgispoints ("time", point)
+SELECT time, ST_MakePoint(longitude, latitude)
+FROM postgrePoints;
+
+SELECT * FROM postgispoints;
+            </programlisting>
         </para>
-        <figure id="NewConnection" float="start">
-            <title>New PostGIS Connection</title>
-            <mediaobject>
-                <imageobject>
-                    <imagedata fileref="./images/PostGIS_Connection.png"/>
-                </imageobject>
-            </mediaobject>
-        </figure>
+
         <para>
-            Here is what you need to fill out:
-            <itemizedlist>
-                <listitem>
-                    <para>Name: choose a name for this connection</para>                    
-                </listitem>
-                <listitem>
-                    <para>Host: if the database is hosted on your machine, then 'localhost'. If not, you should be able to fgure it out by yourself.</para>
-                </listitem>
-                <listitem>
-                    <para>Port: again, if self hosted then keep '5432', if not you should know.</para>
-                </listitem>
-                <listitem>
-                    <para>Database: here write the name of the database in which you have loaded the data.</para>
-                </listitem>
-                <listitem>
-                    <para>Authentication: go to the 'Basic' tab and fill out the user name and password for the account that has access to the database. Make sure to check the 'Store' boxes next to User name and Password.</para>
-                </listitem>
-            </itemizedlist>
+            As you can see, we have a table with 2 columns: the time and the point. The point is a geometry of type point, which is a PostGIS type. 
+            We can then use PostGIS functions to compute the distance between each point, or visualize the trajectory, which is more convenient.
+            For example, we can create a line from the points and visualize it on a map:
+            <programlisting language="sql" xml:space="preserve">
+CREATE TABLE postgisLine(
+    line geometry
+);
+
+INSERT INTO postgisLine (line)
+SELECT ST_MakeLine(ARRAY(SELECT point FROM postgisPoints ORDER BY time));
+
+SELECT * FROM postgisLine;
+            </programlisting>
         </para>
-        
-        <para>
-            You can now click OK and find your connection, database and the trips_mdb table in the tree below the PostGIS line in the QGIS Browser.
-        </para>
-        
-        </section>
+
         <section id="part23">
-            <title>Visualizing the data</title>
-            <para>
-                Now that you have connected to the database, you can visualize the data. 
-                First, let's put a map layer. In the browser window (on the left of the screen), click on 'XYZ Tiles' and then right click on 'OpenStreetMap' and select 'Add Layer to Project'.
-                You will see an OpenStreetMap layer in the inferior left part of the screen.
-                You can zoom in the part you are studyin. In our case, we are focusing on a part of France, in Britanny, called Morbihan.
-                <figure id="OpenStreetMap" float="start">
-                    <title>OpenStreetMap layer</title>
-                    <mediaobject>
-                        <imageobject>
-                            <imagedata fileref="./images/OpenStreetMap.png"/>
-                        </imageobject>
-                    </mediaobject>
-                </figure>
-                Then, let's add the data we have loaded in the database.
-                First, let's draw the trajectory. Click on PostGIS → connection_name → public → trips_mdb → Fields → trajectory. You will see the trajectory in the map.
-                Now, we want to visualize the moving point of the trip.
-                To do so, you need to click on the 'Move' logo on the up-left side of the screen.
-                Select your database and the table you want to visualize. Then, you can write a query and execute it. We are going to put in this query:
-<programlisting language="SQL" xml:space="preserve">SELECT date, trip FROM trips_mdb;</programlisting>
-                Now click on 'Execute Query'.
-                Let's see the trip moving while we are visualizing it. To do so, click on View → Panels → Temporal Controller. You will see a window like this: 
-                <figure id="TemporalController" float="start">
-                    <title>Full temporal visualization</title>
-                    <mediaobject>
-                        <imageobject>
-                            <imagedata fileref="./images/Visual.png"/>
-                        </imageobject>
-                    </mediaobject>
-                </figure>
-                Now this is your time to play with the data and visualize it as you want. You can put the time in the temporal controller and see the trip moving. You can also change the color of the trip, the size of the points, etc.
-            </para>
-            <figure id="Gif" float="start">
-                <title>Visualizing the trip</title>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata fileref="./images/dessin.gif"/>
-                    </imageobject>
-                </mediaobject>
-            </figure>
+            <title>MobilityDB</title>
+            
+        <para>
+            With MobilityDB, we can represent a trajectory with a tgeompoint. 
+            It's pretty much the same as a PostGIS line, except that each point has a time associated with it.
+            Here is how you can make it:
+            <programlisting language="sql" xml:space="preserve">
+
+            </programlisting>
+        </para>
         </section>
 
     </chapter>
