@@ -1,44 +1,26 @@
 DROP EXTENSION IF EXISTS mobilitydb CASCADE;
 CREATE EXTENSION mobilityDB CASCADE;
 
-DROP TABLE IF EXISTS trips_input;
-CREATE TABLE trips_input (
-	id int,
-	lon float,
-	lat float,
-	time timestamptz
-);
+--here, do "ogr2ogr -append -f PostgreSQL PG:dbname=hiking ./data/11390305.gpx"
+--and "ogr2ogr -append -f PostgreSQL PG:dbname=hiking ./data/11390305.gpx"
 
-INSERT INTO trips_input VALUES
-(0,NULL,NULL,NULL);
+SELECT * FROM track_points;
+SELECT * FROM tracks;
 
+ALTER TABLE track_points ADD COLUMN track_number int;
 
--- Here you need to import each trip file separatly. 
--- This allows you to put a different ID on each trip, because if you import all of them at the same time it becomes difficult to tell apart the trips from one another.
-
--- First run the following SQL command (you need to change the name of the file you want to import and the path to it)
-COPY trips_input(lon, lat, time) FROM
-'/home/gpx_data/example.csv' DELIMITER ',' CSV HEADER;
-
--- Do the above or run the command below in a terminal if you have a permission error
--- (you need to change the name of the database, and the name and path to the file you want to import)
--- psql -d DataBaseName -c "\copy trips_input(lon, lat, time) FROM '/home/gpx_data/exemple.csv' DELIMITER ',' CSV HEADER;"
-
--- Then run this command to update the ID
-WITH max_id_cte AS (
-    SELECT MAX(id)+1 AS max_id FROM trips_input
+WITH NumberedTracks AS (
+    SELECT *, LAG(track_seg_point_id) OVER (ORDER BY ogc_fid) AS prev_value
+    FROM track_points
 ),
-rows_to_update AS (
-    SELECT id, (SELECT max_id FROM max_id_cte) AS new_id
-    FROM trips_input
-    WHERE id IS NULL
+TrackIdentifiers AS (
+    SELECT ogc_fid, SUM(CASE WHEN track_seg_point_id < prev_value THEN 1 ELSE 0 END) OVER (ORDER BY ogc_fid) + 1 AS track_id
+    FROM NumberedTracks
 )
-UPDATE trips_input SET id = rows_to_update.new_id
-FROM rows_to_update
-WHERE trips_input.id IS NULL;
-
--- Now you can repeat the last two steps for each trip file you want to import. Don’t forget to change the name of the file each time!
-
+UPDATE track_points tp
+SET track_number = ti.track_id
+FROM TrackIdentifiers ti
+WHERE tp.ogc_fid = ti.ogc_fid;
 
 DROP TABLE IF EXISTS trips_mdb;
 CREATE TABLE trips_mdb (
@@ -50,11 +32,12 @@ CREATE TABLE trips_mdb (
 );
 
 INSERT INTO trips_mdb(id, date, trip)
-SELECT id, date(time), tgeompointSeq(array_agg(tgeompoint(
-  ST_SetSRID(ST_Point(lon, lat), 4326), time) ORDER BY time))
-FROM trips_input
-WHERE id != 0
-GROUP BY id, date;
+SELECT track_number, date(time), tgeompointSeq(array_agg(tgeompoint(
+  wkb_geometry, time) ORDER BY time))
+FROM track_points
+GROUP BY track_number, date;
 
 UPDATE trips_mdb
 SET trajectory = trajectory(trip);
+
+SELECT * from trips_mdb;
