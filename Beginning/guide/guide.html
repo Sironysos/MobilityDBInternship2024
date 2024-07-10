@@ -12,7 +12,7 @@
                 While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
                 If you need help concerning the functions of MobilityDB, please 
                 refer to the <a class="ulink" href="https://mobilitydb.com/documentation.html" target="_top">documentation</a>. 
-            </p></div></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="chapter"><a href="#chapter1">1. Chapter 1: Starting a database with MobilityDB </a></span></dt><dd><dl><dt><span class="section"><a href="#part11">Installing MobilityDB</a></span></dt><dt><span class="section"><a href="#part12">PgAdmin4: a PostgreSQL Editor</a></span></dt><dt><span class="section"><a href="#part13">Starting the database</a></span></dt></dl></dd><dt><span class="chapter"><a href="#chapter2">2. Chapter 2: Visualizing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#part21">Introduction</a></span></dt><dt><span class="section"><a href="#part22">Connecting to the database</a></span></dt><dt><span class="section"><a href="#part23">Visualizing the data</a></span></dt></dl></dd></dl></div><div class="list-of-figures"><p><strong>List of Figures</strong></p><dl><dt>2.1. <a href="#NewConnection">New PostGIS Connection</a></dt><dt>2.2. <a href="#OpenStreetMap">OpenStreetMap layer</a></dt><dt>2.3. <a href="#TemporalController">Full temporal visualization</a></dt><dt>2.4. <a href="#Gif">Visualizing the trip</a></dt></dl></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="chapter1"></a>Chapter 1. Chapter 1: Starting a database with MobilityDB </h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#part11">Installing MobilityDB</a></span></dt><dt><span class="section"><a href="#part12">PgAdmin4: a PostgreSQL Editor</a></span></dt><dt><span class="section"><a href="#part13">Starting the database</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part11"></a>Installing MobilityDB</h2></div></div></div><p>
+            </p></div></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="chapter"><a href="#chapter1">1. Chapter 1: Starting a database with MobilityDB </a></span></dt><dd><dl><dt><span class="section"><a href="#part11">Installing MobilityDB</a></span></dt><dt><span class="section"><a href="#part12">PgAdmin4: a PostgreSQL Editor</a></span></dt><dt><span class="section"><a href="#part13">Starting the database</a></span></dt></dl></dd><dt><span class="chapter"><a href="#chapter2">2. Chapter 2: Playing with the data types</a></span></dt><dd><dl><dt><span class="section"><a href="#part21">PostgreSQL</a></span></dt><dt><span class="section"><a href="#part22">PostGIS</a></span></dt><dt><span class="section"><a href="#part23">MobilityDB</a></span></dt></dl></dd></dl></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="chapter1"></a>Chapter 1. Chapter 1: Starting a database with MobilityDB </h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#part11">Installing MobilityDB</a></span></dt><dt><span class="section"><a href="#part12">PgAdmin4: a PostgreSQL Editor</a></span></dt><dt><span class="section"><a href="#part13">Starting the database</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part11"></a>Installing MobilityDB</h2></div></div></div><p>
                 For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
                 
     
@@ -56,28 +56,68 @@ psql -U &lt;username&gt; -d workshop
                 If you're having troule finding it, here is the explicit path in the Objext Explorer on the left:
                 Servers → Server_name → Databases → workshop                
                 You can now right click on 'workshop' to open the Querry Tool. This is where we will write and execute our querries.
-            </p></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="chapter2"></a>Chapter 2. Chapter 2: Visualizing the data</h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#part21">Introduction</a></span></dt><dt><span class="section"><a href="#part22">Connecting to the database</a></span></dt><dt><span class="section"><a href="#part23">Visualizing the data</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part21"></a>Introduction</h2></div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part22"></a>Connecting to the database</h2></div></div></div><p>
-            You can now create a new blank project in QGIS.
-            Then in the browser on the left of the screen, you should find a 'PostGIS' line. Right click on it and then 'New Connection...'.
-            You will see this window:
-        </p><div class="figure-float"><div class="figure"><a id="NewConnection"></a><p class="title"><strong>Figure 2.1. New PostGIS Connection</strong></p><div class="figure-contents"><div class="mediaobject"><img src="./images/PostGIS_Connection.png" alt="New PostGIS Connection" /></div></div></div><br class="figure-break" /></div><p>
-            Here is what you need to fill out:
+            </p></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="chapter2"></a>Chapter 2. Chapter 2: Playing with the data types</h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#part21">PostgreSQL</a></span></dt><dt><span class="section"><a href="#part22">PostGIS</a></span></dt><dt><span class="section"><a href="#part23">MobilityDB</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part21"></a>PostgreSQL</h2></div></div></div><p>
+            In this chapter, we are going to see how we can represent points or a trajectory in mobilityDB. 
+            Before that, we'll see how to do it without MobilityDB so that you can see the difference.
         </p><p>
-            You can now click OK and find your connection, database and the trips_mdb table in the tree below the PostGIS line in the QGIS Browser.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part23"></a>Visualizing the data</h2></div></div></div><p>
-                Now that you have connected to the database, you can visualize the data. 
-                First, let's put a map layer. In the browser window (on the left of the screen), click on 'XYZ Tiles' and then right click on 'OpenStreetMap' and select 'Add Layer to Project'.
-                You will see an OpenStreetMap layer in the inferior left part of the screen.
-                You can zoom in the part you are studyin. In our case, we are focusing on a part of France, in Britanny, called Morbihan.
-                </p><div class="figure-float"><div class="figure"><a id="OpenStreetMap"></a><p class="title"><strong>Figure 2.2. OpenStreetMap layer</strong></p><div class="figure-contents"><div class="mediaobject"><img src="./images/OpenStreetMap.png" alt="OpenStreetMap layer" /></div></div></div><br class="figure-break" /></div><p>
-                Then, let's add the data we have loaded in the database.
-                First, let's draw the trajectory. Click on PostGIS → connection_name → public → trips_mdb → Fields → trajectory. You will see the trajectory in the map.
-                Now, we want to visualize the moving point of the trip.
-                To do so, you need to click on the 'Move' logo on the up-left side of the screen.
-                Select your database and the table you want to visualize. Then, you can write a query and execute it. We are going to put in this query:
-</p><pre class="programlisting">SELECT date, trip FROM trips_mdb;</pre><p>
-                Now click on 'Execute Query'.
-                Let's see the trip moving while we are visualizing it. To do so, click on View → Panels → Temporal Controller. You will see a window like this: 
-                </p><div class="figure-float"><div class="figure"><a id="TemporalController"></a><p class="title"><strong>Figure 2.3. Full temporal visualization</strong></p><div class="figure-contents"><div class="mediaobject"><img src="./images/Visual.png" alt="Full temporal visualization" /></div></div></div><br class="figure-break" /></div><p>
-                Now this is your time to play with the data and visualize it as you want. You can put the time in the temporal controller and see the trip moving. You can also change the color of the trip, the size of the points, etc.
-            </p><div class="figure-float"><div class="figure"><a id="Gif"></a><p class="title"><strong>Figure 2.4. Visualizing the trip</strong></p><div class="figure-contents"><div class="mediaobject"><img src="./images/dessin.gif" alt="Visualizing the trip" /></div></div></div><br class="figure-break" /></div></div></div></div></body></html>
+            First, in PostgreSQL without any extension, we can represent a point with it's coordinates. Here is a small SQL code you can copy and paste into your editor and run it:
+            </p><pre class="programlisting">
+CREATE TABLE postgrePoints(
+    time int,
+    longitude float,
+    latitude float
+);
+
+INSERT INTO postgrePoints VALUES
+(0, 0, 0),
+(2, 1, 1),
+(3, 0.5, 2),
+(4, 0, 1),
+(6, 1, 1),
+(7, 1, 0);
+
+SELECT * FROM postgrePoints;
+            </pre><p>
+        </p><p>
+            As you can see, we have a table with 3 columns: the time, the longitude and the latitude of each point. 
+            We can then manually compute the distance between each point, or visualize the trajectory, but it is not very convenient.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part22"></a>PostGIS</h2></div></div></div><p>
+            With PostGIS, we can represent a point with a type geometry. Here is a small SQL code you can copy and paste into your editor and run it:
+            </p><pre class="programlisting">
+-- First, we need to create the extension
+CREATE EXTENSION PostGIS;
+
+DROP TABLE IF EXISTS postgispoints;
+CREATE TABLE postgisPoints(
+    time int,
+    point geometry(point)
+);
+
+INSERT INTO postgispoints ("time", point)
+SELECT time, ST_MakePoint(longitude, latitude)
+FROM postgrePoints;
+
+SELECT * FROM postgispoints;
+            </pre><p>
+        </p><p>
+            As you can see, we have a table with 2 columns: the time and the point. The point is a geometry of type point, which is a PostGIS type. 
+            We can then use PostGIS functions to compute the distance between each point, or visualize the trajectory, which is more convenient.
+            For example, we can create a line from the points and visualize it on a map:
+            </p><pre class="programlisting">
+CREATE TABLE postgisLine(
+    line geometry
+);
+
+INSERT INTO postgisLine (line)
+SELECT ST_MakeLine(ARRAY(SELECT point FROM postgisPoints ORDER BY time));
+
+SELECT * FROM postgisLine;
+            </pre><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="part23"></a>MobilityDB</h2></div></div></div><p>
+            With MobilityDB, we can represent a trajectory with a tgeompoint. 
+            It's pretty much the same as a PostGIS line, except that each point has a time associated with it.
+            Here is how you can make it:
+            </p><pre class="programlisting">
+
+            </pre><p>
+        </p></div></div></div></body></html>

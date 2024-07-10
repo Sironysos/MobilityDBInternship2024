@@ -138,7 +138,7 @@ psql -U &lt;username&gt; -d workshop
     
     
     
-        </chapter>
+    </chapter>
     <chapter id="chapter2">
         <title>Chapter 2: Playing with the data types</title>
 
@@ -214,6 +214,7 @@ SELECT ST_MakeLine(ARRAY(SELECT point FROM postgisPoints ORDER BY time));
 SELECT * FROM postgisLine;
             </programlisting>
         </para>
+        </section>
 
         <section id="part23">
             <title>MobilityDB</title>
