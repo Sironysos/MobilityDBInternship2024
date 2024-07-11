@@ -3,26 +3,9 @@
     <title>MobilityDB Beginnings Workshop</title>
     <subtitle>How to install MobilityDB and use it for some basic querries</subtitle>
     
-    <abstract>
-        <para>
-            This document is a guide on how you can install MobilityDB and use it in order to analyse data. It is directly inspired by 
-            the <ulink url="https://mobilitydb.github.io/MobilityDB-workshop/develop/html/index.html">MobilityDB Workshop</ulink> already existing. 
-            We will throughout this document present different use cases of MobilityDB, which is an extension on <ulink url="https://postgis.net/">PostGIS</ulink> and <ulink url="https://www.postgresql.org/">PostgreSQL</ulink>. 
-        </para>       
-        <para>
-            This workshop was made by two students from <ulink url="https://www.insa-rennes.fr/index.html">INSA Rennes</ulink> during an internship in June, July and August 2024. 
-        </para>
-        <para>
-            <!-- TODO: link to the data we used-->
-        </para>       
-        <para>
-            Now, we are ready to start the workshop.
-            While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
-            If you need help concerning the functions of MobilityDB, please 
-            refer to the <ulink url="https://mobilitydb.com/documentation.html">documentation</ulink>. 
-        </para>
-    </abstract>
-
+    <para>
+        This document is a guide on how you can install MobilityDB and use it in order to analyse data.
+    </para>
 
     <section>
         <title>Part 1: Starting a database with MobilityDB </title>
@@ -41,16 +24,15 @@ sudo apt update
 sudo apt install curl ca-certificates gnupg
 
 # Install the public key for the repository (if not done previously):
-curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
+curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg &gt;/dev/null
 
 # Create the repository configuration file:
-sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" >> /etc/apt/sources.list.d/postgresql.list'
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" &gt;&gt; /etc/apt/sources.list.d/postgresql.list'
 sudo apt update
 sudo apt upgrade
 
 # Install the mobilitydb package with apt. It will automatically install the dependancies needed, PosgreSQL and PostGIS in particular.
-sudo apt install postgresql-16-mobilitydb
-                </programlisting>
+sudo apt install postgresql-16-mobilitydb</programlisting>
             </para>
         </section>
 
@@ -77,8 +59,7 @@ sudo apt install postgresql-16-mobilitydb
 sudo -u postgres createuser -s -i -d -r -l -w &lt;username&gt;
 sudo -u postgres createdb workshop
 sudo service postgresql start
-psql -U &lt;username&gt; -d workshop
-                </programlisting>
+psql -U &lt;username&gt; -d workshop</programlisting>
             </para>
 
             <para>
@@ -147,8 +128,7 @@ INSERT INTO postgrePoints VALUES
 (6, 1, 1),
 (7, 1, 0);
 
-SELECT * FROM postgrePoints;
-            </programlisting>
+SELECT * FROM postgrePoints;</programlisting>
         </para>
         <para>
             As you can see, we have a table with 3 columns: the time, the longitude and the latitude of each point. 
@@ -176,8 +156,7 @@ INSERT INTO postgispoints ("time", point)
 SELECT time, ST_MakePoint(longitude, latitude)
 FROM postgrePoints;
 
-SELECT * FROM postgispoints;
-            </programlisting>
+SELECT * FROM postgispoints;</programlisting>
         </para>
 
         <para>
@@ -192,8 +171,7 @@ CREATE TABLE postgisLine(
 INSERT INTO postgisLine (line)
 SELECT ST_MakeLine(ARRAY(SELECT point FROM postgisPoints ORDER BY time));
 
-SELECT * FROM postgisLine;
-            </programlisting>
+SELECT * FROM postgisLine;</programlisting>
         </para>
         </section>
 
@@ -205,8 +183,17 @@ SELECT * FROM postgisLine;
             It's pretty much the same as a PostGIS line, except that each point has a time associated with it.
             Here is how you can make it:
             <programlisting language="sql" xml:space="preserve">
+DROP EXTENSION IF EXISTS mobilityDB CASCADE;
+CREATE EXTENSION mobilityDB CASCADE;
 
-            </programlisting>
+DROP TABLE IF EXISTS mdbTraj CASCADE;
+CREATE TABLE mdbTraj(
+    traj tgeogpoint
+);
+
+INSERT INTO mdbtraj(traj)
+SELECT tgeogpointSeq(array_agg(tgeogpoint(point, time) ORDER BY time))
+FROM postgisPoints;</programlisting>
         </para>
         </section>
 

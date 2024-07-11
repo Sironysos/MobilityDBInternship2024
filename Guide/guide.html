@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>MobilityDB Hiking Workshop</title><link rel="stylesheet" type="text/css" href="guide.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /><meta name="description" content="This document is an example of how you can use MobilityDB in order to analyse and visualize data. It is directly inspired by the MobilityDB Workshop already existing. We will throughout this document present different use cases of MobilityDB, which is an extension on PostGIS and PostgreSQL. This workshop was made by two students from INSA Rennes during an internship in June, July and August 2024. Now, we are ready to start the workshop. While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. If you need help concerning the functions of MobilityDB, please refer to the documentation." /></head><body><div xml:lang="en" class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a id="idm1"></a>MobilityDB Hiking Workshop</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Alice Test</span> <span class="surname">Lombard</span></h3><div class="affiliation"><span class="orgname">INSA Rennes, France<br /></span></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Raphaël</span> <span class="surname">Dubuget</span></h3><div class="affiliation"><span class="orgname">INSA Rennes, France<br /></span></div></div></div><div><div class="abstract"><p class="title"><strong>Abstract</strong></p><p>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>MobilityDB Hiking Workshop</title><link rel="stylesheet" type="text/css" href="guide.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /><meta name="description" content="This document is an example of how you can use MobilityDB in order to analyse and visualize data. It is directly inspired by the MobilityDB Workshop already existing. We will throughout this document present different use cases of MobilityDB, which is an extension on PostGIS and PostgreSQL. This workshop was made by two students from INSA Rennes during an internship in June, July and August 2024. Now, we are ready to start the workshop. While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. If you need help concerning the functions of MobilityDB, please refer to the documentation." /></head><body><div xml:lang="en" class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a id="idm1"></a>MobilityDB Hiking Workshop</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Alice</span> <span class="surname">Lombard</span></h3><div class="affiliation"><span class="orgname">INSA Rennes, France<br /></span></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Raphaël</span> <span class="surname">Dubuget</span></h3><div class="affiliation"><span class="orgname">INSA Rennes, France<br /></span></div></div></div><div><div class="abstract"><p class="title"><strong>Abstract</strong></p><p>
                 This document is an example of how you can use MobilityDB in order to analyse and visualize data. It is directly inspired by 
                 the <a class="ulink" href="https://mobilitydb.github.io/MobilityDB-workshop/develop/html/index.html" target="_top">MobilityDB Workshop</a> already existing. 
                 We will throughout this document present different use cases of MobilityDB, which is an extension on <a class="ulink" href="https://postgis.net/" target="_top">PostGIS</a> and <a class="ulink" href="https://www.postgresql.org/" target="_top">PostgreSQL</a>. 
@@ -10,4 +10,118 @@
                 While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
                 If you need help concerning the functions of MobilityDB, please 
                 refer to the <a class="ulink" href="https://mobilitydb.com/documentation.html" target="_top">documentation</a>. 
-            </p></div></div></div><hr /></div></div></body></html>
+            </p></div></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="chapter"><a href="#FirstSteps">1. MobilityDB Beginnings Workshop</a></span></dt><dd><dl><dt><span class="section"><a href="#idm27">Part 1: Starting a database with MobilityDB </a></span></dt><dd><dl><dt><span class="section"><a href="#part11">Installing MobilityDB</a></span></dt><dt><span class="section"><a href="#part12">PgAdmin4: a PostgreSQL Editor</a></span></dt><dt><span class="section"><a href="#part13">Starting the database</a></span></dt></dl></dd><dt><span class="section"><a href="#idm56">Part 2: Playing with the data types</a></span></dt><dd><dl><dt><span class="section"><a href="#part21">PostgreSQL</a></span></dt><dt><span class="section"><a href="#part22">PostGIS</a></span></dt><dt><span class="section"><a href="#part23">MobilityDB</a></span></dt></dl></dd></dl></dd></dl></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="FirstSteps"></a>Chapter 1. MobilityDB Beginnings Workshop</h1></div><div><h3 class="subtitle"><em>How to install MobilityDB and use it for some basic querries</em></h3></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#idm27">Part 1: Starting a database with MobilityDB </a></span></dt><dd><dl><dt><span class="section"><a href="#part11">Installing MobilityDB</a></span></dt><dt><span class="section"><a href="#part12">PgAdmin4: a PostgreSQL Editor</a></span></dt><dt><span class="section"><a href="#part13">Starting the database</a></span></dt></dl></dd><dt><span class="section"><a href="#idm56">Part 2: Playing with the data types</a></span></dt><dd><dl><dt><span class="section"><a href="#part21">PostgreSQL</a></span></dt><dt><span class="section"><a href="#part22">PostGIS</a></span></dt><dt><span class="section"><a href="#part23">MobilityDB</a></span></dt></dl></dd></dl></div><p>
+        This document is a guide on how you can install MobilityDB and use it in order to analyse data.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm27"></a>Part 1: Starting a database with MobilityDB </h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part11"></a>Installing MobilityDB</h3></div></div></div><p>
+                For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
+                
+    
+                If you run Ubuntu 22.04 (Jammy Jellyfish), you can simply execute the following in a terminal:
+                </p><pre class="programlisting">
+sudo apt update
+# We will need the foloowing packages:
+sudo apt install curl ca-certificates gnupg
+
+# Install the public key for the repository (if not done previously):
+curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg &gt;/dev/null
+
+# Create the repository configuration file:
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" &gt;&gt; /etc/apt/sources.list.d/postgresql.list'
+sudo apt update
+sudo apt upgrade
+
+# Install the mobilitydb package with apt. It will automatically install the dependancies needed, PosgreSQL and PostGIS in particular.
+sudo apt install postgresql-16-mobilitydb</pre><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part12"></a>PgAdmin4: a PostgreSQL Editor</h3></div></div></div><p>
+                We are going to execute SQL commands. To do so, you can do it in a terminal or use any IDE you like. If you do not have one, here is the link to install PgAdmin4, 
+                you just need to choose your distribution and follow the instructions: <a class="ulink" href="https://www.pgadmin.org/download/" target="_top">https://www.pgadmin.org/download/</a>.
+            </p><p>
+                You could also try <a class="ulink" href=" https://www.jetbrains.com/datagrip/" target="_top">DataGrip</a> from Jetbrains. We didn't use it in this workshop, but we're sure it's a good tool.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part13"></a>Starting the database</h3></div></div></div><p>
+                In order to start the PostgreSQL database, you need to do as following, replacing username by your
+                own username. Note that in this case "workshop" is the name of the database we are creating, but you can choose your own name if you take care to change it every time it is needed later. 
+                Additionnaly, &lt;username&gt; should correspond to your OS user name.
+                </p><pre class="programlisting">
+sudo -u postgres createuser -s -i -d -r -l -w &lt;username&gt;
+sudo -u postgres createdb workshop
+sudo service postgresql start
+psql -U &lt;username&gt; -d workshop</pre><p>
+            </p><p>
+                You can now connect to the database in pgAdmin. Here are the steps to do so:
+                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>On the dahboard click 'Add New Server'</p></li><li class="listitem"><p>Fill out a name of your choosing for the server</p></li><li class="listitem"><p>Fill out the host name, which is 'localhost' if you are hosting the database on your machine</p></li><li class="listitem"><p>Fill out the port, which is '5432' if you are hosting the database on your machine</p></li><li class="listitem"><p>Fill out the username and password you used to create the database</p></li></ul></div><p>
+            </p><p>
+                You can now find your database in the browser on the left of the screen.
+                If you're having troule finding it, here is the explicit path in the Objext Explorer on the left:
+                Servers → Server_name → Databases → workshop                
+                You can now right click on 'workshop' to open the Querry Tool. This is where we will write and execute our querries.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm56"></a>Part 2: Playing with the data types</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part21"></a>PostgreSQL</h3></div></div></div><p>
+            In this chapter, we are going to see how we can represent points or a trajectory in mobilityDB. 
+            Before that, we'll see how to do it without MobilityDB so that you can see the difference.
+        </p><p>
+            First, in PostgreSQL without any extension, we can represent a point with it's coordinates. Here is a small SQL code you can copy and paste into your editor and run it:
+            </p><pre class="programlisting">
+CREATE TABLE postgrePoints(
+    time int,
+    longitude float,
+    latitude float
+);
+
+INSERT INTO postgrePoints VALUES
+(0, 0, 0),
+(2, 1, 1),
+(3, 0.5, 2),
+(4, 0, 1),
+(6, 1, 1),
+(7, 1, 0);
+
+SELECT * FROM postgrePoints;</pre><p>
+        </p><p>
+            As you can see, we have a table with 3 columns: the time, the longitude and the latitude of each point. 
+            We can then manually compute the distance between each point, or visualize the trajectory, but it is not very convenient.
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part22"></a>PostGIS</h3></div></div></div><p>
+            With PostGIS, we can represent a point with a type geometry. Here is a small SQL code you can copy and paste into your editor and run it:
+            </p><pre class="programlisting">
+-- First, we need to create the extension
+CREATE EXTENSION PostGIS;
+
+DROP TABLE IF EXISTS postgispoints;
+CREATE TABLE postgisPoints(
+    time int,
+    point geometry(point)
+);
+
+INSERT INTO postgispoints ("time", point)
+SELECT time, ST_MakePoint(longitude, latitude)
+FROM postgrePoints;
+
+SELECT * FROM postgispoints;</pre><p>
+        </p><p>
+            As you can see, we have a table with 2 columns: the time and the point. The point is a geometry of type point, which is a PostGIS type. 
+            We can then use PostGIS functions to compute the distance between each point, or visualize the trajectory, which is more convenient.
+            For example, we can create a line from the points and visualize it on a map:
+            </p><pre class="programlisting">
+CREATE TABLE postgisLine(
+    line geometry
+);
+
+INSERT INTO postgisLine (line)
+SELECT ST_MakeLine(ARRAY(SELECT point FROM postgisPoints ORDER BY time));
+
+SELECT * FROM postgisLine;</pre><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="part23"></a>MobilityDB</h3></div></div></div><p>
+            With MobilityDB, we can represent a trajectory with a tgeompoint. 
+            It's pretty much the same as a PostGIS line, except that each point has a time associated with it.
+            Here is how you can make it:
+            </p><pre class="programlisting">
+DROP EXTENSION IF EXISTS mobilityDB CASCADE;
+CREATE EXTENSION mobilityDB CASCADE;
+
+DROP TABLE IF EXISTS mdbTraj CASCADE;
+CREATE TABLE mdbTraj(
+    traj tgeogpoint
+);
+
+INSERT INTO mdbtraj(traj)
+SELECT tgeogpointSeq(array_agg(tgeogpoint(point, time) ORDER BY time))
+FROM postgisPoints;</pre><p>
+        </p></div></div></div></div></body></html>
