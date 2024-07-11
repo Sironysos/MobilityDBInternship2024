@@ -1,0 +1,60 @@
+﻿Identifiant;Code;Nom;Adresse (numéro);Adresse (voie);Commune (code INSEE);Commune (nom);Coordonnées;Station parente (ID);Station parente (nom);Accessible aux PMR;Stopid du quai gtfs/gtfs-rt;Stopid de la station gtfs/gtfs-rt
+5065;5065;Saint-Jacques - Gaîté;1 B;rue Louis Braille;35281;Saint-Jacques-de-la-Lande;48.0922543436006, -1.70335007013448;15064;Saint-Jacques - Gaîté;true;4-5065;4-15064
+5070;5070;Gares;15;place de la Gare;35238;Rennes;48.1042189200449, -1.67189613885799;15008;Gares;true;4-5070;4-15008
+5073;5073;Jules Ferry;1;rue de la Croix Carrée;35238;Rennes;48.1186562170431, -1.67060937032544;15056;Jules Ferry;true;4-5073;4-15056
+5055;5055;Gros-Chêne;24;rue de la Marbaudais;35238;Rennes;48.1250689151491, -1.66449165463879;15055;Gros-Chêne;true;4-5055;4-15055
+5056;5056;Jules Ferry;1;rue de la Croix Carrée;35238;Rennes;48.1186628618151, -1.67091832948325;15056;Jules Ferry;true;4-5056;4-15056
+5057;5057;Sainte-Anne;21;place Sainte-Anne;35238;Rennes;48.1146211666932, -1.6799268479821;15005;Sainte-Anne;true;4-5057;4-15005
+5003;5003;Pontchaillou;51;rue Antoine Joly;35238;Rennes;48.1215347379187, -1.69334980647373;15003;Pontchaillou;true;4-5003;4-15003
+5006;5006;République;10;rue du Pré Botté;35238;Rennes;48.1096669882225, -1.67922438477864;15006;République;true;4-5006;4-15006
+5012;5012;Italie;2;rue de Suisse;35238;Rennes;48.0865238083084, -1.66764584791703;15012;Italie;true;4-5012;4-15012
+5015;5015;La Poterie;211;rue de Vern;35238;Rennes;48.0874495908804, -1.6445134154635;15015;La Poterie;true;4-5015;4-15015
+5017;5017;Villejean-Université;1;place Recteur Henri Le Moal;35238;Rennes;48.1212833355919, -1.70387937676334;15002;Villejean-Université;true;4-5017;4-15002
+5022;5022;Charles de Gaulle;1;cours des Alliés;35238;Rennes;48.1055410477392, -1.67702286033675;15007;Charles de Gaulle;true;4-5022;4-15007
+5024;5024;Jacques Cartier;104;rue de l'Alma;35238;Rennes;48.097604745102, -1.6754189906777;15009;Jacques Cartier;true;4-5024;4-15009
+5028;5028;Triangle;61;avenue des Pays-Bas;35238;Rennes;48.0864774458175, -1.66065446891166;15013;Triangle;true;4-5028;4-15013
+5064;5064;Saint-Jacques - Gaîté;1 B;rue Louis Braille;35281;Saint-Jacques-de-la-Lande;48.0918389571302, -1.703874780627;15064;Saint-Jacques - Gaîté;true;4-5064;4-15064
+5068;5068;Mabilais;15;rue Surcouf;35238;Rennes;48.105036267316, -1.69241228789686;15061;Mabilais;true;4-5068;4-15061
+5051;5051;Atalante;1;avenue de Belle Fontaine;35051;Cesson-Sévigné;48.1271194329088, -1.62826328652191;15051;Atalante;true;4-5051;4-15051
+5058;5058;Saint-Germain;2 bis;rue des Francs-Bourgeois;35238;Rennes;48.1105185767484, -1.67612219619446;15058;Saint-Germain;true;4-5058;4-15058
+5061;5061;Mabilais;43;rue de Redon;35238;Rennes;48.105080187239, -1.69292332009437;15061;Mabilais;true;4-5061;4-15061
+5002;5002;Villejean-Université;1;place Recteur Henri Le Moal;35238;Rennes;48.1211968262371, -1.70388180215011;15002;Villejean-Université;true;4-5002;4-15002
+5004;5004;Anatole France;20;rue Cardinal Paul Gouyon;35238;Rennes;48.1180502320746, -1.68752858803596;15004;Anatole France;true;4-5004;4-15004
+5008;5008;Gares;18;place de la Gare;35238;Rennes;48.1037788398451, -1.67225208644726;15008;Gares;true;4-5008;4-15008
+5011;5011;Henri Fréville;22;avenue Henri Fréville;35238;Rennes;48.0875767834845, -1.67485907090394;15011;Henri Fréville;true;4-5011;4-15011
+5018;5018;Pontchaillou;51;rue Antoine Joly;35238;Rennes;48.1215783674429, -1.69346100002241;15003;Pontchaillou;true;4-5018;4-15003
+5020;5020;Sainte-Anne;21;place Sainte-Anne;35238;Rennes;48.11450063672, -1.68039773614719;15005;Sainte-Anne;true;4-5020;4-15005
+5021;5021;République;10;rue du Pré Botté;35238;Rennes;48.1097122500642, -1.67913843422998;15006;République;true;4-5021;4-15006
+5026;5026;Henri Fréville;22;avenue Henri Fréville;35238;Rennes;48.0876734110548, -1.67477706951973;15011;Henri Fréville;true;4-5026;4-15011
+5067;5067;Cleunay;6;square Germain Gautier;35238;Rennes;48.1011779725737, -1.70642628237852;15062;Cleunay;true;4-5067;4-15062
+5076;5076;Joliot-Curie - Chateaubriand;15;rue Bourde de la Rogerie;35238;Rennes;48.1238144343386, -1.65149733026091;15053;Joliot-Curie - Chateaubriand;true;4-5076;4-15053
+5053;5053;Joliot-Curie - Chateaubriand;129;boulevard de Vitré;35238;Rennes;48.1242922801835, -1.65147442241401;15053;Joliot-Curie - Chateaubriand;true;4-5053;4-15053
+5054;5054;Les Gayeulles;9;rue Guy Ropartz;35238;Rennes;48.1294068896457, -1.6578679665894;15054;Les Gayeulles;true;4-5054;4-15054
+5007;5007;Charles de Gaulle;1;cours des Alliés;35238;Rennes;48.1054731623499, -1.67710694501412;15007;Charles de Gaulle;true;4-5007;4-15007
+5010;5010;Clemenceau;162;rue de l'Alma;35238;Rennes;48.0935649841987, -1.67447689224434;15010;Clemenceau;true;4-5010;4-15010
+5014;5014;Le Blosne;25;boulevard de Yougoslavie;35238;Rennes;48.0877018352358, -1.65429394101923;15014;Le Blosne;true;4-5014;4-15014
+5019;5019;Anatole France;20;rue Cardinal Paul Gouyon;35238;Rennes;48.1181188896991, -1.68745369798941;15004;Anatole France;true;4-5019;4-15004
+5023;5023;Gares;18;place de la Gare;35238;Rennes;48.1038751276417, -1.67218252984739;15008;Gares;true;4-5023;4-15008
+5066;5066;La Courrouze;;rue Lucie et Raymond Aubrac;35281;Saint-Jacques-de-la-Lande;48.0967299643268, -1.6985518405564;15063;La Courrouze;true;4-5066;4-15063
+5071;5071;Saint-Germain;3;place Saint-Germain;35238;Rennes;48.1107103741532, -1.67642924804993;15058;Saint-Germain;true;4-5071;4-15058
+5078;5078;Atalante;1;avenue de Belle Fontaine;35051;Cesson-Sévigné;48.1271531528695, -1.62785888139907;15051;Atalante;true;4-5078;4-15051
+5079;5079;Cesson - Viasilva;14;la Rochelle;35051;Cesson-Sévigné;48.1315486857473, -1.6198622206097;15050;Cesson - Viasilva;true;4-5079;4-15050
+5050;5050;Cesson - Viasilva;14;la Rochelle;35051;Cesson-Sévigné;48.1314259119796, -1.62024738680177;15050;Cesson - Viasilva;true;4-5050;4-15050
+5052;5052;Beaulieu - Université;39;avenue Professeur Charles Foulon;35238;Rennes;48.1220681784334, -1.639408849558;15052;Beaulieu - Université;true;4-5052;4-15052
+5060;5060;Colombier;13;rue du Puits Mauger;35238;Rennes;48.1058798831822, -1.68231303673512;15060;Colombier;true;4-5060;4-15060
+5062;5062;Cleunay;38;rue Jules Lallemand;35238;Rennes;48.1008145564503, -1.70641656591684;15062;Cleunay;true;4-5062;4-15062
+5005;5005;Sainte-Anne;14;place Sainte-Anne;35238;Rennes;48.1144554693252, -1.68048356496736;15005;Sainte-Anne;true;4-5005;4-15005
+5009;5009;Jacques Cartier;104;rue de l'Alma;35238;Rennes;48.0975655767388, -1.67550848013536;15009;Jacques Cartier;true;4-5009;4-15009
+5029;5029;Le Blosne;25;boulevard de Yougoslavie;35238;Rennes;48.0877649684423, -1.65443889223261;15014;Le Blosne;true;4-5029;4-15014
+5030;5030;La Poterie;211;rue de Vern;35238;Rennes;48.0875311412656, -1.64463340705489;15015;La Poterie;true;4-5030;4-15015
+5001;5001;J.F. Kennedy;45;cours Président John Fitzgerald Kennedy;35238;Rennes;48.1212952521027, -1.71094311992153;15001;J.F. Kennedy;true;4-5001;4-15001
+5069;5069;Colombier;7;rue du Puits Mauger;35238;Rennes;48.1059260411294, -1.68184372934838;15060;Colombier;true;4-5069;4-15060
+5072;5072;Sainte-Anne;4;contour Saint-Aubin;35238;Rennes;48.1148837318859, -1.67997118687387;15005;Sainte-Anne;true;4-5072;4-15005
+5074;5074;Gros-Chêne;24;rue de la Marbaudais;35238;Rennes;48.1251132449858, -1.66444549713083;15055;Gros-Chêne;true;4-5074;4-15055
+5075;5075;Les Gayeulles;9;rue Guy Ropartz;35238;Rennes;48.1293690189203, -1.65761824468627;15054;Les Gayeulles;true;4-5075;4-15054
+5077;5077;Beaulieu - Université;4;avenue Pierre Donzelot;35238;Rennes;48.1221399054252, -1.63894275885369;15052;Beaulieu - Université;true;4-5077;4-15052
+5059;5059;Gares;14;place de la Gare;35238;Rennes;48.1042043249837, -1.67228696063014;15008;Gares;true;4-5059;4-15008
+5063;5063;La Courrouze;;rue Lucie et Raymond Aubrac;35281;Saint-Jacques-de-la-Lande;48.0963105845976, -1.69831046826014;15063;La Courrouze;true;4-5063;4-15063
+5013;5013;Triangle;45;avenue des Pays-Bas;35238;Rennes;48.086404650787, -1.66052114187071;15013;Triangle;true;4-5013;4-15013
+5025;5025;Clemenceau;162;rue de l'Alma;35238;Rennes;48.0936534378551, -1.67439425701892;15010;Clemenceau;true;4-5025;4-15010
+5027;5027;Italie;6;avenue d'Italie;35238;Rennes;48.0865980004362, -1.66774072325888;15012;Italie;true;4-5027;4-15012

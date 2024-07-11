@@ -1,0 +1,2 @@
+agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_phone,agency_fare_url,agency_email
+1,STAR,http://www.star.fr,Europe/Paris,fr,0970821800,https://www.star.fr/titres-tarifs/a-la-duree/,service-clients@star.fr
