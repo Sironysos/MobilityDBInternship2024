@@ -34,7 +34,7 @@
                 We will use data from <ulink url="https://www.openstreetmap.org/user/atchisson/traces">OpenStreetMap</ulink>. The traces we are going to use in this example are rando_morbi1.gpx and rando_morbi2.gpx.
                 GPX is a common file format for storing GPS data. It is used by many GPS devices and applications to store track logs and waypoints. In our case, a person did two hikes on the 26th of June 2024, in the Morbihan, and saved the data in two GPX files.
                 Then, this person exported the data to OpenStreetMap and we can use his trace as we want. We will use these GPX files in this workshop.
-                Please download the files<ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390305"> rando_morbi1.gpx</ulink> and <ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390306">rando_morbi2.gpx</ulink> from the OpenStreetMap website and put in a folder you will remember.
+                Please download the files <ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390305"> rando_morbi1.gpx</ulink> and <ulink url="https://www.openstreetmap.org/user/atchisson/traces/11390306">rando_morbi2.gpx</ulink> from the OpenStreetMap website and put in a folder you will remember.
             </para>       
             <para>
                 Now, we are ready to start the workshop.
@@ -47,7 +47,7 @@
 
 
     <chapter id="chapter1">
-        <title>Chapter 1: Analyzing the data</title>
+        <title>Analyzing the data</title>
         <section id="part11">
             <title>Loading GPX data</title>
             <para>
@@ -178,7 +178,7 @@ SET trajectory = trajectory(trip);</programlisting>
 
     </chapter>
     <chapter id="chapter2">
-        <title>Chapter 2: Visualizing the data</title>
+        <title>Visualizing the data</title>
 
         <section id="part21">
         <title>Introduction</title>
@@ -236,7 +236,7 @@ SET trajectory = trajectory(trip);</programlisting>
             <title>New PostGIS Connection</title>
             <mediaobject>
                 <imageobject>
-                    <imagedata fileref="./images/PostGIS_Connection.png"/>
+                    <imagedata width='30%' fileref="./images/PostGIS_Connection.png"/>
                 </imageobject>
             </mediaobject>
         </figure>
@@ -277,10 +277,12 @@ SET trajectory = trajectory(trip);</programlisting>
                     <title>OpenStreetMap layer</title>
                     <mediaobject>
                         <imageobject>
-                            <imagedata fileref="./images/OpenStreetMap.png"/>
+                            <imagedata width='60%' fileref="./images/OpenStreetMap.png"/>
                         </imageobject>
                     </mediaobject>
                 </figure>
+            </para>
+            <para>
                 Then, let's add the data we have loaded in the database.
                 First, let's draw the trajectory. Click on PostGIS → connection_name → public → trips_mdb → Fields → trajectory. You will see the trajectory in the map.
                 Now, we want to visualize the moving point of the trip.
@@ -293,17 +295,17 @@ SET trajectory = trajectory(trip);</programlisting>
                     <title>Full temporal visualization</title>
                     <mediaobject>
                         <imageobject>
-                            <imagedata fileref="./images/Visual.png"/>
+                            <imagedata width='60%' fileref="./images/Visual.png"/>
                         </imageobject>
                     </mediaobject>
                 </figure>
-                Now this is your time to play with the data and visualize it as you want. You can put the time in the temporal controller and see the trip moving. You can also change the color of the trip, the size of the points, etc.
+                Now this is your time to play with the data and visualize it as you want. You can put the time in the temporal controller and see the trip moving. You can also change the color of the trip, the size of the points, etc...
             </para>
             <figure id="Gif" float="start">
                 <title>Visualizing the trip</title>
                 <mediaobject>
                     <imageobject>
-                        <imagedata fileref="./images/dessin.gif"/>
+                        <imagedata width='60%' fileref="./images/dessin.gif"/>
                     </imageobject>
                 </mediaobject>
             </figure>
