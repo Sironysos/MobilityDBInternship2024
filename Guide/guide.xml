@@ -53,7 +53,7 @@
     &FIRST_STEPS;
 
     <!-- Chapter 2 -->
-    <!-- &MANAGING_BUS_TRAJECTORIES; -->
+    &MANAGING_BUS_TRAJECTORIES;
 
     <!-- Chapter 3 -->
     <!-- &GRAFANA; -->
@@ -62,7 +62,7 @@
     <!-- &GPX; -->
 
     <!-- Chapter 5 -->
-    <!-- &GTFS; -->
+    &GTFS;
 
     <!-- Chapter 6 -->
     <!-- &GTFS_RT; -->

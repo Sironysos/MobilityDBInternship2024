@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="FirstSteps">
-    <title>MobilityDB Beginnings Workshop</title>
+    <title>Beginnings</title>
     <subtitle>How to install MobilityDB and use it for some basic querries</subtitle>
     
     <para>
@@ -10,7 +10,7 @@
     <section>
         <title>Part 1: Starting a database with MobilityDB </title>
 
-        <section id="part11">
+        <section>
             <title>Installing MobilityDB</title>
 
             <para>
@@ -36,7 +36,7 @@ sudo apt install postgresql-16-mobilitydb</programlisting>
             </para>
         </section>
 
-        <section xml:id="part12">
+        <section>
             <title>PgAdmin4: a PostgreSQL Editor</title>
 
             <para>
@@ -49,7 +49,7 @@ sudo apt install postgresql-16-mobilitydb</programlisting>
         </section>
 
 
-        <section xml:id="part13">
+        <section>
             <title>Starting the database</title>
             <para>
                 In order to start the PostgreSQL database, you need to do as following, replacing username by your
@@ -92,19 +92,11 @@ psql -U &lt;username&gt; -d workshop</programlisting>
 
         </section>
     
-    
-    
-        <!-- TODO: One or 2 chapters with basic querries-->
-    
-    
-    
-    
-    
     </section>
     <section>
         <title>Part 2: Playing with the data types</title>
 
-        <section id="part21">
+        <section>
         <title>PostgreSQL</title>
 
         <para>
@@ -137,7 +129,7 @@ SELECT * FROM postgrePoints;</programlisting>
 
         
         </section>
-        <section id="part22">
+        <section>
         <title>PostGIS</title>
         
         <para>
@@ -175,7 +167,7 @@ SELECT * FROM postgisLine;</programlisting>
         </para>
         </section>
 
-        <section id="part23">
+        <section>
             <title>MobilityDB</title>
             
         <para>
