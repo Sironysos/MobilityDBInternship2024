@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/css" href="guide.css"?>
-<book xml:id="guide" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="en">
-    <title>MobilityDB Rennes Workshop</title>
-    <info>
+    <chapter id="GTFS">
+    <title>MobilityDB GTFS Workshop</title>
+    <subtitle>How to use MobilityDB with GTFS data</subtitle>
+    <bookinfo>
         <author>
-            <personname>
-                <firstname>Alice</firstname>
-                <surname>Lombard</surname>
-            </personname>
+            <firstname>Alice</firstname>
+            <surname>Lombard</surname>
+            <affiliation>
+                <orgname>INSA Rennes, France</orgname>
+            </affiliation>
         </author>
         <author>
-            <personname>
-                <firstname>Raphaël</firstname>
-                <surname>Dubuget</surname>
-            </personname>
+            <firstname>Raphaël</firstname>
+            <surname>Dubuget</surname>
+            <affiliation>
+                <orgname>INSA Rennes, France</orgname>
+            </affiliation>
         </author>
-        <pubdate>June 2024</pubdate>
-    </info>
+        <abstract>
+            <para>
+                This document is an example of how you can use MobilityDB in order to analyse GTFS data. It is directly inspired by 
+                the <ulink url="https://mobilitydb.github.io/MobilityDB-workshop/develop/html/index.html">MobilityDB Workshop</ulink> already existing. 
+                We will throughout this document present different use cases of MobilityDB, which is an extension on <ulink url="https://postgis.net/">PostGIS</ulink> and <ulink url="https://www.postgresql.org/">PostgreSQL</ulink>. 
+            </para>       
+            <para>
+                This workshop was made by two students from <ulink url="https://www.insa-rennes.fr/index.html">INSA Rennes</ulink> during an internship in June, July and August 2024. 
+            </para>
+            <para>
+                todo
+            </para>       
+            <para>
+                Now, we are ready to start the workshop.
+                While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
+                If you need help concerning the functions of MobilityDB, please 
+                refer to the <ulink url="https://mobilitydb.com/documentation.html">documentation</ulink>. 
+            </para>
+        </abstract>
+    </bookinfo>
 
-    <section xml:id="intro">
+    <section id="intro">
         <para>
             This document is an example of how you can use MobilityDB in order to analyse data. It is directly inspired by 
             the <ulink url="https://mobilitydb.github.io/MobilityDB-workshop/develop/html/index.html">MobilityDB Workshop</ulink> already existing. 
@@ -38,9 +58,9 @@
     </section>
 
 
-    <section xml:id="chapter0">
+    <section id="chapter0">
         <title>Chapitre 0: Preparations</title>
-        <section xml:id="part01">
+        <section id="part01">
         <title>Installing MobilityDB</title>
         <para>
             For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
@@ -65,7 +85,7 @@ sudo apt upgrade
 sudo apt install postgresql-16-mobilitydb</programlisting>
         </para>
         </section>
-        <section xml:id="part02">
+        <section id="part02">
         <title>PgAdmin4: a PostgreSQL Editor</title>
 
         <para>
@@ -76,7 +96,7 @@ sudo apt install postgresql-16-mobilitydb</programlisting>
             You could also download <ulink url=" https://www.jetbrains.com/datagrip/">DataGrip</ulink> from Jetbrains. We didn’t use it in this workshop, but we’re sure it’s a good tool.
         </para>
         </section>
-        <section xml:id="part03">
+        <section id="part03">
         <title>Starting the database</title>
         <para>
             In order to start the PostgreSQL database, you need to do as following, replacing username by your
@@ -89,10 +109,10 @@ psql -U &lt;username&gt; -d workshop</programlisting>
         </para>
         </section>
     </section>
-    <section xml:id="chapter1">
+    <section id="chapter1">
         <title>Chapitre 1: Introduction to MobilityDB</title>
 
-        <section xml:id="part11">
+        <section id="part11">
         <title>Importing the data</title>
 
         <para>
@@ -174,9 +194,9 @@ CREATE TABLE RennesInput(
 
         </section>
     </section>  
-    <section xml:id="chapter2">
+    <section id="chapter2">
         <title>Chapitre 2: GTFS data</title>
-        <section xml:id="part21">
+        <section id="part21">
             <title>Introduction</title>
             <para>
                 In this chapter, we are going to use GTFS data. GTFS (General Transit Feed Specification) is a standard format for public transportation schedules and associated geographic information. 
@@ -225,7 +245,7 @@ CREATE TABLE RennesInput(
                 We are not going to use the <!--TODO-->xxx and <!--TODO-->xxx files because it is not relevant for our workshop.
             </para>
         </section>
-        <section xml:id="part22">
+        <section id="part22">
             <title>Importing the data</title>
             <para>
                 First thing you need to do is create a MobilityDB extension, just like in the <phrase xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="#chapter1">Chapter 1</phrase>.<sbr/>
@@ -519,13 +539,13 @@ COPY trips(route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_i
             </para>
         <!-- TODO : add a newpage link-->
         </section>
-        <section xml:id="part23">
+        <section id="part23">
             <title>Creating PostGIS geometries</title>
             <para>
                 In this part, we are going to create the PostGIS geometries for the stops, the routes and the shapes of the routes. <sbr/>
                 To do so, we are going to use the stops, routes and shapes tables we created earlier.
             </para>
-            <section xml:id="subpart231">
+            <section id="subpart231">
                 <subtitle>
                     Creating the shapes of the routes
                 </subtitle>
@@ -566,7 +586,7 @@ GROUP BY shape_id;</programlisting>
                     Now that we have the shapes of the routes, we can move on to the next part.
                 </para>
             </section>
-            <section xml:id="subpart232">
+            <section id="subpart232">
                 <subtitle>Creating stop geopoints</subtitle>
                 <para>
                     In this part, we are going to create the stop points. <sbr/>
@@ -584,7 +604,7 @@ SET stop_geom = ST_SetSRID(ST_MakePoint(stop_lon, stop_lat),4326);
                     Now that we have the stop points, we can move on to the next part.
                 </para>
             </section>
-            <section xml:id="subpart233">
+            <section id="subpart233">
                 <subtitle>
                     Generating Service Dates
                 </subtitle>
@@ -829,4 +849,4 @@ FROM temp3;</programlisting>
                 </section>      
         </section>
     </section>
-</book>
+</chapter>
