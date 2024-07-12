@@ -13,7 +13,7 @@
 
 ]>
 <book lang="en">
-    <title>MobilityDB Hiking Workshop</title>
+    <title>MobilityDB Workshop</title>
     <bookinfo>
 
         <!-- Authors -->
@@ -59,7 +59,7 @@
 
     <!-- Chapter 3 -->
         <!-- TODO -->
-    <!-- &GRAFANA; -->
+    &GRAFANA;
 
     <!-- Chapter 4 -->
         <!-- OK -->

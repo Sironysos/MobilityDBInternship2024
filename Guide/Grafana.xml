@@ -19,7 +19,7 @@
     <section id="Queries">
         <title>Queries</title>
         <para>
-            Now that Grafana is connected to your database, you can start creating queries to visualize your data. You can find more information on how to create queries on the <ulink url="https://grafana.com/docs/grafana/latest/features/datasources/postgres/">Grafana documentation</ulink>.
+            Now that Grafana is connected to your database, you can start creating queries to visualize your data.
         </para>
     </section>
     <section id="Dashboards">
