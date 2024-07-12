@@ -50,26 +50,31 @@
     </bookinfo>
 
     <!-- Chapter 1 -->
-    <!-- OK -->
+        <!-- OK -->
     &FIRST_STEPS;
 
     <!-- Chapter 2 -->
+        <!-- TO FINISH -->
     &MANAGING_BUS_TRAJECTORIES;
 
     <!-- Chapter 3 -->
+        <!-- TODO -->
     <!-- &GRAFANA; -->
 
     <!-- Chapter 4 -->
+        <!-- OK -->
     &GPX;
 
     <!-- Chapter 5 -->
-    <!-- OK -->
+        <!-- OK -->
     &GTFS;
 
     <!-- Chapter 6 -->
+        <!-- TODO -->
     <!-- &GTFS_RT; -->
 
     <!-- Chapter 7 -->
+        <!-- TODO -->
     <!-- &JSON; -->
 
 </book>

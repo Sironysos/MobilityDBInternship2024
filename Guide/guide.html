@@ -395,6 +395,16 @@ CREATE EXTENSION mobilitydb CASCADE;</pre><p>
         </p><p>
             Now, we need to import the GTFS data into the database. There is a tool that can help you do that, called gtfs-to-sql. Please install it by following these instructions:
             </p><pre class="programlisting">
+sudo apt install npm
+sudo apt install moreutils
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] &amp;&amp; \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] &amp;&amp; \. "$NVM_DIR/bash_completion"
+nvm install 16
+nvm use 16
+node -v
 npm install gtfs-via-postgres</pre><p>
             Note that you need to have nvm installed on your computer to use this tool, and a recent enough version.
             gtfs-to-sql will create the tables for you, and fill them with the data from the GTFS files. Here is how to use it:
