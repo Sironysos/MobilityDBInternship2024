@@ -3,19 +3,16 @@ CREATE EXTENSION mobilityDB CASCADE;
 
 -- do the command gtfs-to-sql to import the GTFS data into the database.
 
-ALTER TABLE routes ADD COLUMN geom geometry('POINT', 4326);
-
-
-ALTER TABLE stops ADD COLUMN stop_geom geometry('POINT', 4326);
+ALTER TABLE stops ADD COLUMN stop_geom geometry('POINT', 2154);
 
 UPDATE stops
-SET stop_geom = ST_SetSRID(stop_loc::geometry,4326);
+SET stop_geom = ST_SetSRID(stop_loc::geometry,2154);
 
 DROP TABLE IF EXISTS shape_geoms CASCADE;
 -- Create a table to store the shape geometries
 CREATE TABLE shape_geoms (
   shape_id text NOT NULL,
-  shape_geom geometry('LINESTRING', 4326),
+  shape_geom geometry('LINESTRING', 2154),
   CONSTRAINT shape_geom_pkey PRIMARY KEY (shape_id)
 );
 DROP INDEX IF EXISTS shape_geoms_key;
@@ -23,7 +20,7 @@ CREATE INDEX shape_geoms_key ON shapes (shape_id);
 
 INSERT INTO shape_geoms
 SELECT shape_id, ST_MakeLine(array_agg(
-  ST_SetSRID(shape_pt_loc::geometry,4326) ORDER BY shape_pt_sequence))
+  ST_SetSRID(shape_pt_loc::geometry,2154) ORDER BY shape_pt_sequence))
 FROM shapes
 GROUP BY shape_id;
 
@@ -164,6 +161,26 @@ WHEN point_sequence = no_points then stop2_arrival_time
 ELSE stop1_arrival_time + ((stop2_arrival_time - stop1_arrival_time) * perc)
 END AS point_arrival_time
 FROM temp3;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 DROP TABLE IF EXISTS trips_input;
 CREATE TABLE trips_input (
