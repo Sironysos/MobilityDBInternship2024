@@ -50,7 +50,8 @@
     </bookinfo>
 
     <!-- Chapter 1 -->
-    &FIRST_STEPS;
+    <!-- OK -->
+    <!-- &FIRST_STEPS; -->
 
     <!-- Chapter 2 -->
     <!-- &MANAGING_BUS_TRAJECTORIES; -->
@@ -59,10 +60,11 @@
     <!-- &GRAFANA; -->
 
     <!-- Chapter 4 -->
-    <!-- &GPX; -->
+    &GPX;
 
     <!-- Chapter 5 -->
-    &GTFS;
+    <!-- OK -->
+    <!-- &GTFS; -->
 
     <!-- Chapter 6 -->
     <!-- &GTFS_RT; -->
