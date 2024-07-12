@@ -51,10 +51,10 @@
 
     <!-- Chapter 1 -->
     <!-- OK -->
-    <!-- &FIRST_STEPS; -->
+    &FIRST_STEPS;
 
     <!-- Chapter 2 -->
-    <!-- &MANAGING_BUS_TRAJECTORIES; -->
+    &MANAGING_BUS_TRAJECTORIES;
 
     <!-- Chapter 3 -->
     <!-- &GRAFANA; -->
@@ -64,7 +64,7 @@
 
     <!-- Chapter 5 -->
     <!-- OK -->
-    <!-- &GTFS; -->
+    &GTFS;
 
     <!-- Chapter 6 -->
     <!-- &GTFS_RT; -->

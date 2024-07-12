@@ -10,12 +10,195 @@
                 While this workshop illustrates the usage of MobilityDB functions, it does not explain them in detail. 
                 If you need help concerning the functions of MobilityDB, please 
                 refer to the <a class="ulink" href="https://mobilitydb.com/documentation.html" target="_top">documentation</a>. 
-            </p></div></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="chapter"><a href="#GPX">1. MobilityDB Hiking Workshop</a></span></dt><dd><dl><dt><span class="section"><a href="#idm33">Analyzing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#idm35">Loading GPX data</a></span></dt><dt><span class="section"><a href="#idm55">Transforming the data</a></span></dt></dl></dd><dt><span class="section"><a href="#idm68">Visualizing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#idm70">Introduction</a></span></dt><dt><span class="section"><a href="#idm97">Connecting to the database</a></span></dt><dt><span class="section"><a href="#idm118">Visualizing the data</a></span></dt></dl></dd></dl></dd></dl></div><div class="list-of-figures"><p><strong>List of Figures</strong></p><dl><dt>1.1. <a href="#NewConnection">New PostGIS Connection</a></dt><dt>1.2. <a href="#OpenStreetMap">OpenStreetMap layer</a></dt><dt>1.3. <a href="#TemporalController">Full temporal visualization</a></dt><dt>1.4. <a href="#Gif">Visualizing the trip</a></dt></dl></div><div class="list-of-tables"><p><strong>List of Tables</strong></p><dl><dt>1.1. <a href="#idm80">Download the move.zip file</a></dt></dl></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="GPX"></a>Chapter 1. MobilityDB Hiking Workshop</h1></div><div><h3 class="subtitle"><em>How to use MobilityDB to analyze hiking data</em></h3></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#idm33">Analyzing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#idm35">Loading GPX data</a></span></dt><dt><span class="section"><a href="#idm55">Transforming the data</a></span></dt></dl></dd><dt><span class="section"><a href="#idm68">Visualizing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#idm70">Introduction</a></span></dt><dt><span class="section"><a href="#idm97">Connecting to the database</a></span></dt><dt><span class="section"><a href="#idm118">Visualizing the data</a></span></dt></dl></dd></dl></div><p>
+            </p></div></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="chapter"><a href="#FirstSteps">1. Beginnings</a></span></dt><dd><dl><dt><span class="section"><a href="#idm27">Part 1: Starting a database with MobilityDB </a></span></dt><dd><dl><dt><span class="section"><a href="#idm29">Installing MobilityDB</a></span></dt><dt><span class="section"><a href="#idm33">PgAdmin4: a PostgreSQL Editor</a></span></dt><dt><span class="section"><a href="#idm39">Starting the database</a></span></dt></dl></dd><dt><span class="section"><a href="#idm56">Part 2: Playing with the data types</a></span></dt><dd><dl><dt><span class="section"><a href="#idm58">PostgreSQL</a></span></dt><dt><span class="section"><a href="#idm64">PostGIS</a></span></dt><dt><span class="section"><a href="#idm70">MobilityDB</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#ManagingBusTrajectories">2. Managing Bus Trajectories</a></span></dt><dd><dl><dt><span class="section"><a href="#idm77">Introduction to MobilityDB</a></span></dt><dd><dl><dt><span class="section"><a href="#idm79">Importing the data</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#GPX">3. MobilityDB Hiking Workshop</a></span></dt><dd><dl><dt><span class="section"><a href="#idm149">Analyzing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#idm151">Loading GPX data</a></span></dt><dt><span class="section"><a href="#idm171">Transforming the data</a></span></dt></dl></dd><dt><span class="section"><a href="#idm184">Visualizing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#idm186">Introduction</a></span></dt><dt><span class="section"><a href="#idm213">Connecting to the database</a></span></dt><dt><span class="section"><a href="#idm234">Visualizing the data</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#GTFS">4. GTFS data</a></span></dt><dd><dl><dt><span class="section"><a href="#idm264">Introduction</a></span></dt><dt><span class="section"><a href="#idm283">Importing the data</a></span></dt><dt><span class="section"><a href="#idm296">Creating PostGIS geometries</a></span></dt><dd><dl><dt><span class="section"><a href="#idm299"></a></span></dt><dt><span class="section"><a href="#idm326"></a></span></dt></dl></dd><dt><span class="section"><a href="#idm337">Creating trips</a></span></dt><dd><dl><dt><span class="section"><a href="#idm340"></a></span></dt><dt><span class="section"><a href="#idm365"></a></span></dt><dt><span class="section"><a href="#idm393"></a></span></dt><dt><span class="section"><a href="#idm410"></a></span></dt><dt><span class="section"><a href="#idm416"></a></span></dt></dl></dd></dl></dd></dl></div><div class="list-of-figures"><p><strong>List of Figures</strong></p><dl><dt>2.1. <a href="#imgpoints">First few lines of the table</a></dt><dt>3.1. <a href="#NewConnection">New PostGIS Connection</a></dt><dt>3.2. <a href="#OpenStreetMap">OpenStreetMap layer</a></dt><dt>3.3. <a href="#TemporalController">Full temporal visualization</a></dt><dt>3.4. <a href="#Gif">Visualizing the trip</a></dt></dl></div><div class="list-of-tables"><p><strong>List of Tables</strong></p><dl><dt>2.1. <a href="#tabdata">AIS columns</a></dt><dt>3.1. <a href="#idm196">Download the move.zip file</a></dt></dl></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="FirstSteps"></a>Chapter 1. Beginnings</h1></div><div><h3 class="subtitle"><em>How to install MobilityDB and use it for some basic querries</em></h3></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#idm27">Part 1: Starting a database with MobilityDB </a></span></dt><dd><dl><dt><span class="section"><a href="#idm29">Installing MobilityDB</a></span></dt><dt><span class="section"><a href="#idm33">PgAdmin4: a PostgreSQL Editor</a></span></dt><dt><span class="section"><a href="#idm39">Starting the database</a></span></dt></dl></dd><dt><span class="section"><a href="#idm56">Part 2: Playing with the data types</a></span></dt><dd><dl><dt><span class="section"><a href="#idm58">PostgreSQL</a></span></dt><dt><span class="section"><a href="#idm64">PostGIS</a></span></dt><dt><span class="section"><a href="#idm70">MobilityDB</a></span></dt></dl></dd></dl></div><p>
+        This document is a guide on how you can install MobilityDB and use it in order to analyse data.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm27"></a>Part 1: Starting a database with MobilityDB </h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm29"></a>Installing MobilityDB</h3></div></div></div><p>
+                For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
+                
+    
+                If you run Ubuntu 22.04 (Jammy Jellyfish), you can simply execute the following in a terminal:
+                </p><pre class="programlisting">
+sudo apt update
+# We will need the foloowing packages:
+sudo apt install curl ca-certificates gnupg
+
+# Install the public key for the repository (if not done previously):
+curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg &gt;/dev/null
+
+# Create the repository configuration file:
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" &gt;&gt; /etc/apt/sources.list.d/postgresql.list'
+sudo apt update
+sudo apt upgrade
+
+# Install the mobilitydb package with apt. It will automatically install the dependancies needed, PosgreSQL and PostGIS in particular.
+sudo apt install postgresql-16-mobilitydb</pre><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm33"></a>PgAdmin4: a PostgreSQL Editor</h3></div></div></div><p>
+                We are going to execute SQL commands. To do so, you can do it in a terminal or use any IDE you like. If you do not have one, here is the link to install PgAdmin4, 
+                you just need to choose your distribution and follow the instructions: <a class="ulink" href="https://www.pgadmin.org/download/" target="_top">https://www.pgadmin.org/download/</a>.
+            </p><p>
+                You could also try <a class="ulink" href=" https://www.jetbrains.com/datagrip/" target="_top">DataGrip</a> from Jetbrains. We didn't use it in this workshop, but we're sure it's a good tool.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm39"></a>Starting the database</h3></div></div></div><p>
+                In order to start the PostgreSQL database, you need to do as following, replacing username by your
+                own username. Note that in this case "workshop" is the name of the database we are creating, but you can choose your own name if you take care to change it every time it is needed later. 
+                Additionnaly, &lt;username&gt; should correspond to your OS user name.
+                </p><pre class="programlisting">
+sudo -u postgres createuser -s -i -d -r -l -w &lt;username&gt;
+sudo -u postgres createdb workshop
+sudo service postgresql start
+psql -U &lt;username&gt; -d workshop</pre><p>
+            </p><p>
+                You can now connect to the database in pgAdmin. Here are the steps to do so:
+                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>On the dahboard click 'Add New Server'</p></li><li class="listitem"><p>Fill out a name of your choosing for the server</p></li><li class="listitem"><p>Fill out the host name, which is 'localhost' if you are hosting the database on your machine</p></li><li class="listitem"><p>Fill out the port, which is '5432' if you are hosting the database on your machine</p></li><li class="listitem"><p>Fill out the username and password you used to create the database</p></li></ul></div><p>
+            </p><p>
+                You can now find your database in the browser on the left of the screen.
+                If you're having troule finding it, here is the explicit path in the Objext Explorer on the left:
+                Servers → Server_name → Databases → workshop                
+                You can now right click on 'workshop' to open the Querry Tool. This is where we will write and execute our querries.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm56"></a>Part 2: Playing with the data types</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm58"></a>PostgreSQL</h3></div></div></div><p>
+            In this chapter, we are going to see how we can represent points or a trajectory in mobilityDB. 
+            Before that, we'll see how to do it without MobilityDB so that you can see the difference.
+        </p><p>
+            First, in PostgreSQL without any extension, we can represent a point with it's coordinates. Here is a small SQL code you can copy and paste into your editor and run it:
+            </p><pre class="programlisting">
+CREATE TABLE postgrePoints(
+    time int,
+    longitude float,
+    latitude float
+);
+
+INSERT INTO postgrePoints VALUES
+(0, 0, 0),
+(2, 1, 1),
+(3, 0.5, 2),
+(4, 0, 1),
+(6, 1, 1),
+(7, 1, 0);
+
+SELECT * FROM postgrePoints;</pre><p>
+        </p><p>
+            As you can see, we have a table with 3 columns: the time, the longitude and the latitude of each point. 
+            We can then manually compute the distance between each point, or visualize the trajectory, but it is not very convenient.
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm64"></a>PostGIS</h3></div></div></div><p>
+            With PostGIS, we can represent a point with a type geometry. Here is a small SQL code you can copy and paste into your editor and run it:
+            </p><pre class="programlisting">
+-- First, we need to create the extension
+CREATE EXTENSION PostGIS;
+
+DROP TABLE IF EXISTS postgispoints;
+CREATE TABLE postgisPoints(
+    time int,
+    point geometry(point)
+);
+
+INSERT INTO postgispoints ("time", point)
+SELECT time, ST_MakePoint(longitude, latitude)
+FROM postgrePoints;
+
+SELECT * FROM postgispoints;</pre><p>
+        </p><p>
+            As you can see, we have a table with 2 columns: the time and the point. The point is a geometry of type point, which is a PostGIS type. 
+            We can then use PostGIS functions to compute the distance between each point, or visualize the trajectory, which is more convenient.
+            For example, we can create a line from the points and visualize it on a map:
+            </p><pre class="programlisting">
+CREATE TABLE postgisLine(
+    line geometry
+);
+
+INSERT INTO postgisLine (line)
+SELECT ST_MakeLine(ARRAY(SELECT point FROM postgisPoints ORDER BY time));
+
+SELECT * FROM postgisLine;</pre><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm70"></a>MobilityDB</h3></div></div></div><p>
+            With MobilityDB, we can represent a trajectory with a tgeompoint. 
+            It's pretty much the same as a PostGIS line, except that each point has a time associated with it.
+            Here is how you can make it:
+            </p><pre class="programlisting">
+DROP EXTENSION IF EXISTS mobilityDB CASCADE;
+CREATE EXTENSION mobilityDB CASCADE;
+
+DROP TABLE IF EXISTS mdbTraj CASCADE;
+CREATE TABLE mdbTraj(
+    traj tgeogpoint
+);
+
+INSERT INTO mdbtraj(traj)
+SELECT tgeogpointSeq(array_agg(tgeogpoint(point, time) ORDER BY time))
+FROM postgisPoints;</pre><p>
+        </p></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="ManagingBusTrajectories"></a>Chapter 2. Managing Bus Trajectories</h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#idm77">Introduction to MobilityDB</a></span></dt><dd><dl><dt><span class="section"><a href="#idm79">Importing the data</a></span></dt></dl></dd></dl></div><p>    
+        We will, for our examples, use data from STAR which is the Rennes' public transport company. 
+        This data is protected by ODbL (Open Database License)\cite{SourceSTAR}.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm77"></a>Introduction to MobilityDB</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm79"></a>Importing the data</h3></div></div></div><p>
+            You can find in the repository for this workshop a CSV file called Freq_Mars2024 data.csv. It should look like the Figure 1.
+        </p><div class="figure-float"><div class="figure"><a id="imgpoints"></a><p class="title"><strong>Figure 2.1. First few lines of the table</strong></p><div class="figure-contents"><div class="mediaobject"><img src="./images/2/FreqMars2024dataTable.png" alt="First few lines of the table" /></div></div></div><br class="figure-break" /></div><p>
+            This is the data we will use for this workshop. If you want more recent data, you can find it 
+            <a class="ulink" href="https://data.explore.star.fr/explore/dataset/tco-billettique-frequentation-detaillee-td/table/" target="_top">here</a> by 
+            selecting the month you want.
+        </p><p>    
+            The columns in the table are listed below, with in the first column af the table the original name (in french), in the second 
+            column the english translation and in the third column an explanation of the column:
+        </p><div class="table"><a id="tabdata"></a><p class="title"><strong>Table 2.1. AIS columns</strong></p><div class="table-contents"><table class="table" summary="AIS columns" width="100%" border="1"><colgroup><col align="left" class="c1" /><col align="left" class="c2" /><col /></colgroup><tbody><tr><td align="left">DateFreq</td><td align="left">Date</td><td align="left">Date of the entry, format: 31/12/2024</td></tr><tr><td align="left">TrancheHoraire15mn</td><td align="left">15 min time slot</td><td align="left">Beginning of the 15 minutes time slot that encompasses the time of that stop, format: 23:59:59</td></tr><tr><td align="left">Timeo</td><td align="left">Timeo</td><td align="left">id of the stop for that entry</td></tr><tr><td align="left">NomArret</td><td align="left">Stop Name</td><td align="left">Name of that stop</td></tr><tr><td align="left">NomCommune</td><td align="left">Town Name</td><td align="left">Name of the town that stop is in</td></tr><tr><td align="left">identifiantLigne</td><td align="left">Line id</td><td align="left">id of the line for that entry</td></tr><tr><td align="left">NomCourtLigne</td><td align="left">Line name</td><td align="left">Human readable name of that line</td></tr><tr><td align="left">Sens</td><td align="left">Direction</td><td align="left">Direction the bus is going in, 'indéterminé' if it’s not a bus</td></tr><tr><td align="left">Frequentation</td><td align="left">Frequentation</td><td align="left">An estimation of the real number of people that got on the bus at that stop, based on the number of recorded people and indicators like the fraud rate.</td></tr></tbody></table></div></div><br class="table-break" /><p>
+            First, we are going to link the MobilityDB extension to the database. To do so, you need to execute the following command in your SQL editor:
+            </p><pre class="programlisting">
+CREATE EXTENSION mobilitydb CASCADE;</pre><p>
+            We also need to set the date style to the European style, as the data is in this format. To do so, you need to execute the following command:
+            </p><pre class="programlisting">
+SET datestyle TO DMY;</pre><p>
+        </p><p>
+            Then, we need to create a table in the database to store this data. Here is how to create the first three columns of the table:
+            </p><pre class="programlisting">
+CREATE TABLE RennesInput(
+DateFreq date,
+TimeSlot15mn time,
+Timeo integer,</pre><p>
+            We let you create the rest of the table. See you next page to see the full table!
+            
+        </p><p>
+            Here is how to create the full table:
+            </p><pre class="programlisting">
+CREATE TABLE RennesInput(
+DateFreq date,
+TimeSlot15mn time,
+Timeo integer,
+StopName varchar(50),
+TownName varchar(50),
+LineID integer,
+LineName varchar(50),
+Direction varchar(20),
+NbPersBoarding varchar(50)
+);</pre><p>
+        
+        </p></div>
+
+
+
+
+
+
+
+
+
+
+
+    TODO
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="GPX"></a>Chapter 3. MobilityDB Hiking Workshop</h1></div><div><h3 class="subtitle"><em>How to use MobilityDB to analyze hiking data</em></h3></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#idm149">Analyzing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#idm151">Loading GPX data</a></span></dt><dt><span class="section"><a href="#idm171">Transforming the data</a></span></dt></dl></dd><dt><span class="section"><a href="#idm184">Visualizing the data</a></span></dt><dd><dl><dt><span class="section"><a href="#idm186">Introduction</a></span></dt><dt><span class="section"><a href="#idm213">Connecting to the database</a></span></dt><dt><span class="section"><a href="#idm234">Visualizing the data</a></span></dt></dl></dd></dl></div><p>
                 We will use data from <a class="ulink" href="https://www.openstreetmap.org/user/atchisson/traces" target="_top">OpenStreetMap</a>. The traces we are going to use in this example are rando_morbi1.gpx and rando_morbi2.gpx.<br />
                 GPX is a common file format for storing GPS data. It is used by many GPS devices and applications to store track logs and waypoints. In our case, a person did two hikes on the 26th of June 2024, in the Morbihan, and saved the data in two GPX files.<br />
                 Then, this person exported the data to OpenStreetMap and we can use his trace as we want. We will use these GPX files in this workshop.<br />
                 Please download the files <a class="ulink" href="https://www.openstreetmap.org/user/atchisson/traces/11390305" target="_top"> rando_morbi1.gpx</a> and <a class="ulink" href="https://www.openstreetmap.org/user/atchisson/traces/11390306" target="_top">rando_morbi2.gpx</a> from the OpenStreetMap website and put in a folder you will remember.
-            </p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm33"></a>Analyzing the data</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm35"></a>Loading GPX data</h3></div></div></div><p>
+            </p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm149"></a>Analyzing the data</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm151"></a>Loading GPX data</h3></div></div></div><p>
                 GPX, or GPS Exchange Format, is an XML data format for GPS data.<br />
                 Location data (and optionally elevation, time, and other information) is stored in tags and can be interchanged between GPS devices and software. <br />
                 Conceptually, a GPX file contains tracks, which are a record of where a moving object has been, and routes, which are suggestions about where it might go in the future. Furthermore, both tracks and routes and composed by points. <br />
@@ -77,7 +260,7 @@ ogr2ogr -append -f PostgreSQL PG:dbname=hiking <span class="custom-color-red">11
                 You need to replace <span class="custom-color-red">11390305</span> by the name of the file you want to import. <br />
                 Please run this command with both files.<br />
                 Now, you should have the data in the database. 
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm55"></a>Transforming the data</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm171"></a>Transforming the data</h3></div></div></div><p>
                 Let's have a look at the table "tracks" and "track_points" which were created by ogr2ogr.
                 </p><pre class="programlisting">
 SELECT * FROM track_points;
@@ -127,13 +310,13 @@ SET trajectory = trajectory(trip);</pre><p>
                 Finally, we are updating the table with the trajectory of the trip.
             </p><p>
                 We are done with the data loading. In conclusion, we have loaded the GPX data into MobilityDB, and we have created a table "trips_mdb" which contains the trajectories of the trips. We are now ready to visualize the data.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm68"></a>Visualizing the data</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm70"></a>Introduction</h3></div></div></div><p>
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm184"></a>Visualizing the data</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm186"></a>Introduction</h3></div></div></div><p>
             Now that we have cleaned the data and made it ready to be used, we will visualize the data in order to have a better understanding of it.<br />
             To do so, we are going to use QGIS, a free and open-source geographic information system. You can download it <a class="ulink" href="https://qgis.org/en/site/forusers/download.html" target="_top">here</a>.<br />
             If you're interested, know that we are going to follow this tutorial: <a class="ulink" href="https://www.youtube.com/watch?v=titgXKp0kms&amp;t=4940s" target="_top">MobilityDB: Hands on Tutorial on Managing and Visualizing Geospatial Trajectories in SQL</a>.<br />
             We will use the plugin Move to visualize the data. Here is the <a class="ulink" href="https://github.com/mschoema/move/tree/master" target="_top">repo</a> where you can find it.<br />
             Please click on the move.zip file, and download it. Take care to do it like in this following image, otherwise it could not be downloaded correctly. Also, put it in a folder you will remember.
-            </p><div class="table"><a id="idm80"></a><p class="title"><strong>Table 1.1. Download the move.zip file</strong></p><div class="table-contents"><table class="table" summary="Download the move.zip file" border="0"><colgroup><col /><col /></colgroup><tbody><tr><td>
+            </p><div class="table"><a id="idm196"></a><p class="title"><strong>Table 3.1. Download the move.zip file</strong></p><div class="table-contents"><table class="table" summary="Download the move.zip file" border="0"><colgroup><col /><col /></colgroup><tbody><tr><td>
                                 <div class="mediaobject"><img src="./images/4/moveFolder.png" /></div>
                             </td><td>
                                 <div class="mediaobject"><img src="./images/4/moveZip.png" /></div>
@@ -147,21 +330,21 @@ SET trajectory = trajectory(trip);</pre><p>
         To fix this, you need to install the psycopg module. You can do it by running the following command in a terminal:
     </p><pre class="programlisting">pip install psycopg</pre><p>
         If you've had to install the psycopg module, you will need to uninstall the incorrect move plugin that you just installed (Plugins → Manage and Install Plugins → Installed → Move → Uninstall Plugin) and then reinstall it. You may also need to restart QGIS to make the plugin work.
-        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm97"></a>Connecting to the database</h3></div></div></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm213"></a>Connecting to the database</h3></div></div></div><p>
             You can now create a new blank project in QGIS.
             Then in the browser on the left of the screen, you should find a 'PostGIS' line. Right click on it and then 'New Connection...'.
             You will see this window:
-        </p><div class="figure-float"><div class="figure"><a id="NewConnection"></a><p class="title"><strong>Figure 1.1. New PostGIS Connection</strong></p><div class="figure-contents"><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="30%"><tr><td><img src="./images/4/PostGIS_Connection.png" width="100%" alt="New PostGIS Connection" /></td></tr></table></div></div></div><br class="figure-break" /></div><p>
+        </p><div class="figure-float"><div class="figure"><a id="NewConnection"></a><p class="title"><strong>Figure 3.1. New PostGIS Connection</strong></p><div class="figure-contents"><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="30%"><tr><td><img src="./images/4/PostGIS_Connection.png" width="100%" alt="New PostGIS Connection" /></td></tr></table></div></div></div><br class="figure-break" /></div><p>
             Here is what you need to fill out:
             </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Name: choose a name for this connection</p></li><li class="listitem"><p>Host: if the database is hosted on your machine, then 'localhost'. If not, you should be able to fgure it out by yourself.</p></li><li class="listitem"><p>Port: again, if self hosted then keep '5432', if not you should know.</p></li><li class="listitem"><p>Database: here write the name of the database in which you have loaded the data. In our case, it was "hiking".</p></li><li class="listitem"><p>Authentication: go to the 'Basic' tab and fill out the user name and password for the account that has access to the database. Make sure to check the 'Store' boxes next to User name and Password.</p></li></ul></div><p>
         </p><p>
             You can now click OK and find your connection, database and the trips_mdb table in the tree below the PostGIS line in the QGIS Browser.
-        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm118"></a>Visualizing the data</h3></div></div></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="idm234"></a>Visualizing the data</h3></div></div></div><p>
                 Now that you have connected to the database, you can visualize the data. <br />
                 First, let's put a map layer. In the browser window (on the left of the screen), click on 'XYZ Tiles' and then right click on 'OpenStreetMap' and select 'Add Layer to Project'.<br />
                 You will see an OpenStreetMap layer in the inferior left part of the screen.<br />
                 You can zoom in the part you are studyin. In our case, we are focusing on a part of France, in Britanny, called Morbihan.
-                </p><div class="figure-float"><div class="figure"><a id="OpenStreetMap"></a><p class="title"><strong>Figure 1.2. OpenStreetMap layer</strong></p><div class="figure-contents"><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="60%"><tr><td><img src="./images/4/OpenStreetMap.png" width="100%" alt="OpenStreetMap layer" /></td></tr></table></div></div></div><br class="figure-break" /></div><p>
+                </p><div class="figure-float"><div class="figure"><a id="OpenStreetMap"></a><p class="title"><strong>Figure 3.2. OpenStreetMap layer</strong></p><div class="figure-contents"><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="60%"><tr><td><img src="./images/4/OpenStreetMap.png" width="100%" alt="OpenStreetMap layer" /></td></tr></table></div></div></div><br class="figure-break" /></div><p>
             </p><p>
                 Then, let's add the data we have loaded in the database.<br />
                 First, let's draw the trajectory. Click on PostGIS → connection_name → public → trips_mdb → Fields → trajectory. You will see the trajectory in the map.<br />
@@ -171,6 +354,360 @@ SET trajectory = trajectory(trip);</pre><p>
 </p><pre class="programlisting">SELECT date, trip FROM trips_mdb;</pre><p>
                 Now click on 'Execute Query'.<br />
                 Let's see the trip moving while we are visualizing it. To do so, click on View → Panels → Temporal Controller. You will see a window like this: 
-                </p><div class="figure-float"><div class="figure"><a id="TemporalController"></a><p class="title"><strong>Figure 1.3. Full temporal visualization</strong></p><div class="figure-contents"><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="60%"><tr><td><img src="./images/4/Visual.png" width="100%" alt="Full temporal visualization" /></td></tr></table></div></div></div><br class="figure-break" /></div><p>
+                </p><div class="figure-float"><div class="figure"><a id="TemporalController"></a><p class="title"><strong>Figure 3.3. Full temporal visualization</strong></p><div class="figure-contents"><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="60%"><tr><td><img src="./images/4/Visual.png" width="100%" alt="Full temporal visualization" /></td></tr></table></div></div></div><br class="figure-break" /></div><p>
                 Now this is your time to play with the data and visualize it as you want. You can put the time in the temporal controller and see the trip moving. You can also change the color of the trip, the size of the points, etc...
-            </p><div class="figure-float"><div class="figure"><a id="Gif"></a><p class="title"><strong>Figure 1.4. Visualizing the trip</strong></p><div class="figure-contents"><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="60%"><tr><td><img src="./images/4/dessin.gif" width="100%" alt="Visualizing the trip" /></td></tr></table></div></div></div><br class="figure-break" /></div></div></div></div></div></body></html>
+            </p><div class="figure-float"><div class="figure"><a id="Gif"></a><p class="title"><strong>Figure 3.4. Visualizing the trip</strong></p><div class="figure-contents"><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="60%"><tr><td><img src="./images/4/dessin.gif" width="100%" alt="Visualizing the trip" /></td></tr></table></div></div></div><br class="figure-break" /></div></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="GTFS"></a>Chapter 4. GTFS data</h1></div></div></div><div class="toc"><p><strong>Table of Contents</strong></p><dl class="toc"><dt><span class="section"><a href="#idm264">Introduction</a></span></dt><dt><span class="section"><a href="#idm283">Importing the data</a></span></dt><dt><span class="section"><a href="#idm296">Creating PostGIS geometries</a></span></dt><dd><dl><dt><span class="section"><a href="#idm299"></a></span></dt><dt><span class="section"><a href="#idm326"></a></span></dt></dl></dd><dt><span class="section"><a href="#idm337">Creating trips</a></span></dt><dd><dl><dt><span class="section"><a href="#idm340"></a></span></dt><dt><span class="section"><a href="#idm365"></a></span></dt><dt><span class="section"><a href="#idm393"></a></span></dt><dt><span class="section"><a href="#idm410"></a></span></dt><dt><span class="section"><a href="#idm416"></a></span></dt></dl></dd></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm264"></a>Introduction</h2></div></div></div><p>
+            In this chapter, we are going to use GTFS data. GTFS (General Transit Feed Specification) is a standard format for public transportation schedules and associated geographic information. 
+            It is used by many public transportation companies to share their data.
+        </p><p>
+            We are going to use the GTFS data from STAR, the public transportation company of Rennes. You can find the data <a class="ulink" href="https://transport.data.gouv.fr/datasets/versions-des-horaires-theoriques-des-lignes-de-bus-et-de-metro-du-reseau-star-au-format-gtfs#dataset-resources" target="_top">here</a>, in the static data part, but it will give you the updated data. The exact data we are using in this workshop can be found in the repo, in the GTFS folder.
+        </p><p>
+            The GTFS data is composed of several files, such as:
+            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+                    agency.txt: the agency that operates the transportation service;
+                </li><li class="listitem">
+                    calendar_dates.txt: exceptions for the service;
+                </li><li class="listitem">
+                    calendar.txt: the dates for the service;
+                </li><li class="listitem">
+                    fare_attributes.txt: the fare information;
+                </li><li class="listitem">
+                    feed_info.txt: the feed information;
+                </li><li class="listitem">
+                    routes.txt: the routes of the transportation service;
+                </li><li class="listitem">
+                    shapes.txt: the shapes of the routes;
+                </li><li class="listitem">
+                    stop_times.txt: the times of the stops;
+                </li><li class="listitem">
+                    stops.txt: the stops of the transportation service;
+                </li><li class="listitem">
+                    trips.txt: the trips of the transportation service.
+                </li></ul></div><p>
+            You can find more information about the GTFS data <a class="ulink" href="https://gtfs.org/schedule/reference" target="_top">here</a>.
+        </p><p>
+            We are not going to use the fare_attributes.txt and feed_info.txt files because it is not relevant for our workshop.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm283"></a>Importing the data</h2></div></div></div><p>
+            First thing you need to do is create a MobilityDB extension, just like in the <span class="phrase">Chapter 1</span>.
+            To do so, follow this command:
+            </p><pre class="programlisting">
+CREATE EXTENSION mobilitydb CASCADE;</pre><p>
+        </p><p>
+            Now, we need to import the GTFS data into the database. There is a tool that can help you do that, called gtfs-to-sql. Please install it by following these instructions:
+            </p><pre class="programlisting">
+npm install gtfs-via-postgres</pre><p>
+            Note that you need to have nvm installed on your computer to use this tool, and a recent enough version.
+            gtfs-to-sql will create the tables for you, and fill them with the data from the GTFS files. Here is how to use it:
+            </p><pre class="programlisting">
+npm exec -- gtfs-to-sql --require-dependencies -- GTFS/*.txt | sponge | psql -d &lt;databasename&gt; -b</pre><p>
+            You need to replace &lt;databasename&gt; by the name of your database. You also need to replace GTFS/*.txt by the path to the GTFS files on your computer.
+            You should now have the tables in your database. 
+        </p><p>
+            Before moving on to the next part, we still have some changes to make.<br />
+            We need to add some columns to the stops table, fill them with the right SRID, and create a table to store the shape geometries. We also added an index to the shape_geoms table, to make the queries faster.<br />
+            SRID stands for Spatial Reference System Identifier. It is a unique value that identifies the projection of the data. 4326 is the most common SRID, it is the WGS 84 projection.<br />
+            We set the SRID to 2154 because it is the projection reference we are using in Rennes, where the data comes from.
+            </p><pre class="programlisting">
+ALTER TABLE stops ADD COLUMN stop_geom geometry('POINT', 2154);
+
+UPDATE stops
+SET stop_geom = ST_SetSRID(stop_loc::geometry,2154);
+
+CREATE TABLE shape_geoms (
+  shape_id text NOT NULL,
+  shape_geom geometry('LINESTRING', 2154),
+  CONSTRAINT shape_geom_pkey PRIMARY KEY (shape_id)
+);
+
+CREATE INDEX shape_geoms_key ON shapes (shape_id);</pre><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm296"></a>Creating PostGIS geometries</h2></div></div></div><p>
+            In this part, we are going to create the PostGIS geometries for the stops, the routes and the shapes of the routes. 
+            To do so, we are going to use the stops, routes and shapes tables we created earlier.
+        </p><div class="section"><div class="titlepage"><div><div><h4 class="subtitle">
+                Creating the shapes of the routes
+            </h4></div></div></div><p>
+            In this part, we are going to make the shapes of the routes. 
+            To do so, we are going to use the shape_geoms table we created earlier. This table is used to store the shape geometries of the routes. We are going to use the shapes.txt file to create the shapes of the routes.
+            </p><pre class="programlisting">
+INSERT INTO shape_geoms
+SELECT 
+<span class="custom-color-red">    shape_id,</span>
+<span class="custom-color-green">    ST_MakeLine(array_agg(</span>
+<span class="custom-color-blue">        ST_SetSRID(</span>
+<span class="custom-color-brown">            ST_MakePoint(shape_pt_lon, shape_pt_lat),</span>
+<span class="custom-color-blue">        2154) </span>
+<span class="custom-color-green">    ORDER BY shape_pt_sequence))</span>
+FROM shapes
+GROUP BY shape_id;</pre><p>
+                We are filling the shape_geoms table with two attributes.
+                The first one is <span class="custom-color-red">shape_id</span>: the identifier of the shape, which is taken from the shapes table.
+                The second one is the geometry of the shape, which is created in three steps:
+                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><span class="custom-color-brown">We create a point for each shape_pt_lon and shape_pt_lat in the shapes table, using the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.3.5" target="_top">ST_MakePoint</a> function.</span> This is a PostGIS function. 
+                    </li><li class="listitem"><span class="custom-color-blue">We set the SRID of the point to 2154 because it is the norm we are using (see more </span><a class="ulink" href="https://en.wikipedia.org/wiki/Spatial_reference_system" target="_top">here</a><span class="custom-color-blue">). We use the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.10.7.5" target="_top">ST_SetSRID</a> function to do it. </span>This is a PostGIS function.
+                    </li><li class="listitem"><span class="custom-color-green">We use the <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A2100%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C127.25%2C532.882%2Cnull%5D" target="_top">array_agg</a> function to aggregate all the points in an array. </span>This is a PostgreSQL function. <span class="custom-color-green">We create a line with all the points we created, using the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.3.4" target="_top">ST_MakeLine</a> function. </span>This is a PostGIS function.
+                    </li></ul></div><p>
+                We also ordered the points by shape_pt_sequence to make sure the line is in the right order. 
+                Finally, we group the lines by shape_id to make sure we have only one line per shape.
+            </p><p>
+                Now that we have the shapes of the routes, we can move on to the next part.
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="subtitle">
+                Generating Service Dates
+            </h4></div></div></div><p>
+                In this part, we are going to generate the service dates. 
+                To do so, we are going to use the calendar and calendar_dates tables we created earlier.<br />
+                To put it in a nutshell, we compute the information about the service dates from the calendar and calendar_dates tables, so that we have the actual service offered, taking into account exceptions from the calendar_ates table.
+                </p><pre class="programlisting">
+CREATE TABLE service_dates AS (
+    SELECT service_id, date_trunc('day', d)::date AS date
+    FROM calendar c, generate_series(start_date, end_date, '1 day'::interval) AS d
+    WHERE (
+        (monday = 'available' AND extract(isodow FROM d) = 1) OR
+        (tuesday = 'available' AND extract(isodow FROM d) = 2) OR
+        (wednesday = 'available' AND extract(isodow FROM d) = 3) OR
+        (thursday = 'available' AND extract(isodow FROM d) = 4) OR
+        (friday = 'available' AND extract(isodow FROM d) = 5) OR
+        (saturday = 'available' AND extract(isodow FROM d) = 6) OR
+        (sunday = 'available' AND extract(isodow FROM d) = 7)
+    )
+    EXCEPT
+        SELECT service_id, date
+        FROM calendar_dates WHERE exception_type = 'removed'
+        UNION
+        SELECT c.service_id, date
+        FROM calendar c JOIN calendar_dates d ON c.service_id = d.service_id
+        WHERE exception_type = 'added' AND start_date &lt;= date AND date &lt;= end_date
+);</pre><p>
+                You can notice that we are using the <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A4392%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C757.889%2Cnull%5D" target="_top">date_trunc</a> function. This function truncates the date to the specified precision. In this case, we are truncating the date to the day. This is a PostgreSQL function.<br />
+                We also use the <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A1582%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C402.077%2Cnull%5D" target="_top">extract</a> function. This function extracts a field from a date or time value. In this case, we are extracting the day of the week. This is a PostgreSQL function. We write "extract(isodow FROM d)" to get the day of the week of the date d. "isodow" stands for ISO day of the week (here is the <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#page=321" target="_top">postgreSQL documentation about isodow</a>)<br />
+                We also use the <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A22539%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C72%2C410.478%2Cnull%5D" target="_top">generate_series</a> function. This function generates a series of values, in this case, dates. We are using it to generate all the dates between the start_date and the end_date of the service. This is a PostgreSQL function. 
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="idm337"></a>Creating trips</h2></div></div></div><p>
+            Now that we are fully prepared, we can create the trips. 
+            To do so, we are going to create two tables: trip_stops and trip_segs. Let's start with the first one.
+        </p><div class="section"><div class="titlepage"><div><div><h4 class="subtitle">Creating trip_stops</h4></div></div></div><p>
+                    In this part, we are going to create the trip_stops table. 
+                    </p><pre class="programlisting">
+CREATE TABLE trip_stops (
+    trip_id text,
+    stop_sequence integer,
+    no_stops integer,
+    route_id text,
+    service_id text,
+    shape_id text,
+    stop_id text,
+    arrival_time interval,
+    perc float
+);</pre><p>
+                    Now, let's fill this table.
+                    </p><pre class="programlisting">
+INSERT INTO trip_stops (trip_id, stop_sequence, <span class="custom-color-red">no_stops</span>, route_id, service_id, shape_id, stop_id, arrival_time)
+    SELECT t.trip_id, stop_sequence, <span class="custom-color-red">MAX(stop_sequence) OVER (PARTITION BY t.trip_id)</span>, route_id, service_id, shape_id, stop_id, arrival_time
+    FROM trips t JOIN stop_times s ON t.trip_id = s.trip_id;</pre><p>
+                    Here, we are just filling the table with the data from the trips and stop_times tables. We are also adding the no_stops attribute, which is the number of stops of the trip. We are using the <span class="custom-color-red">MAX</span> function to get the maximum stop_sequence for each trip. <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#page=396" target="_top">MAX</a> is a basic PostgreSQL function, so is <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#page=86" target="_top">OVER (PARTITION BY ...)</a>. <br /><br />
+                    Now, let's update the table with the percentage of the trip that has been done.
+                    </p><pre class="programlisting">
+UPDATE trip_stops t
+    SET perc = CASE
+        WHEN <span class="custom-color-red">stop_sequence =  1 then 0.0</span>
+        WHEN <span class="custom-color-green">stop_sequence =  no_stops then 1.0</span>
+        ELSE <span class="custom-color-blue">ST_LineLocatePoint(g.shape_geom, s.stop_geom)</span>
+    END
+    FROM shape_geoms g, stops s
+    WHERE t.shape_id = g.shape_id AND t.stop_id = s.stop_id;</pre><p>
+                    You can see that there are 3 cases:
+                    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><span class="custom-color-red">The first one is when the stop_sequence is 1. In this case, the percentage is 0.0 because the trip has just started (1 is the first stop).</span></li><li class="listitem"><span class="custom-color-green">The second one is when the stop_sequence is equal to no_stops. In this case, the percentage is 1.0 because the trip is over (no_stops is the last stop).</span></li><li class="listitem"><span class="custom-color-blue">The last one is when the stop_sequence is between 1 and no_stops. In this case, we use the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.19.4" target="_top">ST_LineLocatePoint</a> function. This function returns a float between 0 and 1 representing the location of the closest point on the line to the given point. We use it to get the percentage of the trip that has been done. It is much better than just dividing the stop_sequence by no_stops because it takes into account the shape of the route.</span></li></ul></div><p>
+                    The perc attribute is now filled with the percentage of the trip that has been done. Let's delete NULL values, as they are not relevant.
+                    </p><pre class="programlisting">
+DELETE FROM trip_stops WHERE perc IS NULL;</pre><p>
+                        The trip_stops table is now filled with the data we need. Let's move on to the next part.
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="subtitle">Creating trip_segs</h4></div></div></div><p>
+                    In this part, we are going to create the trip_segs table, that will be used to store the segments of the trips. 
+                    </p><pre class="programlisting">
+CREATE TABLE trip_segs (
+    trip_id text,
+    route_id text,
+    service_id text,
+    stop1_sequence integer,
+    stop2_sequence integer,
+    no_stops integer,
+    shape_id text,
+    stop1_arrival_time interval,
+    stop2_arrival_time interval,
+    perc1 float,
+    perc2 float,
+    seg_geom geometry,
+    seg_length float,
+    no_points integer,
+    PRIMARY KEY (trip_id, stop1_sequence)
+);</pre><p>
+                    Now, let's fill this table.
+                    </p><pre class="programlisting">
+INSERT INTO trip_segs (trip_id, route_id, service_id, stop1_sequence, stop2_sequence, no_stops, shape_id, stop1_arrival_time, stop2_arrival_time, perc1, perc2)  
+WITH <span class="custom-color-brown">temp</span> AS <span class="custom-color-brown"> (</span>
+            SELECT trip_id, 
+                route_id, 
+                service_id, 
+                stop_sequence,
+                LEAD(stop_sequence) OVER w AS stop_sequence2,
+                no_stops,
+                shape_id, 
+                arrival_time, 
+                LEAD(arrival_time) OVER w, 
+                perc, 
+                LEAD(perc) OVER w	
+            FROM trip_stops WINDOW w AS (PARTITION BY trip_id ORDER BY stop_sequence)
+        <span class="custom-color-brown"> )</span>
+SELECT * FROM <span class="custom-color-brown">temp</span> WHERE stop_sequence2 IS NOT null;</pre><p>
+                    There is a new set of functions here. <br />
+                    We are using the <a class="ulink" href="https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf#%5B%7B%22num%22%3A2156%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C127.25%2C573.049%2Cnull%5D" target="_top">LEAD</a> function. This function provides access to a row at a given physical offset beyond that position. In our case, we do not specify the offset, so it is 1 (the default value). This is a PostgreSQL function. <br />
+                    Another notion is the window: this clause defines a window specification that says how to partition the rows and how to order them. In our case, we partition the rows by trip_id and order them by stop_sequence, that is to say the order of the stops in the trip. This is a PostgreSQL function. <br />
+                    In the end, the attributes that need the LEAD function are filled with the next stop's data, so the next row. 
+                </p><p>
+                    We just need to delete the incoherent data, that is to say the data where perc1 is greater or equal than perc2. Indeed, a trip cannot go backwards.
+                    </p><pre class="programlisting">
+DELETE FROM trip_segs WHERE perc1 &gt;= perc2;</pre><p>
+                </p><p>
+                    We still need to fill the seg_geom attribute with the geometry of the segment. To do so, we are going to use the shape_geoms table we created earlier.
+                    </p><pre class="programlisting">
+UPDATE <span class="custom-color-blue">trip_segs t</span>
+    SET seg_geom = ST_LineSubstring(<span class="custom-color-brown">g</span>.shape_geom, perc1, perc2)
+    FROM <span class="custom-color-brown">shape_geoms g</span>
+    WHERE <span class="custom-color-blue">t</span>.shape_id = <span class="custom-color-brown">g</span>.shape_id;</pre><p>    
+                    We are using the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.19.5" target="_top">ST_LineSubstring</a> function. We use it to get the segment of the line between the two points. 
+                </p><p>
+                    We also need to fill the seg_length and no_points attributes. 
+                    </p><pre class="programlisting">
+UPDATE trip_segs
+    SET seg_length = ST_Length(seg_geom), 
+    no_points = ST_NumPoints(seg_geom);</pre><p>
+                    You can see that we are using the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.12.12" target="_top">ST_Length</a> function to get the length of the segment and the <a class="ulink" href="https://postgis.net/stuff/postgis-3.4.pdf#subsection.7.4.33" target="_top">ST_NumPoints</a> function to get the number of points of the segment. 
+                </p><p>
+                    The trip_segs table is now filled with the data we need. Let's move on to the next part.
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="subtitle">Creating trip_points</h4></div></div></div><p>
+                    In this part, we are going to create the trips points table. 
+                    </p><pre class="programlisting">
+CREATE TABLE trip_points (
+    trip_id text,
+    route_id text,
+    service_id text,
+    stop1_sequence integer,
+    point_sequence integer,
+    point_geom geometry,
+    point_arrival_time interval,
+    PRIMARY KEY (trip_id, stop1_sequence, point_sequence)
+);</pre><p>      
+                    Now, let's fill this table.
+                    </p><pre class="programlisting">
+INSERT INTO trip_points (trip_id, route_id, service_id, stop1_sequence, point_sequence, point_geom, point_arrival_time)
+
+WITH 
+<span class="custom-color-red">temp1</span> AS <span class="custom-color-red">(</span>
+    SELECT 
+        trip_id, 
+        route_id, 
+        service_id, 
+        stop1_sequence, 
+        stop2_sequence, 
+        no_stops, 
+        stop1_arrival_time, 
+        stop2_arrival_time, 
+        seg_length, 
+        (dp).path[1] AS point_sequence, 
+        no_points, 
+        (dp).geom as point_geom
+    FROM trip_segs, ST_DumpPoints(seg_geom) AS dp
+<span class="custom-color-red">)</span>,
+<span class="custom-color-blue">temp2</span> AS <span class="custom-color-blue">(</span>
+    SELECT 
+        trip_id, 
+        route_id, 
+        service_id, 
+        stop1_sequence, 
+        stop1_arrival_time, 
+        stop2_arrival_time, 
+        seg_length, 
+        point_sequence, 
+        no_points, 
+        point_geom
+    FROM <span class="custom-color-red">temp1</span>
+    WHERE point_sequence &lt;&gt; no_points OR stop2_sequence = no_stops
+<span class="custom-color-blue">)</span>,
+<span class="custom-color-green">temp3</span> AS <span class="custom-color-green">(</span>
+    SELECT 
+        trip_id, 
+        route_id, 
+        service_id, 
+        stop1_sequence, 
+        stop1_arrival_time,
+        stop2_arrival_time, 
+        point_sequence, 
+        no_points, 
+        point_geom,
+        ST_Length(ST_MakeLine(array_agg(point_geom) OVER w)) / seg_length AS perc
+    FROM <span class="custom-color-blue">temp2</span> WINDOW w AS (PARTITION BY trip_id, service_id, stop1_sequence ORDER BY point_sequence)
+<span class="custom-color-green">)</span>
+
+SELECT trip_id, route_id, service_id, stop1_sequence, point_sequence, point_geom,
+CASE
+    WHEN point_sequence = 1 then stop1_arrival_time
+    WHEN point_sequence = no_points then stop2_arrival_time
+    ELSE stop1_arrival_time + ((stop2_arrival_time - stop1_arrival_time) * perc)
+END AS point_arrival_time
+
+FROM <span class="custom-color-green">temp3</span>;</pre><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="subtitle">Creating trip_input</h4></div></div></div><p>
+                    In this part, we are going to create the trip_input table. It will be used to store the trips with the right dates. 
+                    </p><pre class="programlisting">
+CREATE TABLE trips_input (
+    trip_id text,
+    route_id text,
+    service_id text,
+    date date,
+    point_geom geometry,
+    t timestamptz
+);</pre><p>      
+                    Now, let's fill this table.
+                    </p><pre class="programlisting">
+INSERT INTO trips_input
+    SELECT trip_id, route_id, t.service_id, date, point_geom, date + point_arrival_time AS t
+    FROM trip_points t JOIN
+    ( SELECT service_id, MIN(date) AS date FROM service_dates GROUP BY service_id) s
+    ON t.service_id = s.service_id
+;</pre><p>
+                    We also have to delete the data that is not relevant.
+                    </p><pre class="programlisting">
+DELETE FROM trips_input
+    WHERE trip_id in (
+        SELECT distinct t1.trip_id FROM trips_input t1
+        JOIN trips_input t2 ON t2.trip_id = t1.trip_id and t2.service_id = t1.service_id and t2.route_id = t1.route_id and t2.t = t1.t and NOT ST_Equals(t2.point_geom,t1.point_geom)
+    )and t in (
+        SELECT distinct t1.t FROM trips_input t1
+        JOIN trips_input t2 ON t2.trip_id = t1.trip_id and t2.service_id = t1.service_id and t2.route_id = t1.route_id and t2.t = t1.t and NOT ST_Equals(t2.point_geom,t1.point_geom)
+);</pre><p>
+                The trips_input table is now filled with the data we need. Let's move on to the next part.
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="subtitle">Creating the final trips</h4></div></div></div><p>
+                    In this part, we are going to create the trips table. It will be used to store the trips with the right dates. 
+                    </p><pre class="programlisting">
+CREATE TABLE trips_mdb (
+    trip_id text NOT NULL,
+    service_id text NOT NULL,
+    route_id text NOT NULL,
+    date date NOT NULL,
+    trip tgeompoint,
+    PRIMARY KEY (trip_id, date)
+);</pre><p>      
+                    Now, let's fill this table.
+                    </p><pre class="programlisting">
+INSERT INTO trips_mdb(trip_id, service_id, route_id, date, trip)
+    SELECT trip_id, service_id, route_id, date, tgeompointSeq(array_agg(tgeompoint(point_geom, t) ORDER BY T))
+    FROM trips_input
+    GROUP BY trip_id, service_id, route_id, date
+;</pre><p>
+                    We also need to insert the trips that are not in the service_dates table.
+                    </p><pre class="programlisting">
+INSERT INTO trips_mdb(trip_id, service_id, route_id, date, trip)
+    SELECT trip_id, route_id, t.service_id, d.date,
+        shiftTime(trip, make_interval(days =&gt; d.date - t.date))
+    FROM trips_mdb t JOIN service_dates d ON t.service_id = d.service_id AND t.date &lt;&gt; d.date
+;</pre><p>
+                    That's it! You now have the trips table filled with the data you need.
+                </p></div></div></div></div></body></html>

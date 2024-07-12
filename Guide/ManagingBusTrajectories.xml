@@ -1,65 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="ManagingBusTrajectories">
     <title>Managing Bus Trajectories</title>
-    <para>
-        This document is an example of how you can use MobilityDB in order to analyse data. 
-    </para>
     <para>    
         We will, for our examples, use data from STAR which is the Rennes' public transport company. 
         This data is protected by ODbL (Open Database License)\cite{SourceSTAR}.
     </para>
-
-<section>
-    <title>Preparations</title>
-    <section>
-        <title>Installing MobilityDB</title>
-        <para>
-            For this workshop, you will need to have MobilityDB installed. Here is a little guide to do that.
-            <!--TODO : guide for if not on Jammy (at least the link to the packages)-->
-
-            If you run Ubuntu 22.04 (Jammy Jellyfish), you can simply execute the following in a terminal:
-            <programlisting language="bash" xml:space="preserve">
-sudo apt update
-sudo apt
-# We will need the foloowing packages:
-sudo apt install curl ca-certificates gnupg
-
-# Install the public key for the repository (if not done previously):
-curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
-
-# Create the repository configuration file:
-sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" >> /etc/apt/sources.list.d/postgresql.list'
-sudo apt update
-sudo apt upgrade
-
-# Install the mobilitydb package with apt. It will automatically install the dependancies needed, PosgreSQL and PostGIS in particular.
-sudo apt install postgresql-16-mobilitydb</programlisting>
-        </para>
-    </section>
-    <section>
-        <title>PgAdmin4: a PostgreSQL Editor</title>
-
-        <para>
-            We are going to execute SQL commands. To do so, you can do it in a terminal or use any editor
-            you like. If you do not have one, here is a guide to install PgAdmin4, which is the one we used: <ulink url="https://www.pgadmin.org/download/pgadmin-4-apt/">https://www.pgadmin.org/download/pgadmin-4-apt/</ulink>
-        </para>
-        <para>
-            You could also download <ulink url=" https://www.jetbrains.com/datagrip/">DataGrip</ulink> from Jetbrains. We didn’t use it in this workshop, but we’re sure it’s a good tool.
-        </para>
-    </section>
-    <section>
-        <title>Starting the database</title>
-        <para>
-            In order to start the PostgreSQL database, you need to do as following, replacing username by your
-            own username. Note that in this case, "workshop" is the name of the database we are creating.
-            <programlisting language="bash" xml:space="preserve">
-sudo -u postgres createuser -s -i -d -r -l -w &lt;username&gt;
-sudo -u postgres createdb workshop
-sudo service postgresql start
-psql -U &lt;username&gt; -d workshop</programlisting>
-        </para>
-    </section>
-</section>
 <section>
     <title>Introduction to MobilityDB</title>
 
