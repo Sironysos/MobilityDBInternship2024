@@ -5,7 +5,7 @@ This repository contains the work done by Alice Lombard and Raphaël Dubuget dur
 MobilityDB is a temporal extension for PostgreSQL that adds support for managing temporal and spatiotemporal data. The goal of this internship is to use mobilityDB with STAR's data, which is a dataset of the public transportation system in the city of Rennes. The data is in many forms, from CSV to GTFS and GTFS realtime. The goal is to convert this data into a format that can be used by MobilityDB, and then use MobilityDB to perform some queries on the data. We also want to visualize the data, and to do so we will use Grafana and QGIS.
 
 ## Workshop Summary
-The workshop was divided into 5 parts:
+The workshop was divided into 7 parts:
 ### 1. Introduction to MobilityDB - First Steps
 In this part, we learned about MobilityDB, its main features, and how to install it. We also learned how to create a database and some points, lines, and temporal geometric points, using PostgreSQL, PostGIS, and MobilityDB.
 ### 2. Importing STAR's data - Managing Bus Trajectories
