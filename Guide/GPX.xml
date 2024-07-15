@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="GPX">
-    <title>MobilityDB Hiking Workshop</title>
+    <title>Animating GPX data</title>
     <subtitle>How to use MobilityDB to analyze hiking data</subtitle>
             <para>
                 We will use data from <ulink url="https://www.openstreetmap.org/user/atchisson/traces">OpenStreetMap</ulink>. The traces we are going to use in this example are rando_morbi1.gpx and rando_morbi2.gpx.<sbr/>

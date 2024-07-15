@@ -4,16 +4,136 @@
     <para>
         In this chapter, we will see how to use Grafana to visualize the data we have in our database.
     </para>
-    <section id="Installation">
-        <title>Installation</title>
+    <section>
+        <title>Setting up the Visualization Dashboard</title>
         <para>
-            First, you need to install Grafana. You can find the installation guide on the <ulink url="https://grafana.com/docs/grafana/latest/installation/">Grafana website</ulink>.
+          We can use  <ulink url="https://grafana.com/">Grafana</ulink>,
+          an open-source technology, to create a business intelligence
+          dashboard. This will allow different users to set up their own
+          queries and visualizations, or easily slice through data in a
+          visual way for non-technical users.
         </para>
-    </section>
+        <para>
+          Start by setting up Grafana on your system:
+        </para>
+        <orderedlist numeration="arabic">
+          <listitem>
+            <para>
+               <ulink url="https://grafana.com/docs/grafana/latest/setup-grafana/installation/mac/">macOS</ulink>
+            </para>
+            <programlisting language="bash" xml:space="preserve">
+brew update
+brew install grafana
+brew services start grafana</programlisting>
+          </listitem>
+          <listitem>
+            <para>
+               <ulink url="https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/">Debian
+              or Ubuntu</ulink>
+            </para>
+            <programlisting language="bash">
+# Note These are instructions for Grafana Enterprise Edition (via APT repository),
+# which they recommend. It includes all the Open Source features and can also use
+# Enterprise features if you have a License.
+
+# Setup Grafana Keys
+sudo apt-get install -y apt-transport-https
+sudo apt-get install -y software-properties-common wget
+wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+
+# Add repository for stable releases
+echo &quot;deb https://packages.grafana.com/enterprise/deb stable main&quot; 
+    | sudo tee -a /etc/apt/sources.list.d/grafana.list
+
+# Install Grafana
+sudo apt-get update
+sudo apt-get install grafana-enterprise</programlisting>
+          </listitem>
+          <listitem>
+            <para>
+               <ulink url="https://grafana.com/docs/grafana/latest/setup-grafana/installation/windows/">Windows</ulink>
+            </para>
+            <para>
+              Use the Windows installer available at the Grafana website.
+            </para>
+          </listitem>
+        </orderedlist>
+      </section>
     <section id="Configuration">
         <title>Configuration</title>
         <para>
-            Once Grafana is installed, you need to configure it to connect to your database. To do so, you can follow the <ulink url="https://grafana.com/docs/grafana/latest/features/datasources/postgres/">Grafana documentation</ulink>.
+            Once Grafana is installed, you need to start your Grafana server:
+            <programlisting language="bash" xml:space="preserve">
+sudo /bin/systemctl start grafana-server</programlisting>
+      We can now sign in to Grafana by going to
+       <ulink url="http://localhost:3000/">http://localhost:3000/</ulink>.
+      Set up a new account if needed. Additional instructions to login
+      can be found here following the
+       <ulink url="https://grafana.com/docs/grafana/latest/getting-started/build-first-dashboard/">build
+      your first dashboard instructions.</ulink>
+    </para>
+    <para>
+      Next, we <emphasis role="strong">add a data source</emphasis> for
+      Grafana to interact with. In this case, we can follow the
+       <ulink url="https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/">Grafana
+      instructions for adding a data source</ulink> and search for
+       <ulink url="https://grafana.com/docs/grafana/latest/datasources/postgres/">PostgreSQL</ulink>
+      as the data source.
+    </para>
+    <para>
+      The workshop is using the following settings to connect to the
+      postgres server.
+    </para>
+    <itemizedlist spacing="compact">
+      <listitem>
+        <para>
+          Name: <emphasis>MyFirstConnection</emphasis>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Host: <emphasis>localhost</emphasis>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Database: <emphasis>rennesbuses</emphasis>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          User: <emphasis>user_name</emphasis>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Password: <emphasis>your_password</emphasis>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          TLS/SSL Mode: <emphasis>disable</emphasis>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Version: <emphasis>12+</emphasis>
+        </para>
+      </listitem>
+    </itemizedlist>
+    <para>
+      Then press save and test.
+    </para>
+    <figure>
+      <title>Data Source settings</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata width='70%' fileref="images/DataSourceSettings.png" />
+        </imageobject>
+        <textobject><phrase>Data Source settings</phrase></textobject>
+      </mediaobject>
+    </figure>
+  </section>
         </para>
     </section>
     <section id="Queries">
