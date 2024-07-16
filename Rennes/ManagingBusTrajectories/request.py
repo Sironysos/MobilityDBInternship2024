@@ -1,7 +1,7 @@
 import requests
 
 # URL de téléchargement des données
-url = 'http://example.com/data'
+url = 'https://eu.ftp.opendatasoft.com/star/gbfs/free_bike_status.json'
 
 # Fonction pour télécharger les données
 def download_data():
@@ -9,7 +9,7 @@ def download_data():
         response = requests.get(url)
         response.raise_for_status()  # Vérifie les erreurs HTTP
         # Sauvegarde des données dans un fichier
-        with open('data.csv', 'wb') as file:
+        with open('./Rennes/ManagingBusTrajectories/data.csv', 'ab') as file:
             file.write(response.content)
         print("Données téléchargées avec succès.")
     except requests.exceptions.RequestException as e:
