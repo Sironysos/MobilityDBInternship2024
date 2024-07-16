@@ -1,9 +1,10 @@
+DROP EXTENSION IF EXISTS mobilitydb CASCADE;
 CREATE EXTENSION mobilitydb CASCADE;
 
 set datestyle to DMY;
 set lc_numeric to 'fr_FR.UTF-8';
 
-DROP TABLE RennesInput;
+DROP TABLE IF EXISTS RennesInput;
 CREATE TABLE RennesInput(
   DateFreq date,
   TimeSlot15mn time,
