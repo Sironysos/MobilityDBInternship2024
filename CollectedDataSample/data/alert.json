@@ -1,0 +1,30 @@
+2024-07-22 11:06:02.359745
+{"rootTag":{"last_updated":1721638926,"ttl":60,"data":{"alerts":[{"alert_id":"1721638926_1","type":"STATION_CLOSURE","station_ids":["5516","5590"],"region_ids":["region_rennes_metropole_35238"],"summary":"Station hors service"}]}}}
+"data": {"alerts": []}
+2024-07-22 11:07:01.898409
+{"rootTag":{"last_updated":1721638986,"ttl":60,"data":{"alerts":[{"alert_id":"1721638986_1","type":"STATION_CLOSURE","station_ids":["5590"],"region_ids":["region_rennes_metropole_35238"],"summary":"Station hors service"}]}}}
+"data": {"alerts": []}
+2024-07-22 11:08:02.201265
+{"rootTag":{"last_updated":1721639046,"ttl":60,"data":{"alerts":[{"alert_id":"1721639046_1","type":"STATION_CLOSURE","station_ids":["5590"],"region_ids":["region_rennes_metropole_35238"],"summary":"Station hors service"}]}}}
+"data": {"alerts": []}
+2024-07-22 11:09:01.506502
+{"rootTag":{"last_updated":1721639108,"ttl":60,"data":{"alerts":[{"alert_id":"1721639108_1","type":"STATION_CLOSURE","station_ids":["5524","5590"],"region_ids":["region_rennes_metropole_35238"],"summary":"Station hors service"}]}}}
+"data": {"alerts": []}
+2024-07-22 11:10:01.815596
+{"rootTag":{"last_updated":1721639166,"ttl":60,"data":{"alerts":[{"alert_id":"1721639166_1","type":"STATION_CLOSURE","station_ids":["5590"],"region_ids":["region_rennes_metropole_35238"],"summary":"Station hors service"}]}}}
+"data": {"alerts": []}
+2024-07-22 11:11:02.211905
+{"rootTag":{"last_updated":1721639225,"ttl":60,"data":{"alerts":[{"alert_id":"1721639225_1","type":"STATION_CLOSURE","station_ids":["5590"],"region_ids":["region_rennes_metropole_35238"],"summary":"Station hors service"}]}}}
+"data": {"alerts": []}
+2024-07-22 11:12:01.949374
+{"rootTag":{"last_updated":1721639286,"ttl":60,"data":{"alerts":[{"alert_id":"1721639286_1","type":"STATION_CLOSURE","station_ids":["5590"],"region_ids":["region_rennes_metropole_35238"],"summary":"Station hors service"}]}}}
+"data": {"alerts": []}
+2024-07-22 11:13:02.419487
+{"rootTag":{"last_updated":1721639345,"ttl":60,"data":{"alerts":[{"alert_id":"1721639345_1","type":"STATION_CLOSURE","station_ids":["5590"],"region_ids":["region_rennes_metropole_35238"],"summary":"Station hors service"}]}}}
+"data": {"alerts": []}
+2024-07-22 11:14:01.742618
+{"rootTag":{"last_updated":1721639408,"ttl":60,"data":{"alerts":[{"alert_id":"1721639408_1","type":"STATION_CLOSURE","station_ids":["5590"],"region_ids":["region_rennes_metropole_35238"],"summary":"Station hors service"}]}}}
+"data": {"alerts": []}
+2024-07-22 11:15:02.162755
+{"rootTag":{"last_updated":1721639465,"ttl":60,"data":{"alerts":[{"alert_id":"1721639465_1","type":"STATION_CLOSURE","station_ids":["5590"],"region_ids":["region_rennes_metropole_35238"],"summary":"Station hors service"}]}}}
+"data": {"alerts": []}
