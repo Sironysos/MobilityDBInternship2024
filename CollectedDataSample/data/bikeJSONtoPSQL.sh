@@ -25,8 +25,5 @@ done < $input_file
 # Execute the SQL commands to insert data
 psql -d bikes -f $temp_file
 
-# Insert data into the bikes table
-psql -d bikes -f insert_bikes.sql
-
 # Clean up
 rm $temp_file

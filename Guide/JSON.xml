@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="JSON">
+    <title>GBFS data (applicable for every JSON data)</title>
+    <para>    
+        We will, for our examples, use data from STAR which is the Rennes' public transport company. 
+        This data is protected by ODbL (Open Database License)\cite{SourceSTAR}.
+    </para>
+    <section>
+        <title>Introduction to MobilityDB</title>
+        
+    </section>
+</chapter>
