@@ -1,6 +1,6 @@
 #!/bin/bash
 
-input_file="./free_bike.json"
+input_file="../../data/free_bike.json"
 temp_file="/tmp/processed_data.sql"
 
 # Create raw_json_data table if it doesn't exist
