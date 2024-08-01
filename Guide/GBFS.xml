@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="GBFS">
+    <title>GBFS data (applicable for every JSON data)</title>
+
+    <section>
+        <title>Introduction to GBFS</title>
+        <para>
+            GBFS (General Bikeshare Feed Specification) is a data format that is used to provide information about bike-sharing systems. 
+            It is a standardized way to share data about the status of a bike-sharing system. 
+            This data is used by many applications to provide information to users about the availability of bikes and docks.
+        </para>
+        <para>
+            The GBFS data is provided in JSON format. 
+            It is composed of several files that contain information about the system, the stations, the status of the stations, the availability of bikes, etc.
+        </para>
+    </section>
+    <para>
+        We will, for our examples, use data from STAR which is the Rennes' public transport company. 
+        This data is protected by ODbL (Open Database License)\cite{SourceSTAR}.
+    </para>
+    <section>
+        <title>Introduction to MobilityDB</title>
+        
+    </section>
+</chapter>
