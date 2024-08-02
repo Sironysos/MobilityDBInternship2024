@@ -1,6 +1,6 @@
 #!/bin/bash
 
-input_file="./free_bike.json"
+input_file="../../data/free_bike.json"
 temp_file="/tmp/processed_data.sql"
 
 # Create raw_json_data table if it doesn't exist
@@ -24,9 +24,6 @@ done < $input_file
 
 # Execute the SQL commands to insert data
 psql -d bikes -f $temp_file
-
-# Insert data into the bikes table
-psql -d bikes -f insert_bikes.sql
 
 # Clean up
 rm $temp_file
