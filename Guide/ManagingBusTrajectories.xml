@@ -3,7 +3,7 @@
     <title>Managing Bus Trajectories</title>
     <para>    
         We will, for our examples, use data from STAR which is the Rennes' public transport company. 
-        This data is protected by ODbL (Open Database License)\cite{SourceSTAR}.
+        This data is protected by ODbL (Open Database License): Data source: STAR Data Explore/Rennes Métropole.
     </para>
 <section>
     <title>Introduction to MobilityDB</title>

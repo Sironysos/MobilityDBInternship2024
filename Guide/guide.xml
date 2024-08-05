@@ -9,8 +9,6 @@
 <!ENTITY GTFS SYSTEM "GTFS.xml">
 <!ENTITY GTFS_RT SYSTEM "GTFS-RT.xml">
 <!ENTITY JSON SYSTEM "JSON.xml">
-
-
 ]>
 <book lang="en">
     <title>MobilityDB Workshop</title>
@@ -75,6 +73,6 @@
 
     <!-- Chapter 7 -->
         <!-- TODO -->
-    <!-- &JSON; -->
+    &JSON;
 
 </book>

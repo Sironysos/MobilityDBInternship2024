@@ -2,11 +2,71 @@
 <chapter id="JSON">
     <title>GBFS data (applicable for every JSON data)</title>
     <para>    
-        We will, for our examples, use data from STAR which is the Rennes' public transport company. 
-        This data is protected by ODbL (Open Database License)\cite{SourceSTAR}.
+        We will, for our examples, use data from STAR which is the Rennes' public transport company (<ulink url="https://data.rennesmetropole.fr/explore/dataset/vls-gbfs-tr/table/?dataChart=eyJxdWVyaWVzIjpbeyJjb25maWciOnsiZGF0YXNldCI6InZscy1nYmZzLXRyIiwib3B0aW9ucyI6e319LCJjaGFydHMiOlt7ImFsaWduTW9udGgiOnRydWUsInR5cGUiOiJjb2x1bW4iLCJmdW5jIjoiQ09VTlQiLCJzY2llbnRpZmljRGlzcGxheSI6dHJ1ZSwiY29sb3IiOiIjNjZjMmE1In1dLCJ4QXhpcyI6ImlkZmlsZWdiZnMiLCJtYXhwb2ludHMiOjUwLCJzb3J0IjoiIn1dLCJ0aW1lc2NhbGUiOiIiLCJkaXNwbGF5TGVnZW5kIjp0cnVlLCJhbGlnbk1vbnRoIjp0cnVlfQ%3D%3D">link</ulink>). 
+        This data is protected by ODbL (Open Database License): Data source: STAR Data Explore/Rennes Métropole.
     </para>
     <section>
-        <title>Introduction to MobilityDB</title>
-        
+        <title>Presentation</title>
+        <para>
+            The General Bikeshare Feed Specification (GBFS) is a data format that is used to provide real-time information about the status of a bike-sharing system. 
+            It is various JSON files that contain information about the stations, the bikes, the status of the stations, the status of the bikes, etc...
+            <sbr/>Among them, we can find the following files:
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        gbfs.json: Root file describing all the files used in the STAR bike share system's use of the GBFS standard.
+                        It is updated every minute. We didn't collect data for 1 week, because data doesn't significally change.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        station_information.json: List of stations in STAR's bike sharing network, their capacities, locations and geolocations.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_regions.json: STAR bike share application region.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_alerts.json: Alerts and unavailabilities for stations in the STAR bike share network.
+                        It is updated every minute. We collected data for 1 week, using a script in the repository.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_information.json: General information about STAR bike share (organization, contact, e-mail, website).
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_hours.json: STAR bike share opening hours.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_calendar.json: STAR bike share opening days.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        station_status.json: Information on available services, bike availability and locations for each station in the STAR bike share network.
+                        We collected data for 1 week.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        free_bike_status.json: List of bikes available for hire throughout the STAR bike sharing network.
+                        We collected data for 1 week.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        system_pricing_plans.json: STAR bike sharing tariffs and subscriptions (Summary version).
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
     </section>
 </chapter>

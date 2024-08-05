@@ -134,8 +134,6 @@ sudo /bin/systemctl start grafana-server</programlisting>
       </mediaobject>
     </figure>
   </section>
-        </para>
-    </section>
     <section id="Queries">
         <title>Queries</title>
         <para>
