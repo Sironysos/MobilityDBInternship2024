@@ -49,7 +49,8 @@ CREATE TABLE IF NOT EXISTS bike2 (
 );
 
 INSERT INTO bike2(time,lat,lon,bikes,disabled,reserved)
-SELECT time,lat,lon,COUNT(*) AS bikes, COUNT(*) FILTER(WHERE is_disabled=0) AS disabled, COUNT(*)FILTER(WHERE is_reserved=0) AS reserved FROM bikes GROUP BY time,lat,lon;
+SELECT time, lat, lon, COUNT(*) AS bikes, COUNT(*) FILTER(WHERE is_disabled=1) AS disabled, COUNT(*)FILTER(WHERE is_reserved=1) AS reserved
+FROM bikes GROUP BY time,lat,lon;
 
 SELECT * FROM bike2 order BY time, lat, lon;
 
