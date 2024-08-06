@@ -14,8 +14,7 @@
             <itemizedlist>
                 <listitem>
                     <para>
-                        gbfs.json: Root file describing all the files used in the STAR bike share system's use of the GBFS standard.
-                        It is updated every minute. We didn't collect data for 1 week, because data doesn't significally change.
+                        gbfs.json: Root file describing all the files used in the STAR bike share system's use of the GBFS standard. We didn't collect data for 1 week, because data doesn't significally change.
                     </para>
                 </listitem>
                 <listitem>
@@ -67,6 +66,7 @@
                     </para>
                 </listitem>
             </itemizedlist>
+            We are going to use the station_status.json, free_bike_status.json  files in order to illustrate the use of MobilityDB with JSON data.
         </para>
     </section>
 </chapter>
