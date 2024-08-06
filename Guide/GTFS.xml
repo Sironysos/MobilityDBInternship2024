@@ -53,7 +53,7 @@
     <section>
         <title>Importing the data</title>
         <para>
-            First thing you need to do is create a MobilityDB extension, just like in the <phrase xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="#chapter1">Chapter 1</phrase>.
+            First thing you need to do is create a MobilityDB extension, just like in the <phrase xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="#FirstSteps">Chapter 1</phrase>.
             To do so, follow this command:
             <programlisting language="sql" xml:space="preserve">
 CREATE EXTENSION mobilitydb CASCADE;</programlisting>
