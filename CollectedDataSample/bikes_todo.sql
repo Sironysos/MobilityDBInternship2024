@@ -11,16 +11,8 @@ CREATE TABLE IF NOT EXISTS bikes (
 	PRIMARY key(bike_id, time)
 );
 
-DROP TABLE IF EXISTS raw_json_data;
-CREATE TABLE IF NOT EXISTS raw_json_data (
-    timestamp TIMESTAMP,
-    json_data JSON
-);
-SELECT * FROM raw_json_data;
-
-
-
 -- INSERT_bikes using bikeJSONtoPSQL.sh
+SELECT * FROM raw_json_bike;
 
 
 
@@ -33,7 +25,7 @@ SELECT
     (bike->>'is_reserved')::int AS is_reserved,
     (bike->>'is_disabled')::int AS is_disabled
 FROM 
-    raw_json_data,
+    raw_json_bike,
     json_array_elements(json_data->'data'->'bikes') AS bike;
 
 SELECT * FROM bikes;
@@ -81,3 +73,80 @@ SELECT lat, lon,
 FROM bbike;
 
 SELECT * FROM temporal order BY lat, lon;
+
+
+-- INSERT station information + station status using stationJSONtoPSQL.sh + statusJSONtoPSQL.sh
+select * from raw_json_station;
+select * from raw_json_status;
+
+drop table if exists docks;
+CREATE table docks(
+	id int,
+	time timestamp,
+	docks int
+);
+
+
+INSERT INTO docks (id, time, docks)
+SELECT 
+	(dock->>'station_id')::int,
+    timestamp,
+    (dock->>'num_docks_available')::int
+FROM 
+    raw_json_status,
+    json_array_elements(json_data->'data'->'stations') AS dock;
+
+select * from docks;
+
+
+
+
+
+
+
+
+
+
+
+-- on doit transformer ce qu'il y a dans docks pour mettre un tint sequence dans station --
+
+
+
+
+
+
+
+
+
+
+
+
+drop table if exists station;
+create table station(
+	id int primary key,
+	name varchar(100),
+	position geometry(point),
+	capacity int,
+	tbikes tint(SEQUENCE),
+	tdisabled tint(SEQUENCE),
+	treserved tint(SEQUENCE),
+    tdocks_available tint(SEQUENCE)
+);
+
+insert into station(id, name, position, capacity, tbikes, tdisabled, treserved, docks_available)
+select (
+	(stations->>'station_id')::int AS id,
+    stations->>'name' AS name,
+	ST_SetSRID(ST_MakePoint((stations->>'lon')::float,(stations->>'lat')::float),2154),
+	capacity int,
+	tbikes tint(SEQUENCE),
+	tdisabled tint(SEQUENCE),
+	treserved tint(SEQUENCE),
+	
+)
+from
+	(raw_json_station,
+    json_array_elements(json_data->'data'->'stations') AS stations)
+	JOIN temporal ON temporal.lon=raw_json_station.lon and temporal.lat=raw_json_station.lat
+	JOIN docks ON docks.id=raw_json_station.id
+	;
