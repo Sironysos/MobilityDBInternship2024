@@ -1,5 +1,10 @@
 CREATE EXTENSION IF NOT EXISTS mobilityDB CASCADE;
 
+
+
+-- INSERT_bikes using bikeJSONtoPSQL.sh
+SELECT * FROM raw_json_bike;
+
 DROP TABLE IF EXISTS bikes CASCADE;
 CREATE TABLE IF NOT EXISTS bikes (
 	time timestamp,
@@ -10,11 +15,6 @@ CREATE TABLE IF NOT EXISTS bikes (
 	is_disabled int,
 	PRIMARY key(bike_id, time)
 );
-
--- INSERT_bikes using bikeJSONtoPSQL.sh
-SELECT * FROM raw_json_bike;
-
-
 
 INSERT INTO bikes (time, bike_id, lat, lon, is_reserved, is_disabled)
 SELECT 
@@ -75,8 +75,46 @@ FROM bbike;
 SELECT * FROM temporal order BY lat, lon;
 
 
--- INSERT station information + station status using stationJSONtoPSQL.sh + statusJSONtoPSQL.sh
+
+
+
+
+
+
+
+-- INSERT station information using stationJSONtoPSQL.sh --
 select * from raw_json_station;
+
+drop table if exists prestation;
+CREATE table prestation(
+	id int primary key,
+	name varchar(100),
+	position geometry(point),
+	capacity int
+);
+
+insert into prestation(id, name, position, capacity)
+select
+	(stations->>'station_id')::int,
+    stations->>'name',
+	ST_SetSRID(ST_MakePoint((stations->>'lon')::float,(stations->>'lat')::float),2154),
+	(stations->>'capacity')::int
+FROM 
+    raw_json_station,
+    json_array_elements(json_data->'data'->'stations') AS stations;
+
+select * from prestation;
+
+
+
+
+
+
+
+
+
+
+-- INSERT station status using statusJSONtoPSQL.sh --
 select * from raw_json_status;
 
 drop table if exists docks;
@@ -100,6 +138,26 @@ select * from docks;
 
 
 
+DROP TABLE IF EXISTS tempdocks;
+CREATE TABLE IF NOT EXISTS tempdocks(
+	id int,
+	tdocks tint(SEQUENCE)
+);
+
+
+WITH ddocks AS (
+    SELECT 
+		id,
+        tintSeq(array_agg(tint(docks, time) ORDER BY time)) AS sorted_tdocks
+    FROM docks
+    GROUP BY id
+)
+INSERT INTO tempdocks(id, tdocks)
+SELECT id,
+       sorted_tdocks AS tdocks
+FROM ddocks;
+
+SELECT * FROM tempdocks order BY id;
 
 
 
@@ -108,18 +166,13 @@ select * from docks;
 
 
 
--- on doit transformer ce qu'il y a dans docks pour mettre un tint sequence dans station --
 
 
 
 
 
 
-
-
-
-
-
+-- final JOIN --
 
 drop table if exists station;
 create table station(
@@ -133,20 +186,21 @@ create table station(
     tdocks_available tint(SEQUENCE)
 );
 
-insert into station(id, name, position, capacity, tbikes, tdisabled, treserved, docks_available)
-select (
-	(stations->>'station_id')::int AS id,
-    stations->>'name' AS name,
-	ST_SetSRID(ST_MakePoint((stations->>'lon')::float,(stations->>'lat')::float),2154),
-	capacity int,
-	tbikes tint(SEQUENCE),
-	tdisabled tint(SEQUENCE),
-	treserved tint(SEQUENCE),
-	
-)
+insert into station(id, name, position, capacity, tbikes, tdisabled, treserved, tdocks_available)
+select 
+	prestation.id,
+    prestation.name,
+	prestation.position,
+	prestation.capacity,
+	tbikes,
+	tdisabled,
+	treserved,
+	tdocks
 from
-	(raw_json_station,
-    json_array_elements(json_data->'data'->'stations') AS stations)
-	JOIN temporal ON temporal.lon=raw_json_station.lon and temporal.lat=raw_json_station.lat
-	JOIN docks ON docks.id=raw_json_station.id
-	;
+	prestation
+	JOIN temporal ON ST_SetSRID(ST_MakePoint(temporal.lon,temporal.lat),2154)=prestation.position
+	JOIN tempdocks ON tempdocks.id=prestation.id;
+
+
+
+select * from station order by id;
